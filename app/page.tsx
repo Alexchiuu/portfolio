@@ -25,8 +25,8 @@ export default function Home() {
   ];
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 font-sans dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <main className="flex w-full max-w-2xl flex-col items-center justify-center px-8 py-16">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 font-sans dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <main className="flex w-full max-w-2xl flex-col items-center mx-auto px-8 py-16">
         {/* Profile Section */}
         <div className="mb-8 text-center">
           <div className="mb-6 inline-block">
@@ -71,7 +71,7 @@ export default function Home() {
         </div>
 
         {/* Social Links */}
-        <div className="w-full">
+        <div className="w-full mb-10">
           <h2 className="mb-6 text-center text-2xl font-semibold text-gray-900 dark:text-white">
             Connect With Me
           </h2>
@@ -96,6 +96,107 @@ export default function Home() {
                 </span>
               </a>
             ))}
+          </div>
+        </div>
+
+        {/* Experience Section */}
+        <div className="mb-10 w-full rounded-2xl bg-white/70 p-8 shadow-lg backdrop-blur-sm dark:bg-gray-800/70">
+          <h2 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+            Experience
+          </h2>
+          <div className="space-y-6">
+            <div className="border-l-4 border-blue-500 pl-4">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                General Organizer - Science Affairs
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                Class of Science, Taipei Municipal Jianguo High School
+              </p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                2022 - 2025
+              </p>
+              <p className="text-gray-700 dark:text-gray-300">
+                Led and coordinated science-related activities and events for the class, fostering collaboration and engagement among students.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Projects Section */}
+        <div className="mb-10 w-full rounded-2xl bg-white/70 p-8 shadow-lg backdrop-blur-sm dark:bg-gray-800/70">
+          <h2 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+            Projects
+          </h2>
+          <div className="space-y-6">
+            <div className="rounded-lg border border-gray-200 p-6 transition-all hover:border-blue-400 dark:border-gray-700 dark:hover:border-blue-500">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                Personal Portfolio Website
+              </h3>
+              <p className="text-gray-700 dark:text-gray-300 mb-3">
+                A modern, responsive portfolio website built with Next.js and Tailwind CSS, featuring dynamic content and smooth animations.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                  Next.js
+                </span>
+                <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                  TypeScript
+                </span>
+                <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                  Tailwind CSS
+                </span>
+              </div>
+            </div>
+            
+            <div className="rounded-lg border border-gray-200 p-6 transition-all hover:border-blue-400 dark:border-gray-700 dark:hover:border-blue-500">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                Engineering Projects
+              </h3>
+              <p className="text-gray-700 dark:text-gray-300 mb-3">
+                Various electrical and electronics engineering projects focusing on circuit design, systems analysis, and practical applications.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800 dark:bg-purple-900 dark:text-purple-200">
+                  Circuit Design
+                </span>
+                <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800 dark:bg-purple-900 dark:text-purple-200">
+                  Systems Engineering
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Interests Section */}
+        <div className="mb-10 w-full rounded-2xl bg-white/70 p-8 shadow-lg backdrop-blur-sm dark:bg-gray-800/70">
+          <h2 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+            Interests & Hobbies
+          </h2>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            <div className="flex items-center gap-3 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 p-4 dark:from-blue-900/30 dark:to-blue-800/30">
+              <span className="text-2xl">💻</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Coding</span>
+            </div>
+            <div className="flex items-center gap-3 rounded-lg bg-gradient-to-br from-purple-50 to-purple-100 p-4 dark:from-purple-900/30 dark:to-purple-800/30">
+              <span className="text-2xl">🔬</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Science</span>
+            </div>
+            <div className="flex items-center gap-3 rounded-lg bg-gradient-to-br from-green-50 to-green-100 p-4 dark:from-green-900/30 dark:to-green-800/30">
+              <span className="text-2xl">🎮</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Gaming</span>
+            </div>
+            <div className="flex items-center gap-3 rounded-lg bg-gradient-to-br from-orange-50 to-orange-100 p-4 dark:from-orange-900/30 dark:to-orange-800/30">
+              <span className="text-2xl">📚</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Reading</span>
+            </div>
+            <div className="flex items-center gap-3 rounded-lg bg-gradient-to-br from-pink-50 to-pink-100 p-4 dark:from-pink-900/30 dark:to-pink-800/30">
+              <span className="text-2xl">🎵</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Music</span>
+            </div>
+            <div className="flex items-center gap-3 rounded-lg bg-gradient-to-br from-cyan-50 to-cyan-100 p-4 dark:from-cyan-900/30 dark:to-cyan-800/30">
+              <span className="text-2xl">🌐</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Web Dev</span>
+            </div>
           </div>
         </div>
 
