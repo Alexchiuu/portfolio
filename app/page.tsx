@@ -31,9 +31,13 @@ export default function Home() {
         <div className="mb-8 text-center">
           <div className="mb-6 inline-block">
             <div className="relative h-32 w-32 overflow-hidden rounded-full bg-gradient-to-br from-blue-400 to-purple-500 p-1">
-              <div className="flex h-full w-full items-center justify-center rounded-full bg-white dark:bg-gray-800">
-                <span className="text-5xl font-bold text-gray-700 dark:text-gray-200">AC</span>
-              </div>
+              <Image
+                src="/image.jpg"
+                alt="Alex C Profile Picture"
+                width={128}
+                height={128}
+                className="h-full w-full rounded-full object-cover"
+              />
             </div>
           </div>
 
