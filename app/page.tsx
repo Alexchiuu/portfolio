@@ -82,16 +82,16 @@ export default function Home() {
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex flex-col items-center justify-center gap-3 rounded-xl bg-white p-6 shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl dark:bg-gray-800"
+                className="group relative flex flex-col items-center justify-center gap-3 rounded-xl bg-white p-6 shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl dark:bg-gray-800 before:absolute before:inset-0 before:rounded-xl before:border-2 before:border-transparent before:transition-all before:duration-500 hover:before:border-transparent hover:before:bg-gradient-to-r hover:before:from-red-500 hover:before:via-yellow-500 hover:before:via-green-500 hover:before:via-blue-500 hover:before:via-indigo-500 hover:before:to-purple-500 hover:before:p-[2px] hover:before:[-webkit-mask:linear-gradient(#fff_0_0)_content-box,linear-gradient(#fff_0_0)] hover:before:[mask:linear-gradient(#fff_0_0)_content-box,linear-gradient(#fff_0_0)] hover:before:[-webkit-mask-composite:xor] hover:before:[mask-composite:exclude]"
               >
                 <svg
-                  className="h-8 w-8 fill-gray-700 transition-colors group-hover:fill-blue-500 dark:fill-gray-300 dark:group-hover:fill-blue-400"
+                  className="relative z-10 h-8 w-8 fill-gray-700 transition-colors group-hover:fill-blue-500 dark:fill-gray-300 dark:group-hover:fill-blue-400"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path d={link.icon} />
                 </svg>
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                <span className="relative z-10 text-sm font-medium text-gray-700 dark:text-gray-300">
                   {link.name}
                 </span>
               </a>
