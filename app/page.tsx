@@ -31,13 +31,15 @@ export default function Home() {
         <div className="mb-8 text-center">
           <div className="mb-6 inline-block">
             <div className="relative h-32 w-32 overflow-hidden rounded-full bg-gradient-to-br from-blue-400 to-purple-500 p-1">
-              <Image
-                src="/image.jpg"
-                alt="Alex C Profile Picture"
-                width={128}
-                height={128}
-                className="h-full w-full rounded-full object-cover"
-              />
+              <div className="relative h-full w-full overflow-hidden rounded-full bg-white dark:bg-gray-800">
+                <Image
+                  src="/image.jpg"
+                  alt="Alex C Profile Picture"
+                  width={128}
+                  height={128}
+                  className="object-cover"
+                />
+              </div>
             </div>
           </div>
 
@@ -99,7 +101,7 @@ export default function Home() {
 
         {/* Footer */}
         <footer className="mt-16 text-center text-sm text-gray-500 dark:text-gray-400">
-          <p>© 2024 Alex C. Built with Next.js & Tailwind CSS</p>
+          <p>© 2025 Alex C. Built with Next.js & Tailwind CSS</p>
         </footer>
       </main>
     </div>
