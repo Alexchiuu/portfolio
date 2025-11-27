@@ -32,24 +32,21 @@ export default function Home() {
           <div className="mb-6 inline-block">
             <div className="relative h-32 w-32 overflow-hidden rounded-full bg-gradient-to-br from-blue-400 to-purple-500 p-1">
               <div className="flex h-full w-full items-center justify-center rounded-full bg-white dark:bg-gray-800">
-                <span className="text-5xl font-bold text-gray-700 dark:text-gray-200">
-                  YN
-                </span>
+                <span className="text-5xl font-bold text-gray-700 dark:text-gray-200">AC</span>
               </div>
             </div>
           </div>
 
           <h1 className="mb-3 text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
-            Your Name
+            Alex C
           </h1>
           
           <p className="mb-2 text-xl text-gray-600 dark:text-gray-300">
-            Software Developer & Designer
+            Student — Electrical & Electronics Engineering
           </p>
           
           <p className="mx-auto max-w-lg text-base leading-relaxed text-gray-500 dark:text-gray-400">
-            Passionate about creating beautiful and functional web applications.
-            I love turning ideas into reality through code.
+            Aspiring engineer focused on project management and systems design. Currently pursuing a BE in Electrical & Electronics Engineering at National Taiwan University in Taipei.
           </p>
         </div>
 
@@ -59,18 +56,11 @@ export default function Home() {
             About Me
           </h2>
           <div className="space-y-3 text-gray-600 dark:text-gray-300">
-            <p>
-              👨‍💻 Full-stack developer with expertise in modern web technologies
-            </p>
-            <p>
-              🎨 Focused on creating intuitive and engaging user experiences
-            </p>
-            <p>
-              🚀 Always learning and exploring new technologies
-            </p>
-            <p>
-              🌍 Based in [Your Location]
-            </p>
+            <p>🎓 Bachelor of Engineering — Electrical & Electronics Engineering, National Taiwan University (Sep 2025 — Jun 2029)</p>
+            <p>🏫 Taipei Municipal Jianguo High School — High School Diploma, Class of Science (Sep 2022 — Jun 2025)</p>
+            <p>🧩 Activities: General organizer of the Science affair in Class of Science</p>
+            <p>🛠️ Skills: Chinese, English, Project Management, Engineering</p>
+            <p>📍 Taipei, Taipei City, Taiwan</p>
           </div>
         </div>
 
@@ -105,7 +95,7 @@ export default function Home() {
 
         {/* Footer */}
         <footer className="mt-16 text-center text-sm text-gray-500 dark:text-gray-400">
-          <p>© 2024 Your Name. Built with Next.js & Tailwind CSS</p>
+          <p>© 2024 Alex C. Built with Next.js & Tailwind CSS</p>
         </footer>
       </main>
     </div>
