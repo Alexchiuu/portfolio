@@ -82,9 +82,11 @@ export default function Home() {
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative flex flex-col items-center justify-center gap-3 rounded-xl bg-white p-6 shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl dark:bg-gray-800 overflow-hidden"
+                className="group relative flex flex-col items-center justify-center gap-3 rounded-xl bg-white p-6 shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl dark:bg-gray-800"
               >
-                <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 via-indigo-500 to-purple-500 blur-sm -z-10 scale-110"></div>
+                <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-[3px] bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 via-indigo-500 to-purple-500">
+                  <div className="h-full w-full rounded-xl bg-white dark:bg-gray-800"></div>
+                </div>
                 <svg
                   className="relative z-10 h-8 w-8 fill-gray-700 transition-colors group-hover:fill-blue-500 dark:fill-gray-300 dark:group-hover:fill-blue-400"
                   viewBox="0 0 24 24"
