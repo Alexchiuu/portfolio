@@ -42,7 +42,9 @@ export default function Home() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isMouseMoving, setIsMouseMoving] = useState(false);
   const [mouseVelocity, setMouseVelocity] = useState({ vx: 0, vy: 0 });
+  const [shouldDarken, setShouldDarken] = useState(false);
   const triangleIdCounter = useRef(0);
+  const darkenTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     let animationFrameId: number;
@@ -69,12 +71,12 @@ export default function Home() {
             const maxBrightnessDistance = 160;
             let baseBrightness = distance < maxBrightnessDistance ? 1 - (distance / maxBrightnessDistance) : 0;
             
-            // Gradually darken when mouse stops moving
+            // Gradually darken when mouse stops moving (with delay)
             let newDarkenProgress = triangle.darkenProgress;
-            if (!isMouseMoving) {
+            if (shouldDarken) {
               // Gradually increase darken progress (0 to 1 over time)
               newDarkenProgress = Math.min(1, triangle.darkenProgress + 0.02);
-            } else {
+            } else if (isMouseMoving) {
               // Gradually decrease darken progress when moving
               newDarkenProgress = Math.max(0, triangle.darkenProgress - 0.05);
             }
@@ -120,7 +122,7 @@ export default function Home() {
         cancelAnimationFrame(animationFrameId);
       }
     };
-  }, [isHovering, mousePos, isMouseMoving, mouseVelocity]);
+  }, [isHovering, mousePos, isMouseMoving, mouseVelocity, shouldDarken]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const newX = e.clientX;
@@ -207,6 +209,33 @@ export default function Home() {
     
     return () => clearTimeout(timeout);
   }, [mousePos]);
+
+  // Delay before starting to darken after mouse stops
+  useEffect(() => {
+    if (!isMouseMoving) {
+      // Clear any existing timeout
+      if (darkenTimeoutRef.current) {
+        clearTimeout(darkenTimeoutRef.current);
+      }
+      // Start darkening after 1 second delay
+      darkenTimeoutRef.current = setTimeout(() => {
+        setShouldDarken(true);
+      }, 1000);
+    } else {
+      // Mouse is moving, cancel darkening immediately
+      if (darkenTimeoutRef.current) {
+        clearTimeout(darkenTimeoutRef.current);
+        darkenTimeoutRef.current = null;
+      }
+      setShouldDarken(false);
+    }
+    
+    return () => {
+      if (darkenTimeoutRef.current) {
+        clearTimeout(darkenTimeoutRef.current);
+      }
+    };
+  }, [isMouseMoving]);
 
   const handleMouseEnter = () => {
     setIsHovering(true);
