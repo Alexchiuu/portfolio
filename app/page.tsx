@@ -25,13 +25,13 @@ function DualRingEffect() {
         <div className="absolute inset-[-200%] animate-spin-slow" style={{
           background: 'conic-gradient(from 0deg, red, orange, yellow, lime, cyan, blue, magenta, red)'
         }}></div>
-        <div className="absolute inset-[1px] rounded-xl bg-black"></div>
+        <div className="absolute inset-[1px] rounded-xl bg-white"></div>
       </div>
       {/* Blur rainbow effect */}
       <div className="gradient-container">
         <div className="gradient"></div>
       </div>
-      <div className="absolute inset-[3px] rounded-xl bg-black"></div>
+      <div className="absolute inset-[3px] rounded-xl bg-white"></div>
     </div>
   );
 }
@@ -58,20 +58,7 @@ export default function Home() {
             const dy = triangle.y - mousePos.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
             
-            // Fade out based on distance (start fading at 140px, gone by 200px)
-            const maxDistance = 200;
-            const fadeStart = 140;
-            let newOpacity = triangle.opacity;
-            
-            if (distance > fadeStart) {
-              newOpacity = Math.max(0, 1 - (distance - fadeStart) / (maxDistance - fadeStart));
-            }
-            
-            // Calculate brightness based on distance (closer = brighter)
-            const maxBrightnessDistance = 160;
-            let baseBrightness = distance < maxBrightnessDistance ? 1 - (distance / maxBrightnessDistance) : 0;
-            
-            // Gradually darken when mouse stops moving (with delay)
+            // Gradually fade out when mouse stops moving (with delay)
             let newDarkenProgress = triangle.darkenProgress;
             if (shouldDarken) {
               // Gradually increase darken progress (0 to 1 over time)
@@ -81,8 +68,25 @@ export default function Home() {
               newDarkenProgress = Math.max(0, triangle.darkenProgress - 0.05);
             }
             
-            // Apply darkening: fully fade to black when stopped
-            const brightness = baseBrightness * (1 - newDarkenProgress * 0.8);
+            // Calculate base opacity from distance (start fading at 100px, gone by 180px)
+            const maxDistance = 180;
+            const fadeStart = 100;
+            let distanceOpacity = 1;
+            
+            if (distance > fadeStart) {
+              // Steeper fade curve - triangles fade faster as they get farther
+              const fadeProgress = (distance - fadeStart) / (maxDistance - fadeStart);
+              distanceOpacity = Math.max(0, 1 - Math.pow(fadeProgress, 0.7)); // Power < 1 for steeper fade
+            }
+            
+            // Apply stop-motion fade: use MAX of distance fade and darken progress
+            // This ensures outer triangles fade first (from distance), then inner ones (from darken)
+            const fadeMultiplier = 1 - newDarkenProgress; // 1 = full opacity, 0 = transparent
+            const newOpacity = Math.min(distanceOpacity, fadeMultiplier) * 0.8; // Reduce overall opacity to 50%
+            
+            // Calculate brightness based on distance (closer = brighter)
+            const maxBrightnessDistance = 160;
+            const brightness = distance < maxBrightnessDistance ? 1 - (distance / maxBrightnessDistance) : 0;
 
             // Calculate rotation based on mouse movement and proximity
             let rotationChange = 0;
@@ -177,14 +181,16 @@ export default function Home() {
             // Only add if we found a valid position
             if (validPosition) {
               triangleIdCounter.current += 1;
+              // Randomly choose between normal (0°) and upside-down (180°)
+              const initialRotationZ = Math.random() < 0.5 ? 0 : 180;
               newTriangles.push({
                 id: triangleIdCounter.current,
                 x: triangleX,
                 y: triangleY,
                 rotationX: 0,
                 rotationY: 0,
-                rotationZ: 0,
-                rotationSpeed: (Math.random() - 0.5) * 8,
+                rotationZ: initialRotationZ,
+                rotationSpeed: 8,
                 size: 30, // Fixed size for all triangles
                 opacity: 1,
                 brightness: 1,
@@ -270,7 +276,7 @@ export default function Home() {
 
   return (
     <div 
-      className="min-h-screen bg-black font-sans relative overflow-hidden"
+      className="min-h-screen bg-white font-sans relative overflow-hidden"
       style={{ perspective: '1000px' }}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
@@ -300,7 +306,7 @@ export default function Home() {
             <polygon
               points="50,10 90,90 10,90"
               fill="none"
-              stroke="white"
+              stroke="black"
               strokeWidth="3"
             />
           </svg>
@@ -324,25 +330,25 @@ export default function Home() {
             </div>
           </div>
 
-          <h1 className="mb-3 text-4xl font-bold tracking-tight text-white sm:text-5xl">
+          <h1 className="mb-3 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
             Alex C
           </h1>
           
-          <p className="mb-2 text-xl text-gray-300">
+          <p className="mb-2 text-xl text-gray-700">
             Student — Electrical & Electronics Engineering
           </p>
           
-          <p className="mx-auto max-w-lg text-base leading-relaxed text-gray-400">
+          <p className="mx-auto max-w-lg text-base leading-relaxed text-gray-600">
             Aspiring engineer focused on project management and systems design. Currently pursuing a BE in Electrical & Electronics Engineering at National Taiwan University in Taipei.
           </p>
         </div>
 
         {/* About Section */}
-        <div className="mb-10 w-full rounded-2xl bg-white/10 p-8 shadow-lg backdrop-blur-sm">
-          <h2 className="mb-4 text-2xl font-semibold text-white">
+        <div className="mb-10 w-full rounded-2xl bg-gray-100 p-8 shadow-lg">
+          <h2 className="mb-4 text-2xl font-semibold text-gray-900">
             About Me
           </h2>
-          <div className="space-y-3 text-gray-300">
+          <div className="space-y-3 text-gray-700">
             <p>🎓 Bachelor of Engineering — Electrical & Electronics Engineering, National Taiwan University (Sep 2025 — Jun 2029)</p>
             <p>🏫 Taipei Municipal Jianguo High School — High School Diploma, Class of Science (Sep 2022 — Jun 2025)</p>
             <p>🧩 Activities: General organizer of the Science affair in Class of Science</p>
@@ -353,7 +359,7 @@ export default function Home() {
 
         {/* Social Links */}
         <div className="w-full mb-10">
-          <h2 className="mb-6 text-center text-2xl font-semibold text-white">
+          <h2 className="mb-6 text-center text-2xl font-semibold text-gray-900">
             Connect With Me
           </h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -363,17 +369,17 @@ export default function Home() {
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative flex flex-col items-center justify-center gap-3 rounded-xl bg-white/10 p-6 shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl backdrop-blur-sm"
+                className="group relative flex flex-col items-center justify-center gap-3 rounded-xl bg-gray-100 p-6 shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl"
               >
                 <DualRingEffect />
                 <svg
-                  className="relative z-20 h-8 w-8 fill-gray-300"
+                  className="relative z-20 h-8 w-8 fill-gray-700"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path d={link.icon} />
                 </svg>
-                <span className="relative z-20 text-sm font-medium text-gray-300">
+                <span className="relative z-20 text-sm font-medium text-gray-700">
                   {link.name}
                 </span>
               </a>
@@ -382,22 +388,22 @@ export default function Home() {
         </div>
 
         {/* Experience Section */}
-        <div className="mb-10 w-full rounded-2xl bg-white/10 p-8 shadow-lg backdrop-blur-sm">
-          <h2 className="mb-6 text-2xl font-semibold text-white">
+        <div className="mb-10 w-full rounded-2xl bg-gray-100 p-8 shadow-lg">
+          <h2 className="mb-6 text-2xl font-semibold text-gray-900">
             Experience
           </h2>
           <div className="space-y-6">
             <div className="border-l-4 border-blue-500 pl-4">
-              <h3 className="text-lg font-semibold text-white">
+              <h3 className="text-lg font-semibold text-gray-900">
                 General Organizer - Science Affairs
               </h3>
-              <p className="text-sm text-gray-400 mb-2">
+              <p className="text-sm text-gray-600 mb-2">
                 Class of Science, Taipei Municipal Jianguo High School
               </p>
-              <p className="text-sm text-gray-400 mb-2">
+              <p className="text-sm text-gray-600 mb-2">
                 2022 - 2025
               </p>
-              <p className="text-gray-300">
+              <p className="text-gray-700">
                 Led and coordinated science-related activities and events for the class, fostering collaboration and engagement among students.
               </p>
             </div>
@@ -405,45 +411,45 @@ export default function Home() {
         </div>
 
         {/* Projects Section */}
-        <div className="mb-10 w-full rounded-2xl bg-white/10 p-8 shadow-lg backdrop-blur-sm">
-          <h2 className="mb-6 text-2xl font-semibold text-white">
+        <div className="mb-10 w-full rounded-2xl bg-gray-100 p-8 shadow-lg">
+          <h2 className="mb-6 text-2xl font-semibold text-gray-900">
             Projects
           </h2>
           <div className="space-y-6">
-            <div className="group relative rounded-lg border border-gray-700 p-6 transition-all hover:scale-105 hover:shadow-xl">
+            <div className="group relative rounded-lg border border-gray-300 p-6 transition-all hover:scale-105 hover:shadow-xl bg-white">
               <DualRingEffect />
-              <h3 className="relative z-20 text-lg font-semibold text-white mb-2">
+              <h3 className="relative z-20 text-lg font-semibold text-gray-900 mb-2">
                 Personal Portfolio Website
               </h3>
-              <p className="relative z-20 text-gray-300 mb-3">
+              <p className="relative z-20 text-gray-700 mb-3">
                 A modern, responsive portfolio website built with Next.js and Tailwind CSS, featuring dynamic content and smooth animations.
               </p>
               <div className="relative z-20 flex flex-wrap gap-2">
-                <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
                   Next.js
                 </span>
-                <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
                   TypeScript
                 </span>
-                <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
                   Tailwind CSS
                 </span>
               </div>
             </div>
             
-            <div className="group relative rounded-lg border border-gray-700 p-6 transition-all hover:scale-105 hover:shadow-xl">
+            <div className="group relative rounded-lg border border-gray-300 p-6 transition-all hover:scale-105 hover:shadow-xl bg-white">
               <DualRingEffect />
-              <h3 className="relative z-20 text-lg font-semibold text-white mb-2">
+              <h3 className="relative z-20 text-lg font-semibold text-gray-900 mb-2">
                 Engineering Projects
               </h3>
-              <p className="relative z-20 text-gray-300 mb-3">
+              <p className="relative z-20 text-gray-700 mb-3">
                 Various electrical and electronics engineering projects focusing on circuit design, systems analysis, and practical applications.
               </p>
               <div className="relative z-20 flex flex-wrap gap-2">
-                <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800 dark:bg-purple-900 dark:text-purple-200">
+                <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800">
                   Circuit Design
                 </span>
-                <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800 dark:bg-purple-900 dark:text-purple-200">
+                <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800">
                   Systems Engineering
                 </span>
               </div>
@@ -452,46 +458,46 @@ export default function Home() {
         </div>
 
         {/* Interests Section */}
-        <div className="mb-10 w-full rounded-2xl bg-white/10 p-8 shadow-lg backdrop-blur-sm">
-          <h2 className="mb-6 text-2xl font-semibold text-white">
+        <div className="mb-10 w-full rounded-2xl bg-gray-100 p-8 shadow-lg">
+          <h2 className="mb-6 text-2xl font-semibold text-gray-900">
             Interests & Hobbies
           </h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-            <div className="group relative flex items-center gap-3 rounded-lg bg-white/10 p-4 transition-all hover:scale-105 hover:shadow-lg backdrop-blur-sm">
+            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
               <DualRingEffect />
               <span className="relative z-20 text-2xl">💻</span>
-              <span className="relative z-20 text-sm font-medium text-gray-300">Coding</span>
+              <span className="relative z-20 text-sm font-medium text-gray-700">Coding</span>
             </div>
-            <div className="group relative flex items-center gap-3 rounded-lg bg-white/10 p-4 transition-all hover:scale-105 hover:shadow-lg backdrop-blur-sm">
+            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
               <DualRingEffect />
               <span className="relative z-20 text-2xl">🔬</span>
-              <span className="relative z-20 text-sm font-medium text-gray-300">Science</span>
+              <span className="relative z-20 text-sm font-medium text-gray-700">Science</span>
             </div>
-            <div className="group relative flex items-center gap-3 rounded-lg bg-white/10 p-4 transition-all hover:scale-105 hover:shadow-lg backdrop-blur-sm">
+            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
               <DualRingEffect />
               <span className="relative z-20 text-2xl">🎮</span>
-              <span className="relative z-20 text-sm font-medium text-gray-300">Gaming</span>
+              <span className="relative z-20 text-sm font-medium text-gray-700">Gaming</span>
             </div>
-            <div className="group relative flex items-center gap-3 rounded-lg bg-white/10 p-4 transition-all hover:scale-105 hover:shadow-lg backdrop-blur-sm">
+            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
               <DualRingEffect />
               <span className="relative z-20 text-2xl">📚</span>
-              <span className="relative z-20 text-sm font-medium text-gray-300">Reading</span>
+              <span className="relative z-20 text-sm font-medium text-gray-700">Reading</span>
             </div>
-            <div className="group relative flex items-center gap-3 rounded-lg bg-white/10 p-4 transition-all hover:scale-105 hover:shadow-lg backdrop-blur-sm">
+            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
               <DualRingEffect />
               <span className="relative z-20 text-2xl">🎵</span>
-              <span className="relative z-20 text-sm font-medium text-gray-300">Music</span>
+              <span className="relative z-20 text-sm font-medium text-gray-700">Music</span>
             </div>
-            <div className="group relative flex items-center gap-3 rounded-lg bg-white/10 p-4 transition-all hover:scale-105 hover:shadow-lg backdrop-blur-sm">
+            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
               <DualRingEffect />
               <span className="relative z-20 text-2xl">🌐</span>
-              <span className="relative z-20 text-sm font-medium text-gray-300">Web Dev</span>
+              <span className="relative z-20 text-sm font-medium text-gray-700">Web Dev</span>
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <footer className="mt-16 text-center text-sm text-gray-400">
+        <footer className="mt-16 text-center text-sm text-gray-600">
           <p>© 2025 Alex C. Built with Next.js & Tailwind CSS</p>
         </footer>
       </main>
