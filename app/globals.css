@@ -37,3 +37,80 @@ body {
 .animate-spin-slow {
   animation: spin-slow 3s linear infinite;
 }
+
+@keyframes rainbow-border {
+  0% {
+    border-image-source: conic-gradient(from 0deg at 50% 50%, red, orange, yellow, lime, cyan, blue, magenta, red);
+  }
+  100% {
+    border-image-source: conic-gradient(from 360deg at 50% 50%, red, orange, yellow, lime, cyan, blue, magenta, red);
+  }
+}
+
+.animate-rainbow-border {
+  animation: rainbow-border 3s linear infinite;
+  border: 3px solid;
+  border-image-slice: 1;
+}
+
+@keyframes orbit-rotate {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.gradient-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  z-index: -2;
+  filter: blur(8px);
+  transition: all 0.3s;
+}
+
+.gradient {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 110%;
+  aspect-ratio: 1;
+  border-radius: 100%;
+  transition: all 0.3s;
+  background: conic-gradient(
+    from 0deg,
+    hsl(0, 100%, 50%),
+    hsl(30, 100%, 50%),
+    hsl(60, 100%, 50%),
+    hsl(90, 100%, 50%),
+    hsl(120, 100%, 50%),
+    hsl(150, 100%, 50%),
+    hsl(180, 100%, 50%),
+    hsl(210, 100%, 50%),
+    hsl(240, 100%, 50%),
+    hsl(270, 100%, 50%),
+    hsl(300, 100%, 50%),
+    hsl(330, 100%, 50%),
+    hsl(360, 100%, 50%)
+  );
+  animation: rotate-gradient 3s linear infinite;
+  filter: blur(8px);
+  opacity: 0.6;
+}
+
+@keyframes rotate-gradient {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}

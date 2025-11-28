@@ -1,5 +1,24 @@
 import Image from "next/image";
 
+function DualRingEffect() {
+  return (
+    <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none overflow-visible">
+      {/* Light ring effect */}
+      <div className="absolute inset-0 rounded-xl transition-opacity duration-300 overflow-hidden">
+        <div className="absolute inset-[-200%] animate-spin-slow" style={{
+          background: 'conic-gradient(from 0deg, red, orange, yellow, lime, cyan, blue, magenta, red)'
+        }}></div>
+        <div className="absolute inset-[1px] rounded-xl bg-white dark:bg-gray-800"></div>
+      </div>
+      {/* Blur rainbow effect */}
+      <div className="gradient-container">
+        <div className="gradient"></div>
+      </div>
+      <div className="absolute inset-[3px] rounded-xl bg-white dark:bg-gray-800"></div>
+    </div>
+  );
+}
+
 export default function Home() {
   const socialLinks = [
     {
@@ -84,17 +103,15 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="group relative flex flex-col items-center justify-center gap-3 rounded-xl bg-white p-6 shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl dark:bg-gray-800"
               >
-                <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-[3px] bg-[conic-gradient(from_0deg,_red,_yellow,_lime,_cyan,_blue,_magenta,_red)] group-hover:animate-spin-slow">
-                  <div className="h-full w-full rounded-xl bg-white dark:bg-gray-800"></div>
-                </div>
+                <DualRingEffect />
                 <svg
-                  className="relative z-10 h-8 w-8 fill-gray-700 transition-colors group-hover:fill-blue-500 dark:fill-gray-300 dark:group-hover:fill-blue-400"
+                  className="relative z-20 h-8 w-8 fill-gray-700 dark:fill-gray-300"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path d={link.icon} />
                 </svg>
-                <span className="relative z-10 text-sm font-medium text-gray-700 dark:text-gray-300">
+                <span className="relative z-20 text-sm font-medium text-gray-700 dark:text-gray-300">
                   {link.name}
                 </span>
               </a>
@@ -131,14 +148,15 @@ export default function Home() {
             Projects
           </h2>
           <div className="space-y-6">
-            <div className="rounded-lg border border-gray-200 p-6 transition-all hover:border-blue-400 dark:border-gray-700 dark:hover:border-blue-500">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            <div className="group relative rounded-lg border border-gray-200 p-6 transition-all hover:scale-105 hover:shadow-xl dark:border-gray-700">
+              <DualRingEffect />
+              <h3 className="relative z-20 text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 Personal Portfolio Website
               </h3>
-              <p className="text-gray-700 dark:text-gray-300 mb-3">
+              <p className="relative z-20 text-gray-700 dark:text-gray-300 mb-3">
                 A modern, responsive portfolio website built with Next.js and Tailwind CSS, featuring dynamic content and smooth animations.
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="relative z-20 flex flex-wrap gap-2">
                 <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                   Next.js
                 </span>
@@ -151,14 +169,15 @@ export default function Home() {
               </div>
             </div>
             
-            <div className="rounded-lg border border-gray-200 p-6 transition-all hover:border-blue-400 dark:border-gray-700 dark:hover:border-blue-500">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            <div className="group relative rounded-lg border border-gray-200 p-6 transition-all hover:scale-105 hover:shadow-xl dark:border-gray-700">
+              <DualRingEffect />
+              <h3 className="relative z-20 text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 Engineering Projects
               </h3>
-              <p className="text-gray-700 dark:text-gray-300 mb-3">
+              <p className="relative z-20 text-gray-700 dark:text-gray-300 mb-3">
                 Various electrical and electronics engineering projects focusing on circuit design, systems analysis, and practical applications.
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="relative z-20 flex flex-wrap gap-2">
                 <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800 dark:bg-purple-900 dark:text-purple-200">
                   Circuit Design
                 </span>
@@ -176,29 +195,35 @@ export default function Home() {
             Interests & Hobbies
           </h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-            <div className="flex items-center gap-3 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 p-4 dark:from-blue-900/30 dark:to-blue-800/30">
-              <span className="text-2xl">💻</span>
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Coding</span>
+            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg dark:bg-gray-800">
+              <DualRingEffect />
+              <span className="relative z-20 text-2xl">💻</span>
+              <span className="relative z-20 text-sm font-medium text-gray-700 dark:text-gray-300">Coding</span>
             </div>
-            <div className="flex items-center gap-3 rounded-lg bg-gradient-to-br from-purple-50 to-purple-100 p-4 dark:from-purple-900/30 dark:to-purple-800/30">
-              <span className="text-2xl">🔬</span>
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Science</span>
+            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg dark:bg-gray-800">
+              <DualRingEffect />
+              <span className="relative z-20 text-2xl">🔬</span>
+              <span className="relative z-20 text-sm font-medium text-gray-700 dark:text-gray-300">Science</span>
             </div>
-            <div className="flex items-center gap-3 rounded-lg bg-gradient-to-br from-green-50 to-green-100 p-4 dark:from-green-900/30 dark:to-green-800/30">
-              <span className="text-2xl">🎮</span>
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Gaming</span>
+            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg dark:bg-gray-800">
+              <DualRingEffect />
+              <span className="relative z-20 text-2xl">🎮</span>
+              <span className="relative z-20 text-sm font-medium text-gray-700 dark:text-gray-300">Gaming</span>
             </div>
-            <div className="flex items-center gap-3 rounded-lg bg-gradient-to-br from-orange-50 to-orange-100 p-4 dark:from-orange-900/30 dark:to-orange-800/30">
-              <span className="text-2xl">📚</span>
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Reading</span>
+            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg dark:bg-gray-800">
+              <DualRingEffect />
+              <span className="relative z-20 text-2xl">📚</span>
+              <span className="relative z-20 text-sm font-medium text-gray-700 dark:text-gray-300">Reading</span>
             </div>
-            <div className="flex items-center gap-3 rounded-lg bg-gradient-to-br from-pink-50 to-pink-100 p-4 dark:from-pink-900/30 dark:to-pink-800/30">
-              <span className="text-2xl">🎵</span>
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Music</span>
+            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg dark:bg-gray-800">
+              <DualRingEffect />
+              <span className="relative z-20 text-2xl">🎵</span>
+              <span className="relative z-20 text-sm font-medium text-gray-700 dark:text-gray-300">Music</span>
             </div>
-            <div className="flex items-center gap-3 rounded-lg bg-gradient-to-br from-cyan-50 to-cyan-100 p-4 dark:from-cyan-900/30 dark:to-cyan-800/30">
-              <span className="text-2xl">🌐</span>
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Web Dev</span>
+            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg dark:bg-gray-800">
+              <DualRingEffect />
+              <span className="relative z-20 text-2xl">🌐</span>
+              <span className="relative z-20 text-sm font-medium text-gray-700 dark:text-gray-300">Web Dev</span>
             </div>
           </div>
         </div>
