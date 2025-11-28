@@ -36,6 +36,32 @@ function DualRingEffect() {
   );
 }
 
+function ScrollDownArrow() {
+  return (
+    <div 
+      className="flex justify-center items-center overflow-hidden cursor-pointer animate-bounce transition-all duration-500 ease-in-out"
+      style={{ 
+        height: '13vh',
+        paddingLeft: '20px',
+        paddingRight: '20px'
+      }}
+      onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
+    >
+      <svg 
+        width="40" 
+        height="40" 
+        viewBox="0 0 24 24" 
+        fill="none" 
+        stroke="currentColor" 
+        strokeWidth="2"
+        className="text-gray-700"
+      >
+        <path d="M19 12l-7 7-7-7"/>
+      </svg>
+    </div>
+  );
+}
+
 export default function Home() {
   const [triangles, setTriangles] = useState<Triangle[]>([]);
   const [isHovering, setIsHovering] = useState(false);
@@ -43,6 +69,7 @@ export default function Home() {
   const [isMouseMoving, setIsMouseMoving] = useState(false);
   const [mouseVelocity, setMouseVelocity] = useState({ vx: 0, vy: 0 });
   const [shouldDarken, setShouldDarken] = useState(false);
+  const [showScrollArrow, setShowScrollArrow] = useState(true);
   const triangleIdCounter = useRef(0);
   const darkenTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -243,6 +270,20 @@ export default function Home() {
     };
   }, [isMouseMoving]);
 
+  // Hide scroll arrow when user scrolls
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setShowScrollArrow(false);
+      } else {
+        setShowScrollArrow(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const handleMouseEnter = () => {
     setIsHovering(true);
   };
@@ -276,12 +317,30 @@ export default function Home() {
 
   return (
     <div 
-      className="min-h-screen bg-white font-sans relative overflow-hidden"
-      style={{ perspective: '1000px' }}
+      className="min-h-screen font-sans relative overflow-hidden"
+      style={{ 
+        perspective: '1000px',
+        background: 'linear-gradient(to right, #dbeafe 0%, #dbeafe 40%, #ffffff 40%, #ffffff 100%)'
+      }}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
+      {/* Navigation Header */}
+      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
+        <div className="max-w-6xl mx-auto px-8 py-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold text-gray-900">Chiu Alex</h2>
+            <div className="flex gap-6">
+              <a href="#about" className="text-gray-700 hover:text-gray-900 transition-colors">About</a>
+              <a href="#experience" className="text-gray-700 hover:text-gray-900 transition-colors">Experience</a>
+              <a href="#projects" className="text-gray-700 hover:text-gray-900 transition-colors">Projects</a>
+              <a href="#contact" className="text-gray-700 hover:text-gray-900 transition-colors">Contact</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+
       {/* Animated Triangles */}
       {triangles.map((triangle) => (
         <div
@@ -313,52 +372,68 @@ export default function Home() {
         </div>
       ))}
 
-      <main className="flex w-full max-w-2xl flex-col items-center mx-auto px-8 py-16 relative z-10">
-        {/* Profile Section */}
-        <div className="mb-8 text-center">
-          <div className="mb-6 inline-block">
-            <div className="relative h-32 w-32 overflow-hidden rounded-full bg-gradient-to-br from-blue-400 to-purple-500 p-1">
-              <div className="relative h-full w-full overflow-hidden rounded-full bg-white dark:bg-gray-800">
+      <main className="flex w-full max-w-6xl flex-col items-center mx-auto px-8 py-16 relative z-10">
+        {/* Transparent Spacer */}
+        <div className="w-full" style={{ height: '7vh' }}></div>
+
+        {/* Profile and About Section - Side by Side */}
+        <div className="mb-10 w-full grid grid-cols-1 lg:grid-cols-2 gap-0" style={{ minHeight: '60vh' }}>
+          {/* Profile Section */}
+          <div className="bg-blue-50 p-6 shadow-lg text-center flex flex-col justify-center">
+            <div className="mb-4 inline-block">
+              <div className="relative h-40 w-40 overflow-hidden rounded-full mx-auto">
                 <Image
                   src="/image.jpg"
-                  alt="Alex C Profile Picture"
-                  width={128}
-                  height={128}
+                  alt="Chiu Alex Profile Picture"
+                  width={160}
+                  height={160}
                   className="object-cover"
                 />
               </div>
             </div>
+
+            <h1 className="mb-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+              Chiu Alex
+            </h1>
+            
+            <p className="mb-2 text-lg text-gray-700">
+              Student — Electrical & Electronics Engineering
+            </p>
+            
+            <p className="mx-auto max-w-lg text-sm leading-relaxed text-gray-600">
+              Aspiring engineer focused on project management and systems design. Currently pursuing a BE in Electrical & Electronics Engineering at National Taiwan University in Taipei.
+            </p>
           </div>
 
-          <h1 className="mb-3 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-            Alex C
-          </h1>
-          
-          <p className="mb-2 text-xl text-gray-700">
-            Student — Electrical & Electronics Engineering
-          </p>
-          
-          <p className="mx-auto max-w-lg text-base leading-relaxed text-gray-600">
-            Aspiring engineer focused on project management and systems design. Currently pursuing a BE in Electrical & Electronics Engineering at National Taiwan University in Taipei.
-          </p>
+          {/* About Section */}
+          <div id="about" className="bg-white p-6 shadow-lg flex flex-col justify-center">
+            <h2 className="mb-3 text-xl font-semibold text-gray-900">
+              About Me
+            </h2>
+            <div className="space-y-2 text-sm text-gray-700">
+              <p>🎓 Bachelor of Engineering — Electrical & Electronics Engineering, National Taiwan University (Sep 2025 — Jun 2029)</p>
+              <p>🏫 Taipei Municipal Jianguo High School — High School Diploma, Class of Science (Sep 2022 — Jun 2025)</p>
+              <p>📍 Taipei, Taipei City, Taiwan</p>
+            </div>
+          </div>
         </div>
 
-        {/* About Section */}
-        <div className="mb-10 w-full bg-gray-100 p-8 shadow-lg">
-          <h2 className="mb-4 text-2xl font-semibold text-gray-900">
-            About Me
-          </h2>
-          <div className="space-y-3 text-gray-700">
-            <p>🎓 Bachelor of Engineering — Electrical & Electronics Engineering, National Taiwan University (Sep 2025 — Jun 2029)</p>
-            <p>🏫 Taipei Municipal Jianguo High School — High School Diploma, Class of Science (Sep 2022 — Jun 2025)</p>
-            <p>🧩 Activities: General organizer of the Science affair in Class of Science</p>
-            <p>🛠️ Skills: Chinese, English, Project Management, Engineering</p>
-            <p>📍 Taipei, Taipei City, Taiwan</p>
-          </div>
+        {/* Transparent Spacer Bottom */}
+        <div className="w-full" style={{ height: '7vh' }}></div>
+
+        {/* Scroll Down Arrow */}
+        <div 
+          className="transition-all duration-500 ease-in-out overflow-hidden"
+          style={{ 
+            height: showScrollArrow ? '13vh' : '0',
+            opacity: showScrollArrow ? 1 : 0
+          }}
+        >
+          <ScrollDownArrow />
         </div>
 
         {/* Social Links */}
-        <div className="w-full mb-10">
+        <div id="contact" className="w-full mb-10">
           <h2 className="mb-6 text-center text-2xl font-semibold text-gray-900">
             Connect With Me
           </h2>
@@ -388,7 +463,7 @@ export default function Home() {
         </div>
 
         {/* Experience Section */}
-        <div className="mb-10 w-full bg-gray-100 p-8 shadow-lg">
+        <div id="experience" className="mb-10 w-full bg-gray-100 p-8 shadow-lg">
           <h2 className="mb-6 text-2xl font-semibold text-gray-900">
             Experience
           </h2>
@@ -411,7 +486,7 @@ export default function Home() {
         </div>
 
         {/* Projects Section */}
-        <div className="mb-10 w-full bg-gray-100 p-8 shadow-lg">
+        <div id="projects" className="mb-10 w-full bg-gray-100 p-8 shadow-lg">
           <h2 className="mb-6 text-2xl font-semibold text-gray-900">
             Projects
           </h2>
@@ -498,7 +573,7 @@ export default function Home() {
 
         {/* Footer */}
         <footer className="mt-16 text-center text-sm text-gray-600">
-          <p>© 2025 Alex C. Built with Next.js & Tailwind CSS</p>
+          <p>© 2025 Chiu Alex. Built with Next.js & Tailwind CSS</p>
         </footer>
       </main>
     </div>
