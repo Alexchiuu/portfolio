@@ -70,8 +70,14 @@ export default function Home() {
   const [mouseVelocity, setMouseVelocity] = useState({ vx: 0, vy: 0 });
   const [shouldDarken, setShouldDarken] = useState(false);
   const [showScrollArrow, setShowScrollArrow] = useState(true);
+  const [hasLoaded, setHasLoaded] = useState(false);
   const triangleIdCounter = useRef(0);
   const darkenTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Entry animation effect
+  useEffect(() => {
+    setHasLoaded(true);
+  }, []);
 
   useEffect(() => {
     let animationFrameId: number;
@@ -317,25 +323,30 @@ export default function Home() {
 
   return (
     <div 
-      className="min-h-screen font-sans relative overflow-hidden"
+      className="min-h-screen relative overflow-hidden"
       style={{ 
         perspective: '1000px',
-        background: 'linear-gradient(to right, #dbeafe 0%, #dbeafe 40%, #ffffff 40%, #ffffff 100%)'
+        background: 'linear-gradient(to right, #dbeafe 0%, #dbeafe 40%, #ffffff 40%, #ffffff 100%)',
+        fontFamily: 'var(--font-inter)'
       }}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       {/* Navigation Header */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
+      <nav 
+        className={`sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm transition-all duration-1000 ${
+          hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
+        }`}
+      >
         <div className="max-w-6xl mx-auto px-8 py-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-gray-900">Chiu Alex</h2>
-            <div className="flex gap-6">
-              <a href="#about" className="text-gray-700 hover:text-gray-900 transition-colors">About</a>
-              <a href="#experience" className="text-gray-700 hover:text-gray-900 transition-colors">Experience</a>
-              <a href="#projects" className="text-gray-700 hover:text-gray-900 transition-colors">Projects</a>
-              <a href="#contact" className="text-gray-700 hover:text-gray-900 transition-colors">Contact</a>
+            <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>Chiu Alex</h2>
+            <div className="flex gap-6" style={{ fontFamily: 'var(--font-poppins)' }}>
+              <a href="#about" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">About</a>
+              <a href="#experience" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Experience</a>
+              <a href="#projects" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Projects</a>
+              <a href="#contact" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Contact</a>
             </div>
           </div>
         </div>
@@ -377,9 +388,16 @@ export default function Home() {
         <div className="w-full" style={{ height: '7vh' }}></div>
 
         {/* Profile and About Section - Side by Side */}
-        <div className="mb-10 w-full grid grid-cols-1 lg:grid-cols-2 gap-0" style={{ minHeight: '60vh' }}>
+        <div 
+          className="mb-10 w-full grid grid-cols-1 lg:grid-cols-2 gap-0" 
+          style={{ minHeight: '60vh' }}
+        >
           {/* Profile Section */}
-          <div className="bg-blue-50 p-6 shadow-lg text-center flex flex-col justify-center">
+          <div 
+            className={`bg-blue-50 p-6 shadow-lg text-center flex flex-col justify-center transition-all duration-1000 delay-200 relative z-20 ${
+              hasLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-full'
+            }`}
+          >
             <div className="mb-4 inline-block">
               <div className="relative h-40 w-40 overflow-hidden rounded-full mx-auto">
                 <Image
@@ -392,11 +410,11 @@ export default function Home() {
               </div>
             </div>
 
-            <h1 className="mb-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h1 className="mb-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl" style={{ fontFamily: 'var(--font-playfair)' }}>
               Chiu Alex
             </h1>
             
-            <p className="mb-2 text-lg text-gray-700">
+            <p className="mb-2 text-lg text-gray-700 font-medium" style={{ fontFamily: 'var(--font-poppins)' }}>
               Student — Electrical & Electronics Engineering
             </p>
             
@@ -406,8 +424,13 @@ export default function Home() {
           </div>
 
           {/* About Section */}
-          <div id="about" className="bg-white p-6 shadow-lg flex flex-col justify-center">
-            <h2 className="mb-3 text-xl font-semibold text-gray-900">
+          <div 
+            id="about" 
+            className={`bg-white p-6 shadow-lg flex flex-col justify-center transition-all duration-1000 delay-200 relative z-10 ${
+              hasLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
+            }`}
+          >
+            <h2 className="mb-3 text-xl font-semibold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
               About Me
             </h2>
             <div className="space-y-2 text-sm text-gray-700">
@@ -432,44 +455,19 @@ export default function Home() {
           <ScrollDownArrow />
         </div>
 
-        {/* Social Links */}
-        <div id="contact" className="w-full mb-10">
-          <h2 className="mb-6 text-center text-2xl font-semibold text-gray-900">
-            Connect With Me
-          </h2>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-            {socialLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative flex flex-col items-center justify-center gap-3 bg-gray-100 p-6 shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl"
-              >
-                <DualRingEffect />
-                <svg
-                  className="relative z-20 h-8 w-8 fill-gray-700"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d={link.icon} />
-                </svg>
-                <span className="relative z-20 text-sm font-medium text-gray-700">
-                  {link.name}
-                </span>
-              </a>
-            ))}
-          </div>
-        </div>
-
         {/* Experience Section */}
-        <div id="experience" className="mb-10 w-full bg-gray-100 p-8 shadow-lg">
-          <h2 className="mb-6 text-2xl font-semibold text-gray-900">
+        <div 
+          id="experience" 
+          className={`mb-10 w-full bg-gray-100 p-8 shadow-lg transition-all duration-1000 delay-500 ${
+            hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}
+        >
+          <h2 className="mb-6 text-2xl font-semibold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
             Experience
           </h2>
           <div className="space-y-6">
             <div className="border-l-4 border-blue-500 pl-4">
-              <h3 className="text-lg font-semibold text-gray-900">
+              <h3 className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'var(--font-poppins)' }}>
                 General Organizer - Science Affairs
               </h3>
               <p className="text-sm text-gray-600 mb-2">
@@ -486,14 +484,19 @@ export default function Home() {
         </div>
 
         {/* Projects Section */}
-        <div id="projects" className="mb-10 w-full bg-gray-100 p-8 shadow-lg">
-          <h2 className="mb-6 text-2xl font-semibold text-gray-900">
+        <div 
+          id="projects" 
+          className={`mb-10 w-full bg-gray-100 p-8 shadow-lg transition-all duration-1000 delay-700 ${
+            hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}
+        >
+          <h2 className="mb-6 text-2xl font-semibold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
             Projects
           </h2>
           <div className="space-y-6">
             <div className="group relative border border-gray-300 p-6 transition-all hover:scale-105 hover:shadow-xl bg-white">
               <DualRingEffect />
-              <h3 className="relative z-20 text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="relative z-20 text-lg font-semibold text-gray-900 mb-2" style={{ fontFamily: 'var(--font-poppins)' }}>
                 Personal Portfolio Website
               </h3>
               <p className="relative z-20 text-gray-700 mb-3">
@@ -514,7 +517,7 @@ export default function Home() {
             
             <div className="group relative border border-gray-300 p-6 transition-all hover:scale-105 hover:shadow-xl bg-white">
               <DualRingEffect />
-              <h3 className="relative z-20 text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="relative z-20 text-lg font-semibold text-gray-900 mb-2" style={{ fontFamily: 'var(--font-poppins)' }}>
                 Engineering Projects
               </h3>
               <p className="relative z-20 text-gray-700 mb-3">
@@ -533,8 +536,12 @@ export default function Home() {
         </div>
 
         {/* Interests Section */}
-        <div className="mb-10 w-full bg-gray-100 p-8 shadow-lg">
-          <h2 className="mb-6 text-2xl font-semibold text-gray-900">
+        <div 
+          className={`mb-10 w-full bg-gray-100 p-8 shadow-lg transition-all duration-1000 delay-[900ms] ${
+            hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}
+        >
+          <h2 className="mb-6 text-2xl font-semibold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
             Interests & Hobbies
           </h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
@@ -571,8 +578,47 @@ export default function Home() {
           </div>
         </div>
 
+        {/* Social Links */}
+        <div 
+          id="contact" 
+          className={`w-full mb-10 transition-all duration-1000 delay-[1300ms] ${
+            hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}
+        >
+          <h2 className="mb-6 text-center text-2xl font-semibold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
+            Connect With Me
+          </h2>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            {socialLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative flex flex-col items-center justify-center gap-3 bg-gray-100 p-6 shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl"
+              >
+                <DualRingEffect />
+                <svg
+                  className="relative z-20 h-8 w-8 fill-gray-700"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d={link.icon} />
+                </svg>
+                <span className="relative z-20 text-sm font-medium text-gray-700">
+                  {link.name}
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+
         {/* Footer */}
-        <footer className="mt-16 text-center text-sm text-gray-600">
+        <footer 
+          className={`mt-16 text-center text-sm text-gray-600 transition-all duration-1000 delay-[1500ms] ${
+            hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}
+        >
           <p>© 2025 Chiu Alex. Built with Next.js & Tailwind CSS</p>
         </footer>
       </main>
