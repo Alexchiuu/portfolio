@@ -394,17 +394,17 @@ export default function Home() {
         >
           {/* Profile Section */}
           <div 
-            className={`bg-blue-50 p-6 shadow-lg text-center flex flex-col justify-center transition-all duration-1000 delay-200 relative z-20 ${
-              hasLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-full'
+            className={`bg-blue-50 p-6 shadow-lg text-center flex flex-col justify-center transition-all duration-1000 delay-500 relative z-20 ${
+              hasLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-20'
             }`}
           >
             <div className="mb-4 inline-block">
-              <div className="relative h-40 w-40 overflow-hidden rounded-full mx-auto">
+              <div className="relative h-52 w-52 overflow-hidden rounded-full mx-auto">
                 <Image
                   src="/image.jpg"
                   alt="Chiu Alex Profile Picture"
-                  width={160}
-                  height={160}
+                  width={208}
+                  height={208}
                   className="object-cover"
                 />
               </div>
@@ -413,27 +413,28 @@ export default function Home() {
             <h1 className="mb-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl" style={{ fontFamily: 'var(--font-playfair)' }}>
               Chiu Alex
             </h1>
-            
+            <div className="w-32 h-0.5 bg-blue-900 mx-auto mb-2"></div>
             <p className="mb-2 text-lg text-gray-700 font-medium" style={{ fontFamily: 'var(--font-poppins)' }}>
-              Student — Electrical & Electronics Engineering
-            </p>
-            
-            <p className="mx-auto max-w-lg text-sm leading-relaxed text-gray-600">
-              Aspiring engineer focused on project management and systems design. Currently pursuing a BE in Electrical & Electronics Engineering at National Taiwan University in Taipei.
+              Student
+              <br />
+              <br />
+              Currently studying Electrical Engineering
+              <br />
+              at National Taiwan University.
             </p>
           </div>
 
           {/* About Section */}
           <div 
             id="about" 
-            className={`bg-white p-6 shadow-lg flex flex-col justify-center transition-all duration-1000 delay-200 relative z-10 ${
-              hasLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
+            className={`bg-white p-6 shadow-lg flex flex-col justify-center transition-all duration-1000 delay-500 relative z-10 ${
+              hasLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'
             }`}
           >
-            <h2 className="mb-3 text-xl font-semibold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
+            <h2 className="mb-3 text-3xl font-semibold text-gray-900 sm:text-4xl" style={{ fontFamily: 'var(--font-playfair)' }}>
               About Me
             </h2>
-            <div className="space-y-2 text-sm text-gray-700">
+            <div className="space-y-2 text-lg text-gray-700">
               <p>🎓 Bachelor of Engineering — Electrical & Electronics Engineering, National Taiwan University (Sep 2025 — Jun 2029)</p>
               <p>🏫 Taipei Municipal Jianguo High School — High School Diploma, Class of Science (Sep 2022 — Jun 2025)</p>
               <p>📍 Taipei, Taipei City, Taiwan</p>
