@@ -1,4 +1,21 @@
+"use client";
+
 import Image from "next/image";
+import { useState, useEffect, useRef } from "react";
+
+interface Triangle {
+  id: number;
+  x: number;
+  y: number;
+  rotationX: number;
+  rotationY: number;
+  rotationZ: number;
+  rotationSpeed: number;
+  size: number;
+  opacity: number;
+  brightness: number;
+  darkenProgress: number;
+}
 
 function DualRingEffect() {
   return (
@@ -8,18 +25,197 @@ function DualRingEffect() {
         <div className="absolute inset-[-200%] animate-spin-slow" style={{
           background: 'conic-gradient(from 0deg, red, orange, yellow, lime, cyan, blue, magenta, red)'
         }}></div>
-        <div className="absolute inset-[1px] rounded-xl bg-white dark:bg-gray-800"></div>
+        <div className="absolute inset-[1px] rounded-xl bg-black"></div>
       </div>
       {/* Blur rainbow effect */}
       <div className="gradient-container">
         <div className="gradient"></div>
       </div>
-      <div className="absolute inset-[3px] rounded-xl bg-white dark:bg-gray-800"></div>
+      <div className="absolute inset-[3px] rounded-xl bg-black"></div>
     </div>
   );
 }
 
 export default function Home() {
+  const [triangles, setTriangles] = useState<Triangle[]>([]);
+  const [isHovering, setIsHovering] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isMouseMoving, setIsMouseMoving] = useState(false);
+  const [mouseVelocity, setMouseVelocity] = useState({ vx: 0, vy: 0 });
+  const triangleIdCounter = useRef(0);
+
+  useEffect(() => {
+    let animationFrameId: number;
+    
+    const animate = () => {
+      setTriangles((prevTriangles) => {
+        return prevTriangles
+          .map((triangle) => {
+            // Calculate distance from mouse to triangle
+            const dx = triangle.x - mousePos.x;
+            const dy = triangle.y - mousePos.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            // Fade out based on distance (start fading at 140px, gone by 200px)
+            const maxDistance = 200;
+            const fadeStart = 140;
+            let newOpacity = triangle.opacity;
+            
+            if (distance > fadeStart) {
+              newOpacity = Math.max(0, 1 - (distance - fadeStart) / (maxDistance - fadeStart));
+            }
+            
+            // Calculate brightness based on distance (closer = brighter)
+            const maxBrightnessDistance = 160;
+            let baseBrightness = distance < maxBrightnessDistance ? 1 - (distance / maxBrightnessDistance) : 0;
+            
+            // Gradually darken when mouse stops moving
+            let newDarkenProgress = triangle.darkenProgress;
+            if (!isMouseMoving) {
+              // Gradually increase darken progress (0 to 1 over time)
+              newDarkenProgress = Math.min(1, triangle.darkenProgress + 0.02);
+            } else {
+              // Gradually decrease darken progress when moving
+              newDarkenProgress = Math.max(0, triangle.darkenProgress - 0.05);
+            }
+            
+            // Apply darkening: fully fade to black when stopped
+            const brightness = baseBrightness * (1 - newDarkenProgress * 0.8);
+
+            // Calculate rotation based on mouse movement and proximity
+            let rotationChange = 0;
+            if (isMouseMoving && distance < 160) {
+              // Stronger effect when mouse is closer and moving
+              const influence = 1 - (distance / 160);
+              const velocityMagnitude = Math.sqrt(mouseVelocity.vx * mouseVelocity.vx + mouseVelocity.vy * mouseVelocity.vy);
+              // Use same rotation speed for all triangles (sign determines direction)
+              const direction = triangle.rotationSpeed > 0 ? 1 : -1;
+              // Speed multiplier based on distance (closer = much faster, outer = much slower)
+              const speedMultiplier = 0.1 + (influence * 2.9); // Range from 0.1 (far) to 3.0 (close)
+              rotationChange = direction * influence * Math.min(velocityMagnitude * 1, 15) * speedMultiplier;
+            }
+            
+            return {
+              ...triangle,
+              rotationX: triangle.rotationX + rotationChange,
+              rotationY: triangle.rotationY + rotationChange * 0.7,
+              rotationZ: triangle.rotationZ + rotationChange * 1.2,
+              opacity: newOpacity,
+              brightness: brightness,
+              darkenProgress: newDarkenProgress,
+            };
+          })
+          .filter((triangle) => triangle.opacity > 0);
+      });
+      
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    if (isHovering) {
+      animationFrameId = requestAnimationFrame(animate);
+    }
+
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
+  }, [isHovering, mousePos, isMouseMoving, mouseVelocity]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const newX = e.clientX;
+    const newY = e.clientY + window.scrollY; // Add scroll offset
+    
+    // Calculate velocity
+    const vx = newX - mousePos.x;
+    const vy = newY - mousePos.y;
+    setMouseVelocity({ vx, vy });
+    
+    setMousePos({ x: newX, y: newY });
+    setIsMouseMoving(true);
+    
+    if (isHovering) {
+      const maxTriangles = 100; // Keep 100 triangles around the mouse
+      
+      setTriangles((prev) => {
+        // If we have fewer triangles than the max, add more
+        if (prev.length < maxTriangles) {
+          const trianglesToAdd = Math.min(8, maxTriangles - prev.length);
+          const newTriangles = [];
+          
+          for (let i = 0; i < trianglesToAdd; i++) {
+            let attempts = 0;
+            let validPosition = false;
+            let triangleX: number = 0;
+            let triangleY: number = 0;
+            
+            // Try to find a position that doesn't overlap with existing triangles
+            while (!validPosition && attempts < 10) {
+              // Generate random angle and distance from mouse cursor
+              const angle = Math.random() * Math.PI * 2;
+              const distance = Math.random() * 170 + 30; // Random distance between 30-200px from cursor
+              const offsetX = Math.cos(angle) * distance;
+              const offsetY = Math.sin(angle) * distance;
+              
+              triangleX = newX + offsetX;
+              triangleY = newY + offsetY;
+              
+              // Check if this position is far enough from existing triangles
+              const minDistance = 25; // Minimum distance between triangles
+              validPosition = prev.every(triangle => {
+                const dx = triangle.x - triangleX;
+                const dy = triangle.y - triangleY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                return dist > minDistance;
+              });
+              
+              attempts++;
+            }
+            
+            // Only add if we found a valid position
+            if (validPosition) {
+              triangleIdCounter.current += 1;
+              newTriangles.push({
+                id: triangleIdCounter.current,
+                x: triangleX,
+                y: triangleY,
+                rotationX: 0,
+                rotationY: 0,
+                rotationZ: 0,
+                rotationSpeed: (Math.random() - 0.5) * 8,
+                size: 30, // Fixed size for all triangles
+                opacity: 1,
+                brightness: 1,
+                darkenProgress: 0,
+              });
+            }
+          }
+          
+          return [...prev, ...newTriangles];
+        }
+        
+        return prev;
+      });
+    }
+  };
+
+  // Detect when mouse stops moving
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsMouseMoving(false);
+    }, 100);
+    
+    return () => clearTimeout(timeout);
+  }, [mousePos]);
+
+  const handleMouseEnter = () => {
+    setIsHovering(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+    setTriangles([]);
+  };
   const socialLinks = [
     {
       name: "GitHub",
@@ -44,8 +240,45 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 font-sans dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <main className="flex w-full max-w-2xl flex-col items-center mx-auto px-8 py-16">
+    <div 
+      className="min-h-screen bg-black font-sans relative overflow-hidden"
+      style={{ perspective: '1000px' }}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      {/* Animated Triangles */}
+      {triangles.map((triangle) => (
+        <div
+          key={triangle.id}
+          className="absolute pointer-events-none z-0"
+          style={{
+            left: triangle.x,
+            top: triangle.y,
+            transform: `translate(-50%, -50%) rotateX(${triangle.rotationX}deg) rotateY(${triangle.rotationY}deg) rotateZ(${triangle.rotationZ}deg)`,
+            transformStyle: 'preserve-3d',
+            opacity: triangle.opacity,
+          }}
+        >
+          <svg
+            width={triangle.size}
+            height={triangle.size}
+            viewBox="0 0 100 100"
+            style={{
+              filter: `brightness(${triangle.brightness}) drop-shadow(0 0 2px rgba(255, 255, 255, ${triangle.brightness * 0.5}))`,
+            }}
+          >
+            <polygon
+              points="50,10 90,90 10,90"
+              fill="none"
+              stroke="white"
+              strokeWidth="3"
+            />
+          </svg>
+        </div>
+      ))}
+
+      <main className="flex w-full max-w-2xl flex-col items-center mx-auto px-8 py-16 relative z-10">
         {/* Profile Section */}
         <div className="mb-8 text-center">
           <div className="mb-6 inline-block">
@@ -62,25 +295,25 @@ export default function Home() {
             </div>
           </div>
 
-          <h1 className="mb-3 text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
+          <h1 className="mb-3 text-4xl font-bold tracking-tight text-white sm:text-5xl">
             Alex C
           </h1>
           
-          <p className="mb-2 text-xl text-gray-600 dark:text-gray-300">
+          <p className="mb-2 text-xl text-gray-300">
             Student — Electrical & Electronics Engineering
           </p>
           
-          <p className="mx-auto max-w-lg text-base leading-relaxed text-gray-500 dark:text-gray-400">
+          <p className="mx-auto max-w-lg text-base leading-relaxed text-gray-400">
             Aspiring engineer focused on project management and systems design. Currently pursuing a BE in Electrical & Electronics Engineering at National Taiwan University in Taipei.
           </p>
         </div>
 
         {/* About Section */}
-        <div className="mb-10 w-full rounded-2xl bg-white/70 p-8 shadow-lg backdrop-blur-sm dark:bg-gray-800/70">
-          <h2 className="mb-4 text-2xl font-semibold text-gray-900 dark:text-white">
+        <div className="mb-10 w-full rounded-2xl bg-white/10 p-8 shadow-lg backdrop-blur-sm">
+          <h2 className="mb-4 text-2xl font-semibold text-white">
             About Me
           </h2>
-          <div className="space-y-3 text-gray-600 dark:text-gray-300">
+          <div className="space-y-3 text-gray-300">
             <p>🎓 Bachelor of Engineering — Electrical & Electronics Engineering, National Taiwan University (Sep 2025 — Jun 2029)</p>
             <p>🏫 Taipei Municipal Jianguo High School — High School Diploma, Class of Science (Sep 2022 — Jun 2025)</p>
             <p>🧩 Activities: General organizer of the Science affair in Class of Science</p>
@@ -91,7 +324,7 @@ export default function Home() {
 
         {/* Social Links */}
         <div className="w-full mb-10">
-          <h2 className="mb-6 text-center text-2xl font-semibold text-gray-900 dark:text-white">
+          <h2 className="mb-6 text-center text-2xl font-semibold text-white">
             Connect With Me
           </h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -101,17 +334,17 @@ export default function Home() {
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative flex flex-col items-center justify-center gap-3 rounded-xl bg-white p-6 shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl dark:bg-gray-800"
+                className="group relative flex flex-col items-center justify-center gap-3 rounded-xl bg-white/10 p-6 shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl backdrop-blur-sm"
               >
                 <DualRingEffect />
                 <svg
-                  className="relative z-20 h-8 w-8 fill-gray-700 dark:fill-gray-300"
+                  className="relative z-20 h-8 w-8 fill-gray-300"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path d={link.icon} />
                 </svg>
-                <span className="relative z-20 text-sm font-medium text-gray-700 dark:text-gray-300">
+                <span className="relative z-20 text-sm font-medium text-gray-300">
                   {link.name}
                 </span>
               </a>
@@ -120,22 +353,22 @@ export default function Home() {
         </div>
 
         {/* Experience Section */}
-        <div className="mb-10 w-full rounded-2xl bg-white/70 p-8 shadow-lg backdrop-blur-sm dark:bg-gray-800/70">
-          <h2 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+        <div className="mb-10 w-full rounded-2xl bg-white/10 p-8 shadow-lg backdrop-blur-sm">
+          <h2 className="mb-6 text-2xl font-semibold text-white">
             Experience
           </h2>
           <div className="space-y-6">
             <div className="border-l-4 border-blue-500 pl-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              <h3 className="text-lg font-semibold text-white">
                 General Organizer - Science Affairs
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+              <p className="text-sm text-gray-400 mb-2">
                 Class of Science, Taipei Municipal Jianguo High School
               </p>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+              <p className="text-sm text-gray-400 mb-2">
                 2022 - 2025
               </p>
-              <p className="text-gray-700 dark:text-gray-300">
+              <p className="text-gray-300">
                 Led and coordinated science-related activities and events for the class, fostering collaboration and engagement among students.
               </p>
             </div>
@@ -143,17 +376,17 @@ export default function Home() {
         </div>
 
         {/* Projects Section */}
-        <div className="mb-10 w-full rounded-2xl bg-white/70 p-8 shadow-lg backdrop-blur-sm dark:bg-gray-800/70">
-          <h2 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+        <div className="mb-10 w-full rounded-2xl bg-white/10 p-8 shadow-lg backdrop-blur-sm">
+          <h2 className="mb-6 text-2xl font-semibold text-white">
             Projects
           </h2>
           <div className="space-y-6">
-            <div className="group relative rounded-lg border border-gray-200 p-6 transition-all hover:scale-105 hover:shadow-xl dark:border-gray-700">
+            <div className="group relative rounded-lg border border-gray-700 p-6 transition-all hover:scale-105 hover:shadow-xl">
               <DualRingEffect />
-              <h3 className="relative z-20 text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              <h3 className="relative z-20 text-lg font-semibold text-white mb-2">
                 Personal Portfolio Website
               </h3>
-              <p className="relative z-20 text-gray-700 dark:text-gray-300 mb-3">
+              <p className="relative z-20 text-gray-300 mb-3">
                 A modern, responsive portfolio website built with Next.js and Tailwind CSS, featuring dynamic content and smooth animations.
               </p>
               <div className="relative z-20 flex flex-wrap gap-2">
@@ -169,12 +402,12 @@ export default function Home() {
               </div>
             </div>
             
-            <div className="group relative rounded-lg border border-gray-200 p-6 transition-all hover:scale-105 hover:shadow-xl dark:border-gray-700">
+            <div className="group relative rounded-lg border border-gray-700 p-6 transition-all hover:scale-105 hover:shadow-xl">
               <DualRingEffect />
-              <h3 className="relative z-20 text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              <h3 className="relative z-20 text-lg font-semibold text-white mb-2">
                 Engineering Projects
               </h3>
-              <p className="relative z-20 text-gray-700 dark:text-gray-300 mb-3">
+              <p className="relative z-20 text-gray-300 mb-3">
                 Various electrical and electronics engineering projects focusing on circuit design, systems analysis, and practical applications.
               </p>
               <div className="relative z-20 flex flex-wrap gap-2">
@@ -190,46 +423,46 @@ export default function Home() {
         </div>
 
         {/* Interests Section */}
-        <div className="mb-10 w-full rounded-2xl bg-white/70 p-8 shadow-lg backdrop-blur-sm dark:bg-gray-800/70">
-          <h2 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+        <div className="mb-10 w-full rounded-2xl bg-white/10 p-8 shadow-lg backdrop-blur-sm">
+          <h2 className="mb-6 text-2xl font-semibold text-white">
             Interests & Hobbies
           </h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg dark:bg-gray-800">
+            <div className="group relative flex items-center gap-3 rounded-lg bg-white/10 p-4 transition-all hover:scale-105 hover:shadow-lg backdrop-blur-sm">
               <DualRingEffect />
               <span className="relative z-20 text-2xl">💻</span>
-              <span className="relative z-20 text-sm font-medium text-gray-700 dark:text-gray-300">Coding</span>
+              <span className="relative z-20 text-sm font-medium text-gray-300">Coding</span>
             </div>
-            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg dark:bg-gray-800">
+            <div className="group relative flex items-center gap-3 rounded-lg bg-white/10 p-4 transition-all hover:scale-105 hover:shadow-lg backdrop-blur-sm">
               <DualRingEffect />
               <span className="relative z-20 text-2xl">🔬</span>
-              <span className="relative z-20 text-sm font-medium text-gray-700 dark:text-gray-300">Science</span>
+              <span className="relative z-20 text-sm font-medium text-gray-300">Science</span>
             </div>
-            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg dark:bg-gray-800">
+            <div className="group relative flex items-center gap-3 rounded-lg bg-white/10 p-4 transition-all hover:scale-105 hover:shadow-lg backdrop-blur-sm">
               <DualRingEffect />
               <span className="relative z-20 text-2xl">🎮</span>
-              <span className="relative z-20 text-sm font-medium text-gray-700 dark:text-gray-300">Gaming</span>
+              <span className="relative z-20 text-sm font-medium text-gray-300">Gaming</span>
             </div>
-            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg dark:bg-gray-800">
+            <div className="group relative flex items-center gap-3 rounded-lg bg-white/10 p-4 transition-all hover:scale-105 hover:shadow-lg backdrop-blur-sm">
               <DualRingEffect />
               <span className="relative z-20 text-2xl">📚</span>
-              <span className="relative z-20 text-sm font-medium text-gray-700 dark:text-gray-300">Reading</span>
+              <span className="relative z-20 text-sm font-medium text-gray-300">Reading</span>
             </div>
-            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg dark:bg-gray-800">
+            <div className="group relative flex items-center gap-3 rounded-lg bg-white/10 p-4 transition-all hover:scale-105 hover:shadow-lg backdrop-blur-sm">
               <DualRingEffect />
               <span className="relative z-20 text-2xl">🎵</span>
-              <span className="relative z-20 text-sm font-medium text-gray-700 dark:text-gray-300">Music</span>
+              <span className="relative z-20 text-sm font-medium text-gray-300">Music</span>
             </div>
-            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg dark:bg-gray-800">
+            <div className="group relative flex items-center gap-3 rounded-lg bg-white/10 p-4 transition-all hover:scale-105 hover:shadow-lg backdrop-blur-sm">
               <DualRingEffect />
               <span className="relative z-20 text-2xl">🌐</span>
-              <span className="relative z-20 text-sm font-medium text-gray-700 dark:text-gray-300">Web Dev</span>
+              <span className="relative z-20 text-sm font-medium text-gray-300">Web Dev</span>
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <footer className="mt-16 text-center text-sm text-gray-500 dark:text-gray-400">
+        <footer className="mt-16 text-center text-sm text-gray-400">
           <p>© 2025 Alex C. Built with Next.js & Tailwind CSS</p>
         </footer>
       </main>
