@@ -19,19 +19,19 @@ interface Triangle {
 
 function DualRingEffect() {
   return (
-    <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none overflow-visible">
+    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none overflow-visible">
       {/* Light ring effect */}
-      <div className="absolute inset-0 rounded-xl transition-opacity duration-300 overflow-hidden">
+      <div className="absolute inset-0 transition-opacity duration-300 overflow-hidden">
         <div className="absolute inset-[-200%] animate-spin-slow" style={{
           background: 'conic-gradient(from 0deg, red, orange, yellow, lime, cyan, blue, magenta, red)'
         }}></div>
-        <div className="absolute inset-[1px] rounded-xl bg-white"></div>
+        <div className="absolute inset-[1px] bg-white"></div>
       </div>
       {/* Blur rainbow effect */}
       <div className="gradient-container">
         <div className="gradient"></div>
       </div>
-      <div className="absolute inset-[3px] rounded-xl bg-white"></div>
+      <div className="absolute inset-[3px] bg-white"></div>
     </div>
   );
 }
@@ -98,7 +98,7 @@ export default function Home() {
               const direction = triangle.rotationSpeed > 0 ? 1 : -1;
               // Speed multiplier based on distance (closer = much faster, outer = much slower)
               const speedMultiplier = 0.1 + (influence * 2.9); // Range from 0.1 (far) to 3.0 (close)
-              rotationChange = direction * influence * Math.min(velocityMagnitude * 1, 15) * speedMultiplier;
+              rotationChange = direction * influence * Math.min(velocityMagnitude / 2.5, 15) * speedMultiplier;
             }
             
             return {
@@ -344,7 +344,7 @@ export default function Home() {
         </div>
 
         {/* About Section */}
-        <div className="mb-10 w-full rounded-2xl bg-gray-100 p-8 shadow-lg">
+        <div className="mb-10 w-full bg-gray-100 p-8 shadow-lg">
           <h2 className="mb-4 text-2xl font-semibold text-gray-900">
             About Me
           </h2>
@@ -369,7 +369,7 @@ export default function Home() {
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative flex flex-col items-center justify-center gap-3 rounded-xl bg-gray-100 p-6 shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                className="group relative flex flex-col items-center justify-center gap-3 bg-gray-100 p-6 shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl"
               >
                 <DualRingEffect />
                 <svg
@@ -388,7 +388,7 @@ export default function Home() {
         </div>
 
         {/* Experience Section */}
-        <div className="mb-10 w-full rounded-2xl bg-gray-100 p-8 shadow-lg">
+        <div className="mb-10 w-full bg-gray-100 p-8 shadow-lg">
           <h2 className="mb-6 text-2xl font-semibold text-gray-900">
             Experience
           </h2>
@@ -411,12 +411,12 @@ export default function Home() {
         </div>
 
         {/* Projects Section */}
-        <div className="mb-10 w-full rounded-2xl bg-gray-100 p-8 shadow-lg">
+        <div className="mb-10 w-full bg-gray-100 p-8 shadow-lg">
           <h2 className="mb-6 text-2xl font-semibold text-gray-900">
             Projects
           </h2>
           <div className="space-y-6">
-            <div className="group relative rounded-lg border border-gray-300 p-6 transition-all hover:scale-105 hover:shadow-xl bg-white">
+            <div className="group relative border border-gray-300 p-6 transition-all hover:scale-105 hover:shadow-xl bg-white">
               <DualRingEffect />
               <h3 className="relative z-20 text-lg font-semibold text-gray-900 mb-2">
                 Personal Portfolio Website
@@ -425,19 +425,19 @@ export default function Home() {
                 A modern, responsive portfolio website built with Next.js and Tailwind CSS, featuring dynamic content and smooth animations.
               </p>
               <div className="relative z-20 flex flex-wrap gap-2">
-                <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
+                <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
                   Next.js
                 </span>
-                <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
+                <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
                   TypeScript
                 </span>
-                <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
+                <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
                   Tailwind CSS
                 </span>
               </div>
             </div>
             
-            <div className="group relative rounded-lg border border-gray-300 p-6 transition-all hover:scale-105 hover:shadow-xl bg-white">
+            <div className="group relative border border-gray-300 p-6 transition-all hover:scale-105 hover:shadow-xl bg-white">
               <DualRingEffect />
               <h3 className="relative z-20 text-lg font-semibold text-gray-900 mb-2">
                 Engineering Projects
@@ -446,10 +446,10 @@ export default function Home() {
                 Various electrical and electronics engineering projects focusing on circuit design, systems analysis, and practical applications.
               </p>
               <div className="relative z-20 flex flex-wrap gap-2">
-                <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800">
+                <span className="bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800">
                   Circuit Design
                 </span>
-                <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800">
+                <span className="bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800">
                   Systems Engineering
                 </span>
               </div>
@@ -458,37 +458,37 @@ export default function Home() {
         </div>
 
         {/* Interests Section */}
-        <div className="mb-10 w-full rounded-2xl bg-gray-100 p-8 shadow-lg">
+        <div className="mb-10 w-full bg-gray-100 p-8 shadow-lg">
           <h2 className="mb-6 text-2xl font-semibold text-gray-900">
             Interests & Hobbies
           </h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
+            <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
               <DualRingEffect />
               <span className="relative z-20 text-2xl">💻</span>
               <span className="relative z-20 text-sm font-medium text-gray-700">Coding</span>
             </div>
-            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
+            <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
               <DualRingEffect />
               <span className="relative z-20 text-2xl">🔬</span>
               <span className="relative z-20 text-sm font-medium text-gray-700">Science</span>
             </div>
-            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
+            <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
               <DualRingEffect />
               <span className="relative z-20 text-2xl">🎮</span>
               <span className="relative z-20 text-sm font-medium text-gray-700">Gaming</span>
             </div>
-            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
+            <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
               <DualRingEffect />
               <span className="relative z-20 text-2xl">📚</span>
               <span className="relative z-20 text-sm font-medium text-gray-700">Reading</span>
             </div>
-            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
+            <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
               <DualRingEffect />
               <span className="relative z-20 text-2xl">🎵</span>
               <span className="relative z-20 text-sm font-medium text-gray-700">Music</span>
             </div>
-            <div className="group relative flex items-center gap-3 rounded-lg bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
+            <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
               <DualRingEffect />
               <span className="relative z-20 text-2xl">🌐</span>
               <span className="relative z-20 text-sm font-medium text-gray-700">Web Dev</span>
