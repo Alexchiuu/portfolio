@@ -71,8 +71,11 @@ export default function Home() {
   const [shouldDarken, setShouldDarken] = useState(false);
   const [showScrollArrow, setShowScrollArrow] = useState(true);
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [isAtTop, setIsAtTop] = useState(true);
   const triangleIdCounter = useRef(0);
   const darkenTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Entry animation effect
   useEffect(() => {
@@ -276,18 +279,36 @@ export default function Home() {
     };
   }, [isMouseMoving]);
 
-  // Hide scroll arrow when user scrolls
+  // Hide scroll arrow and manage nav visibility on scroll
   useEffect(() => {
     const handleScroll = () => {
+      // Manage scroll arrow visibility
       if (window.scrollY > 50) {
         setShowScrollArrow(false);
       } else {
         setShowScrollArrow(true);
       }
+
+      // Manage nav bar visibility
+      setIsAtTop(window.scrollY < 50);
+      setIsScrolling(true);
+
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+
+      scrollTimeoutRef.current = setTimeout(() => {
+        setIsScrolling(false);
+      }, 2000); // Hide nav after 2 seconds of inactivity
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
   }, []);
 
   const handleMouseEnter = () => {
@@ -322,28 +343,18 @@ export default function Home() {
   ];
 
   return (
-    <div 
-      className="min-h-screen relative overflow-hidden"
-      style={{ 
-        perspective: '1000px',
-        background: 'linear-gradient(to right, #dbeafe 0%, #dbeafe 40%, #ffffff 40%, #ffffff 100%)',
-        fontFamily: 'var(--font-inter)'
-      }}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
+    <>
       {/* Navigation Header */}
       <nav 
-        className={`sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm transition-all duration-1000 ${
-          hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
+        className={`fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md shadow-sm transition-all duration-300 ${
+          hasLoaded && (isScrolling || isAtTop) ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full'
         }`}
       >
         <div className="max-w-6xl mx-auto px-8 py-4">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>Chiu Alex</h2>
             <div className="flex gap-6" style={{ fontFamily: 'var(--font-poppins)' }}>
-              <a href="#about" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">About</a>
+              <a href="#about" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Intro</a>
               <a href="#experience" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Experience</a>
               <a href="#projects" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Projects</a>
               <a href="#contact" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Contact</a>
@@ -351,278 +362,339 @@ export default function Home() {
           </div>
         </div>
       </nav>
-
-      {/* Animated Triangles */}
-      {triangles.map((triangle) => (
-        <div
-          key={triangle.id}
-          className="absolute pointer-events-none z-0"
-          style={{
-            left: triangle.x,
-            top: triangle.y,
-            transform: `translate(-50%, -50%) rotateX(${triangle.rotationX}deg) rotateY(${triangle.rotationY}deg) rotateZ(${triangle.rotationZ}deg)`,
-            transformStyle: 'preserve-3d',
-            opacity: triangle.opacity,
-          }}
-        >
-          <svg
-            width={triangle.size}
-            height={triangle.size}
-            viewBox="0 0 100 100"
+      <div 
+        className="min-h-screen relative overflow-hidden pt-20" // Added pt-20 for padding
+        style={{ 
+          perspective: '1000px',
+          background: 'linear-gradient(to right, #dbeafe 0%, #dbeafe 40%, #ffffff 40%, #ffffff 100%)',
+          fontFamily: 'var(--font-inter)'
+        }}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        {/* Animated Triangles */}
+        {triangles.map((triangle) => (
+          <div
+            key={triangle.id}
+            className="absolute pointer-events-none z-0"
             style={{
-              filter: `brightness(${triangle.brightness}) drop-shadow(0 0 2px rgba(255, 255, 255, ${triangle.brightness * 0.5}))`,
+              left: triangle.x,
+              top: triangle.y,
+              transform: `translate(-50%, -50%) rotateX(${triangle.rotationX}deg) rotateY(${triangle.rotationY}deg) rotateZ(${triangle.rotationZ}deg)`,
+              transformStyle: 'preserve-3d',
+              opacity: triangle.opacity,
             }}
           >
-            <polygon
-              points="50,10 90,90 10,90"
-              fill="none"
-              stroke="black"
-              strokeWidth="3"
-            />
-          </svg>
-        </div>
-      ))}
+            <svg
+              width={triangle.size}
+              height={triangle.size}
+              viewBox="0 0 100 100"
+              style={{
+                filter: `brightness(${triangle.brightness}) drop-shadow(0 0 2px rgba(255, 255, 255, ${triangle.brightness * 0.5}))`,
+              }}
+            >
+              <polygon
+                points="50,10 90,90 10,90"
+                fill="none"
+                stroke="black"
+                strokeWidth="3"
+              />
+            </svg>
+          </div>
+        ))}
 
-      <main className="flex w-full max-w-6xl flex-col items-center mx-auto px-8 py-16 relative z-10">
-        {/* Transparent Spacer */}
-        <div className="w-full" style={{ height: '7vh' }}></div>
+        <main className="flex w-full max-w-6xl flex-col items-center mx-auto px-8 py-16 relative z-10">
+          {/* Transparent Spacer Bottom */}
+          <div className="w-full" style={{ height: '5vh' }}></div>
 
-        {/* Profile and About Section - Side by Side */}
-        <div 
-          className="mb-10 w-full grid grid-cols-1 lg:grid-cols-2 gap-0" 
-          style={{ minHeight: '60vh' }}
-        >
-          {/* Profile Section */}
+          {/* Profile and About Section - Side by Side */}
           <div 
-            className={`bg-blue-50 p-6 shadow-lg text-center flex flex-col justify-center transition-all duration-1000 delay-500 relative z-20 ${
-              hasLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-20'
-            }`}
+            className="mb-10 w-full grid grid-cols-1 lg:grid-cols-2 gap-0" 
+            style={{ minHeight: '60vh' }}
           >
-            <div className="mb-4 inline-block">
-              <div className="relative h-52 w-52 overflow-hidden rounded-full mx-auto">
-                <Image
-                  src="/image.jpg"
-                  alt="Chiu Alex Profile Picture"
-                  width={208}
-                  height={208}
-                  className="object-cover"
-                />
+            {/* Profile Section */}
+            <div 
+              className={`bg-blue-50 p-6 shadow-lg text-center flex flex-col justify-center transition-all duration-1000 delay-500 relative z-20 ${
+                hasLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-20'
+              }`}
+            >
+              <div className="mb-4 inline-block">
+                <div className="relative h-52 w-52 overflow-hidden rounded-full mx-auto">
+                  <Image
+                    src="/image.jpg"
+                    alt="Chiu Alex Profile Picture"
+                    width={208}
+                    height={208}
+                    className="object-cover"
+                  />
+                </div>
               </div>
+
+              <h1 className="mb-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl" style={{ fontFamily: 'var(--font-playfair)' }}>
+                Chiu Alex
+              </h1>
+              <div className="w-32 h-0.5 bg-blue-900 mx-auto mb-2"></div>
+              <p className="mb-2 text-lg text-gray-700 font-medium" style={{ fontFamily: 'var(--font-poppins)' }}>
+                Student
+                <br />
+                <br />
+                Currently studying Electrical Engineering
+                <br />
+                at National Taiwan University.
+              </p>
             </div>
 
-            <h1 className="mb-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl" style={{ fontFamily: 'var(--font-playfair)' }}>
-              Chiu Alex
-            </h1>
-            <div className="w-32 h-0.5 bg-blue-900 mx-auto mb-2"></div>
-            <p className="mb-2 text-lg text-gray-700 font-medium" style={{ fontFamily: 'var(--font-poppins)' }}>
-              Student
-              <br />
-              <br />
-              Currently studying Electrical Engineering
-              <br />
-              at National Taiwan University.
-            </p>
+            {/* Intro Section */}
+            <div 
+              id="about" 
+              className={`bg-white p-6 shadow-lg flex flex-col justify-center transition-all duration-1000 delay-500 relative z-10 ${
+                hasLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'
+              }`}
+            >
+              <h2 className="mb-4 text-3xl font-semibold text-gray-900 sm:text-4xl" style={{ fontFamily: 'var(--font-playfair)' }}>
+                Intro
+              </h2>
+              <div className="space-y-4 text-lg text-gray-700 leading-relaxed">
+                <p>
+                  Hello! I'm Alex, a passionate electrical engineering student at National Taiwan University with a deep interest in technology and innovation.
+                </p>
+                <p>
+                  When I'm not studying, you can find me coding, playing guitar, or exploring new places with my camera. I love traveling, photography, and capturing unique perspectives from around the world.
+                </p>
+                <div className="flex items-center gap-3 pt-2">
+                  <a 
+                    href="https://www.google.com/maps/place/Taipei,+Taiwan"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="location-button group relative inline-block cursor-pointer border-none px-8 py-3.5 font-bold text-base rounded-full overflow-hidden bg-white text-gray-900 shadow-md hover:shadow-xl transition-all duration-300 border-2 border-gray-200"
+                    style={{ fontFamily: 'var(--font-poppins)', letterSpacing: '0.05rem' }}
+                  >
+                    <span 
+                      className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-blue-500 to-blue-600 -translate-x-full group-hover:translate-x-0 transition-transform duration-[400ms] ease-[cubic-bezier(0.3,1,0.8,1)]"
+                    ></span>
+                    <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-400">
+                      <svg 
+                        width="20" 
+                        height="20" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="transition-transform duration-300 group-hover:scale-110"
+                      >
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                      </svg>
+                      <span>Taipei, Taiwan</span>
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* About Section */}
+
+          {/* Scroll Down Arrow */}
           <div 
-            id="about" 
-            className={`bg-white p-6 shadow-lg flex flex-col justify-center transition-all duration-1000 delay-500 relative z-10 ${
-              hasLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'
+            className={`ease-in-out overflow-hidden ${
+              hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
+            style={{ 
+              height: showScrollArrow ? '13vh' : '0',
+              opacity: showScrollArrow && hasLoaded ? 1 : 0,
+              transition: hasLoaded && !showScrollArrow ? 'all 0.5s ease-in-out' : 'all 1s ease-in-out 3s'
+            }}
+          >
+            <ScrollDownArrow />
+          </div>
+          {/* Transparent Spacer Bottom */}
+          <div className="w-full" style={{ height: '7vh' }}></div>
+          {/* Experience Section */}
+          <div 
+            id="experience" 
+            className={`mb-10 w-full bg-gray-100 p-8 shadow-lg transition-all duration-1000 delay-500 ${
+              hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
-            <h2 className="mb-3 text-3xl font-semibold text-gray-900 sm:text-4xl" style={{ fontFamily: 'var(--font-playfair)' }}>
-              About Me
+            <h2 className="mb-6 text-2xl font-semibold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
+              Experience & Education
             </h2>
-            <div className="space-y-2 text-lg text-gray-700">
-              <p>🎓 Bachelor of Engineering — Electrical & Electronics Engineering, National Taiwan University (Sep 2025 — Jun 2029)</p>
-              <p>🏫 Taipei Municipal Jianguo High School — High School Diploma, Class of Science (Sep 2022 — Jun 2025)</p>
-              <p>📍 Taipei, Taipei City, Taiwan</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Transparent Spacer Bottom */}
-        <div className="w-full" style={{ height: '7vh' }}></div>
-
-        {/* Scroll Down Arrow */}
-        <div 
-          className="transition-all duration-500 ease-in-out overflow-hidden"
-          style={{ 
-            height: showScrollArrow ? '13vh' : '0',
-            opacity: showScrollArrow ? 1 : 0
-          }}
-        >
-          <ScrollDownArrow />
-        </div>
-
-        {/* Experience Section */}
-        <div 
-          id="experience" 
-          className={`mb-10 w-full bg-gray-100 p-8 shadow-lg transition-all duration-1000 delay-500 ${
-            hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
-        >
-          <h2 className="mb-6 text-2xl font-semibold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
-            Experience
-          </h2>
-          <div className="space-y-6">
-            <div className="border-l-4 border-blue-500 pl-4">
-              <h3 className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'var(--font-poppins)' }}>
-                General Organizer - Science Affairs
-              </h3>
-              <p className="text-sm text-gray-600 mb-2">
-                Class of Science, Taipei Municipal Jianguo High School
-              </p>
-              <p className="text-sm text-gray-600 mb-2">
-                2022 - 2025
-              </p>
-              <p className="text-gray-700">
-                Led and coordinated science-related activities and events for the class, fostering collaboration and engagement among students.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Projects Section */}
-        <div 
-          id="projects" 
-          className={`mb-10 w-full bg-gray-100 p-8 shadow-lg transition-all duration-1000 delay-700 ${
-            hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
-        >
-          <h2 className="mb-6 text-2xl font-semibold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
-            Projects
-          </h2>
-          <div className="space-y-6">
-            <div className="group relative border border-gray-300 p-6 transition-all hover:scale-105 hover:shadow-xl bg-white">
-              <DualRingEffect />
-              <h3 className="relative z-20 text-lg font-semibold text-gray-900 mb-2" style={{ fontFamily: 'var(--font-poppins)' }}>
-                Personal Portfolio Website
-              </h3>
-              <p className="relative z-20 text-gray-700 mb-3">
-                A modern, responsive portfolio website built with Next.js and Tailwind CSS, featuring dynamic content and smooth animations.
-              </p>
-              <div className="relative z-20 flex flex-wrap gap-2">
-                <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
-                  Next.js
-                </span>
-                <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
-                  TypeScript
-                </span>
-                <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
-                  Tailwind CSS
-                </span>
+            <div className="space-y-6">
+              <div className="border-l-4 border-blue-500 pl-4">
+                <h3 className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'var(--font-poppins)' }}>
+                  Bachelor of Engineering — Electrical & Electronics Engineering
+                </h3>
+                <p className="text-sm text-gray-600 mb-2">
+                  National Taiwan University
+                </p>
+                <p className="text-sm text-gray-600 mb-2">
+                  Sep 2025 — Jun 2029
+                </p>
+                <p className="text-gray-700">
+                  Pursuing a comprehensive education in electrical and electronics engineering, focusing on circuit design, systems analysis, and emerging technologies.
+                </p>
               </div>
-            </div>
-            
-            <div className="group relative border border-gray-300 p-6 transition-all hover:scale-105 hover:shadow-xl bg-white">
-              <DualRingEffect />
-              <h3 className="relative z-20 text-lg font-semibold text-gray-900 mb-2" style={{ fontFamily: 'var(--font-poppins)' }}>
-                Engineering Projects
-              </h3>
-              <p className="relative z-20 text-gray-700 mb-3">
-                Various electrical and electronics engineering projects focusing on circuit design, systems analysis, and practical applications.
-              </p>
-              <div className="relative z-20 flex flex-wrap gap-2">
-                <span className="bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800">
-                  Circuit Design
-                </span>
-                <span className="bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800">
-                  Systems Engineering
-                </span>
+              
+              <div className="border-l-4 border-green-500 pl-4">
+                <h3 className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'var(--font-poppins)' }}>
+                  High School Diploma — Class of Science
+                </h3>
+                <p className="text-sm text-gray-600 mb-2">
+                  Taipei Municipal Jianguo High School
+                </p>
+                <p className="text-sm text-gray-600 mb-2">
+                  Sep 2022 — Jun 2025
+                </p>
+                <p className="text-gray-700">
+                  Completed rigorous science curriculum with focus on mathematics, physics, and chemistry. Served as General Organizer for Science Affairs, leading and coordinating science-related activities and events for the class.
+                </p>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Interests Section */}
-        <div 
-          className={`mb-10 w-full bg-gray-100 p-8 shadow-lg transition-all duration-1000 delay-[900ms] ${
-            hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
-        >
-          <h2 className="mb-6 text-2xl font-semibold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
-            Interests & Hobbies
-          </h2>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-            <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
-              <DualRingEffect />
-              <span className="relative z-20 text-2xl">💻</span>
-              <span className="relative z-20 text-sm font-medium text-gray-700">Coding</span>
-            </div>
-            <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
-              <DualRingEffect />
-              <span className="relative z-20 text-2xl">🔬</span>
-              <span className="relative z-20 text-sm font-medium text-gray-700">Science</span>
-            </div>
-            <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
-              <DualRingEffect />
-              <span className="relative z-20 text-2xl">🎮</span>
-              <span className="relative z-20 text-sm font-medium text-gray-700">Gaming</span>
-            </div>
-            <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
-              <DualRingEffect />
-              <span className="relative z-20 text-2xl">📚</span>
-              <span className="relative z-20 text-sm font-medium text-gray-700">Reading</span>
-            </div>
-            <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
-              <DualRingEffect />
-              <span className="relative z-20 text-2xl">🎵</span>
-              <span className="relative z-20 text-sm font-medium text-gray-700">Music</span>
-            </div>
-            <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
-              <DualRingEffect />
-              <span className="relative z-20 text-2xl">🌐</span>
-              <span className="relative z-20 text-sm font-medium text-gray-700">Web Dev</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Social Links */}
-        <div 
-          id="contact" 
-          className={`w-full mb-10 transition-all duration-1000 delay-[1300ms] ${
-            hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
-        >
-          <h2 className="mb-6 text-center text-2xl font-semibold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
-            Connect With Me
-          </h2>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-            {socialLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative flex flex-col items-center justify-center gap-3 bg-gray-100 p-6 shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl"
-              >
+          {/* Projects Section */}
+          <div 
+            id="projects" 
+            className={`mb-10 w-full bg-gray-100 p-8 shadow-lg transition-all duration-1000 delay-700 ${
+              hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
+          >
+            <h2 className="mb-6 text-2xl font-semibold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
+              Projects
+            </h2>
+            <div className="space-y-6">
+              <div className="group relative border border-gray-300 p-6 transition-all hover:scale-105 hover:shadow-xl bg-white">
                 <DualRingEffect />
-                <svg
-                  className="relative z-20 h-8 w-8 fill-gray-700"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d={link.icon} />
-                </svg>
-                <span className="relative z-20 text-sm font-medium text-gray-700">
-                  {link.name}
-                </span>
-              </a>
-            ))}
+                <h3 className="relative z-20 text-lg font-semibold text-gray-900 mb-2" style={{ fontFamily: 'var(--font-poppins)' }}>
+                  Personal Portfolio Website
+                </h3>
+                <p className="relative z-20 text-gray-700 mb-3">
+                  A modern, responsive portfolio website built with Next.js and Tailwind CSS, featuring dynamic content and smooth animations.
+                </p>
+                <div className="relative z-20 flex flex-wrap gap-2">
+                  <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
+                    Next.js
+                  </span>
+                  <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
+                    TypeScript
+                  </span>
+                  <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
+                    Tailwind CSS
+                  </span>
+                </div>
+              </div>
+              
+              <div className="group relative border border-gray-300 p-6 transition-all hover:scale-105 hover:shadow-xl bg-white">
+                <DualRingEffect />
+                <h3 className="relative z-20 text-lg font-semibold text-gray-900 mb-2" style={{ fontFamily: 'var(--font-poppins)' }}>
+                  Engineering Projects
+                </h3>
+                <p className="relative z-20 text-gray-700 mb-3">
+                  Various electrical and electronics engineering projects focusing on circuit design, systems analysis, and practical applications.
+                </p>
+                <div className="relative z-20 flex flex-wrap gap-2">
+                  <span className="bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800">
+                    Circuit Design
+                  </span>
+                  <span className="bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800">
+                    Systems Engineering
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
 
-        {/* Footer */}
-        <footer 
-          className={`mt-16 text-center text-sm text-gray-600 transition-all duration-1000 delay-[1500ms] ${
-            hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
-        >
-          <p>© 2025 Chiu Alex. Built with Next.js & Tailwind CSS</p>
-        </footer>
-      </main>
-    </div>
+          {/* Interests Section */}
+          <div 
+            className={`mb-10 w-full bg-gray-100 p-8 shadow-lg transition-all duration-1000 delay-[900ms] ${
+              hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
+          >
+            <h2 className="mb-6 text-2xl font-semibold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
+              Interests & Hobbies
+            </h2>
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+              <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
+                <DualRingEffect />
+                <span className="relative z-20 text-2xl">💻</span>
+                <span className="relative z-20 text-sm font-medium text-gray-700">Coding</span>
+              </div>
+              <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
+                <DualRingEffect />
+                <span className="relative z-20 text-2xl">🎸</span>
+                <span className="relative z-20 text-sm font-medium text-gray-700">Guitar</span>
+              </div>
+              <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
+                <DualRingEffect />
+                <span className="relative z-20 text-2xl">✈️</span>
+                <span className="relative z-20 text-sm font-medium text-gray-700">Traveling</span>
+              </div>
+              <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
+                <DualRingEffect />
+                <span className="relative z-20 text-2xl">�</span>
+                <span className="relative z-20 text-sm font-medium text-gray-700">Photography</span>
+              </div>
+              <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
+                <DualRingEffect />
+                <span className="relative z-20 text-2xl">🔬</span>
+                <span className="relative z-20 text-sm font-medium text-gray-700">Science</span>
+              </div>
+              <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
+                <DualRingEffect />
+                <span className="relative z-20 text-2xl">🌐</span>
+                <span className="relative z-20 text-sm font-medium text-gray-700">Web Dev</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Social Links */}
+          <div 
+            id="contact" 
+            className={`w-full mb-10 transition-all duration-1000 delay-[1300ms] ${
+              hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
+          >
+            <h2 className="mb-6 text-center text-2xl font-semibold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
+              Connect With Me
+            </h2>
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+              {socialLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative flex flex-col items-center justify-center gap-3 bg-gray-100 p-6 shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                >
+                  <DualRingEffect />
+                  <svg
+                    className="relative z-20 h-8 w-8 fill-gray-700"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d={link.icon} />
+                  </svg>
+                  <span className="relative z-20 text-sm font-medium text-gray-700">
+                    {link.name}
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <footer 
+            className={`mt-16 text-center text-sm text-gray-600 transition-all duration-1000 delay-[1500ms] ${
+              hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
+          >
+            <p>© 2025 Chiu Alex. Built with Next.js & Tailwind CSS</p>
+          </footer>
+        </main>
+      </div>
+    </>
   );
 }
