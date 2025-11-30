@@ -74,9 +74,11 @@ export default function Home() {
   const [isScrolling, setIsScrolling] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [resumeInView, setResumeInView] = useState(false);
   const triangleIdCounter = useRef(0);
   const darkenTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const resumeRef = useRef<HTMLDivElement>(null);
 
   // New: control open/close for resume sections (click-to-toggle)
   const [openSections, setOpenSections] = useState({
@@ -327,6 +329,13 @@ export default function Home() {
       setIsAtTop(window.scrollY < 50);
       setIsScrolling(true);
 
+      // Check if resume section is in view - trigger animation every time
+      if (resumeRef.current) {
+        const rect = resumeRef.current.getBoundingClientRect();
+        const isInView = rect.top < window.innerHeight * 0.7 && rect.bottom > 0;
+        setResumeInView(isInView);
+      }
+
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
       }
@@ -343,7 +352,7 @@ export default function Home() {
         clearTimeout(scrollTimeoutRef.current);
       }
     };
-  }, []);
+  }, [resumeInView]);
 
   const handleMouseEnter = () => {
     setIsHovering(true);
@@ -594,6 +603,7 @@ export default function Home() {
           {/* Resume Section */}
           <div 
             id="resume" 
+            ref={resumeRef}
             className={`mb-10 w-full grid grid-cols-1 lg:grid-cols-2 gap-0 transition-all duration-1000 delay-500 ${
               hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
@@ -601,7 +611,12 @@ export default function Home() {
           >
             {/* Title - Left Side (Blue Background) */}
             <div className="p-8 flex items-center justify-start">
-              <h2 className="text-7xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
+              <h2 
+                className={`text-7xl font-bold text-gray-900 transition-all duration-1000 ease-out ${
+                  resumeInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-full'
+                }`}
+                style={{ fontFamily: 'var(--font-playfair)' }}
+              >
                 Resume
               </h2>
             </div>
@@ -612,7 +627,13 @@ export default function Home() {
                 {/* Education */}
                 <div className="cursor-pointer">
                   <div
-                    className="flex items-center gap-2"
+                    className={`flex items-center gap-2 transition-all duration-700 ease-out ${
+                      resumeInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
+                    }`}
+                    style={{ 
+                      transitionDelay: resumeInView ? '400ms' : '0ms',
+                      animation: resumeInView ? 'bounceInRight 0.8s ease-out 0.4s both' : 'bounceOutRight 0.6s ease-out both'
+                    }}
                     role="button"
                     tabIndex={0}
                     onClick={() => toggleSection('education')}
@@ -681,7 +702,13 @@ export default function Home() {
                 {/* Experience */}
                 <div className="cursor-pointer">
                   <div
-                    className="flex items-center gap-2"
+                    className={`flex items-center gap-2 transition-all duration-700 ease-out ${
+                      resumeInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
+                    }`}
+                    style={{ 
+                      transitionDelay: resumeInView ? '600ms' : '100ms',
+                      animation: resumeInView ? 'bounceInRight 0.8s ease-out 0.6s both' : 'bounceOutRight 0.6s ease-out 0.1s both'
+                    }}
                     role="button"
                     tabIndex={0}
                     onClick={() => toggleSection('experience')}
@@ -766,7 +793,13 @@ export default function Home() {
                 {/* Extracurriculars */}
                 <div className="cursor-pointer">
                   <div
-                    className="flex items-center gap-2"
+                    className={`flex items-center gap-2 transition-all duration-700 ease-out ${
+                      resumeInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
+                    }`}
+                    style={{ 
+                      transitionDelay: resumeInView ? '800ms' : '200ms',
+                      animation: resumeInView ? 'bounceInRight 0.8s ease-out 0.8s both' : 'bounceOutRight 0.6s ease-out 0.2s both'
+                    }}
                     role="button"
                     tabIndex={0}
                     onClick={() => toggleSection('extracurriculars')}
@@ -824,21 +857,6 @@ export default function Home() {
                       <div className="relative">
                         <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-purple-500 rounded-full border-2 border-white shadow-md"></div>
                         <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
-                          Service Learning — Science Camp
-                        </h4>
-                        <p className="text-base text-gray-600 mb-1">介壽國中 Science Camp — dates available on request</p>
-                        <p className="text-base text-gray-700 leading-relaxed">
-                          Designed and taught hands-on experimental workshops (e.g., demonstrations on resonance and 3D-printed mazes), served as a team leader, and supported middle-school students in conducting experiments and exploring scientific concepts.
-                        </p>
-                        <div className="mt-2 flex flex-wrap gap-2">
-                          <span className="bg-green-100 px-3 py-1 text-xs font-medium text-green-800 rounded">Community Service</span>
-                          <span className="bg-pink-100 px-3 py-1 text-xs font-medium text-pink-800 rounded">STEM Outreach</span>
-                        </div>
-                      </div>
-
-                      <div className="relative">
-                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-purple-500 rounded-full border-2 border-white shadow-md"></div>
-                        <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
                           Competition Achievements
                         </h4>
                         <p className="text-base text-gray-600 mb-1">Selected awards & honors</p>
@@ -856,7 +874,13 @@ export default function Home() {
                 {/* Skills */}
                 <div className="cursor-pointer">
                   <div
-                    className="flex items-center gap-2"
+                    className={`flex items-center gap-2 transition-all duration-700 ease-out ${
+                      resumeInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
+                    }`}
+                    style={{ 
+                      transitionDelay: resumeInView ? '1000ms' : '300ms',
+                      animation: resumeInView ? 'bounceInRight 0.8s ease-out 1s both' : 'bounceOutRight 0.6s ease-out 0.3s both'
+                    }}
                     role="button"
                     tabIndex={0}
                     onClick={() => toggleSection('skills')}
@@ -921,127 +945,159 @@ export default function Home() {
           {/* Projects Section */}
           <div 
             id="projects" 
-            className={`mb-10 w-full bg-gray-100 p-8 shadow-lg transition-all duration-1000 delay-700 ${
+            className={`mb-10 w-full transition-all duration-1000 delay-700 ${
               hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
+            style={{ 
+              minHeight: '80vh',
+              perspective: '1500px'
+            }}
           >
-            <h2 className="mb-6 text-2xl font-semibold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
-              Projects
-            </h2>
-            <div className="grid gap-6 md:grid-cols-2">
-              <a 
-                href="https://github.com/Alexchiuu/Discord_bot_for_Minecraft_server"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative border border-gray-300 p-6 transition-all hover:scale-105 hover:shadow-xl bg-white"
-              >
-                <DualRingEffect />
-                <h3 className="relative z-20 text-lg font-semibold text-gray-900 mb-2" style={{ fontFamily: 'var(--font-poppins)' }}>
-                  Discord-Controlled Minecraft Server Bot
-                </h3>
-                <p className="relative z-20 text-gray-700 mb-3">
-                  A Discord bot that enables remote control of a local Minecraft server via Discord commands. Solves the challenge of 24/7 hosting costs by allowing on-demand server startup/shutdown.
-                </p>
-                <div className="relative z-20 flex flex-wrap gap-2">
-                  <span className="bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800">
-                    JavaScript
-                  </span>
-                  <span className="bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
-                    Node.js
-                  </span>
-                  <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
-                    Discord.js
-                  </span>
-                  <span className="bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800">
-                    MIT License
-                  </span>
-                </div>
-              </a>
-              
-              <a 
-                href="https://github.com/Alexchiuu/programming_contest_code"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative border border-gray-300 p-6 transition-all hover:scale-105 hover:shadow-xl bg-white"
-              >
-                <DualRingEffect />
-                <h3 className="relative z-20 text-lg font-semibold text-gray-900 mb-2" style={{ fontFamily: 'var(--font-poppins)' }}>
-                  Competitive Programming Solutions
-                </h3>
-                <p className="relative z-20 text-gray-700 mb-3">
-                  A collection of algorithms and solutions for competitive programming challenges from CSES, ZeroJudge, TIO Judge, and CodeForces. Focuses on graph theory, dynamic programming, and optimization.
-                </p>
-                <div className="relative z-20 flex flex-wrap gap-2">
-                  <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
-                    C++
-                  </span>
-                  <span className="bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800">
-                    Algorithms
-                  </span>
-                  <span className="bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
-                    Data Structures
-                  </span>
-                </div>
-              </a>
+            <div className="projects-background">
+              <div className="max-w-7xl mx-auto px-8 py-16">
+                <h2 className="mb-16 text-5xl font-bold text-gray-900 text-center" style={{ fontFamily: 'var(--font-playfair)' }}>
+                  Projects
+                </h2>
+                
+                <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2 items-stretch">
+                  <a 
+                    href="https://github.com/Alexchiuu/Discord_bot_for_Minecraft_server"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  className="project-card group"
+                >
+                  <div className="project-card-inner">
+                    <div className="project-card-glow"></div>
+                    <div className="project-card-content">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="project-icon">
+                          <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                          </svg>
+                        </div>
+                        <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-900 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </div>
+                      <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors" style={{ fontFamily: 'var(--font-poppins)' }}>
+                        Discord Bot for Minecraft
+                      </h3>
+                      <p className="text-gray-600 mb-4 leading-relaxed">
+                        A Discord bot that enables remote control of a local Minecraft server via Discord commands. Solves the challenge of 24/7 hosting costs by allowing on-demand server startup/shutdown.
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        <span className="project-tag">JavaScript</span>
+                        <span className="project-tag">Node.js</span>
+                        <span className="project-tag">Discord.js</span>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+                
+                <a 
+                  href="https://github.com/Alexchiuu/programming_contest_code"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="project-card group"
+                >
+                  <div className="project-card-inner">
+                    <div className="project-card-glow"></div>
+                    <div className="project-card-content">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="project-icon">
+                          <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>
+                          </svg>
+                        </div>
+                        <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-900 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </div>
+                      <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-purple-600 transition-colors" style={{ fontFamily: 'var(--font-poppins)' }}>
+                        Competitive Programming
+                      </h3>
+                      <p className="text-gray-600 mb-4 leading-relaxed">
+                        A collection of algorithms and solutions for competitive programming challenges from CSES, ZeroJudge, TIO Judge, and CodeForces. Focuses on graph theory, dynamic programming, and optimization.
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        <span className="project-tag">C++</span>
+                        <span className="project-tag">Algorithms</span>
+                        <span className="project-tag">Data Structures</span>
+                      </div>
+                    </div>
+                  </div>
+                </a>
 
-              <a 
-                href="https://github.com/Alexchiuu/rainmeter_desktop_plugin"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative border border-gray-300 p-6 transition-all hover:scale-105 hover:shadow-xl bg-white"
-              >
-                <DualRingEffect />
-                <h3 className="relative z-20 text-lg font-semibold text-gray-900 mb-2" style={{ fontFamily: 'var(--font-poppins)' }}>
-                  Rainmeter Desktop Theme
-                </h3>
-                <p className="relative z-20 text-gray-700 mb-3">
-                  A clean and customizable system monitor skin for Rainmeter featuring CPU/GPU temps, network info, Spotify integration, and animated visualizers. Updated for 2024 with modern design.
-                </p>
-                <div className="relative z-20 flex flex-wrap gap-2">
-                  <span className="bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800 rounded">
-                    Lua
-                  </span>
-                  <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 rounded">
-                    Rainmeter
-                  </span>
-                  <span className="bg-green-100 px-3 py-1 text-xs font-medium text-green-800 rounded">
-                    UI/UX Design
-                  </span>
-                  <span className="bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800 rounded">
-                    MIT License
-                  </span>
-                </div>
-              </a>
+                <a 
+                  href="https://github.com/Alexchiuu/rainmeter_desktop_plugin"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="project-card group"
+                >
+                  <div className="project-card-inner">
+                    <div className="project-card-glow"></div>
+                    <div className="project-card-content">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="project-icon">
+                          <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                          </svg>
+                        </div>
+                        <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-900 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </div>
+                      <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors" style={{ fontFamily: 'var(--font-poppins)' }}>
+                        Rainmeter Desktop Theme
+                      </h3>
+                      <p className="text-gray-600 mb-4 leading-relaxed">
+                        A clean and customizable system monitor skin for Rainmeter featuring CPU/GPU temps, network info, Spotify integration, and animated visualizers. Updated for 2024 with modern design.
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        <span className="project-tag">Lua</span>
+                        <span className="project-tag">Rainmeter</span>
+                        <span className="project-tag">UI/UX Design</span>
+                      </div>
+                    </div>
+                  </div>
+                </a>
 
-              <a 
-                href="https://github.com/Alexchiuu/ROS_ackermann_car"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative border border-gray-300 p-6 transition-all hover:scale-105 hover:shadow-xl bg-white"
-              >
-                <DualRingEffect />
-                <h3 className="relative z-20 text-lg font-semibold text-gray-900 mb-2" style={{ fontFamily: 'var(--font-poppins)' }}>
-                  ROS Ackermann Car Simulation
-                </h3>
-                <p className="relative z-20 text-gray-700 mb-3">
-                  A Robot Operating System (ROS2) package for simulating an Ackermann steering car in Gazebo. Includes launch files, URDF models, and controller configurations for autonomous vehicle development.
-                </p>
-                <div className="relative z-20 flex flex-wrap gap-2">
-                  <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
-                    Python
-                  </span>
-                  <span className="bg-orange-100 px-3 py-1 text-xs font-medium text-orange-800">
-                    ROS2
-                  </span>
-                  <span className="bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
-                    Robotics
-                  </span>
-                  <span className="bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800">
-                    Apache 2.0
-                  </span>
-                </div>
-              </a>
+                <a 
+                  href="https://github.com/Alexchiuu/ROS_ackermann_car"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="project-card group"
+                >
+                  <div className="project-card-inner">
+                    <div className="project-card-glow"></div>
+                    <div className="project-card-content">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="project-icon">
+                          <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
+                          </svg>
+                        </div>
+                        <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-900 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </div>
+                      <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-orange-600 transition-colors" style={{ fontFamily: 'var(--font-poppins)' }}>
+                        ROS Ackermann Car
+                      </h3>
+                      <p className="text-gray-600 mb-4 leading-relaxed">
+                        A Robot Operating System (ROS2) package for simulating an Ackermann steering car in Gazebo. Includes launch files, URDF models, and controller configurations for autonomous vehicle development.
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        <span className="project-tag">Python</span>
+                        <span className="project-tag">ROS2</span>
+                        <span className="project-tag">Robotics</span>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
             </div>
+          </div>
           </div>
 
           {/* Interests Section */}
