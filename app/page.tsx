@@ -73,6 +73,7 @@ export default function Home() {
   const [hasLoaded, setHasLoaded] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const triangleIdCounter = useRef(0);
   const darkenTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -289,6 +290,14 @@ export default function Home() {
         setShowScrollArrow(true);
       }
 
+      // Calculate scroll progress for profile/intro animation (0 to 1)
+      // Start fading at 100px, fully hidden by 600px (slower)
+      const fadeStart = 100;
+      const fadeEnd = 600;
+      const scrollY = window.scrollY;
+      const progress = Math.min(Math.max((scrollY - fadeStart) / (fadeEnd - fadeStart), 0), 1);
+      setScrollProgress(progress);
+
       // Manage nav bar visibility
       setIsAtTop(window.scrollY < 50);
       setIsScrolling(true);
@@ -355,7 +364,7 @@ export default function Home() {
             <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>Chiu Alex</h2>
             <div className="flex gap-6" style={{ fontFamily: 'var(--font-poppins)' }}>
               <a href="#about" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Intro</a>
-              <a href="#experience" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Experience</a>
+              <a href="#resume" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Resume</a>
               <a href="#projects" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Projects</a>
               <a href="#contact" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Contact</a>
             </div>
@@ -365,7 +374,7 @@ export default function Home() {
       <div 
         className="min-h-screen relative overflow-hidden pt-20" // Added pt-20 for padding
         style={{ 
-          perspective: '1000px',
+          perspective: '2000px',
           background: 'linear-gradient(to right, #dbeafe 0%, #dbeafe 40%, #ffffff 40%, #ffffff 100%)',
           fontFamily: 'var(--font-inter)'
         }}
@@ -411,13 +420,34 @@ export default function Home() {
           {/* Profile and About Section - Side by Side */}
           <div 
             className="mb-10 w-full grid grid-cols-1 lg:grid-cols-2 gap-0" 
-            style={{ minHeight: '60vh' }}
+            style={{ 
+              minHeight: '60vh',
+              transform: `translateY(${scrollProgress * 80}px) scale(${1 - scrollProgress * 0.25})`,
+              opacity: 1 - scrollProgress * 1.1,
+              transition: 'transform 0.15s ease-out, opacity 0.15s ease-out',
+              transformStyle: 'preserve-3d',
+              perspective: '1500px'
+            }}
           >
             {/* Profile Section */}
             <div 
               className={`bg-blue-50 p-6 shadow-lg text-center flex flex-col justify-center transition-all duration-1000 delay-500 relative z-20 ${
                 hasLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-20'
               }`}
+              style={{
+                transform: `
+                  translateX(${-scrollProgress * 250}px) 
+                  translateZ(${-scrollProgress * 200}px)
+                  rotateY(${-scrollProgress * 90}deg) 
+                  rotateX(${scrollProgress * 15}deg)
+                  scale(${1 - scrollProgress * 0.15})
+                `,
+                transformStyle: 'preserve-3d',
+                transformOrigin: 'right center',
+                transition: 'transform 0.15s ease-out',
+                filter: `blur(${scrollProgress * 4}px)`,
+                backfaceVisibility: 'hidden'
+              }}
             >
               <div className="mb-4 inline-block">
                 <div className="relative h-52 w-52 overflow-hidden rounded-full mx-auto">
@@ -451,6 +481,20 @@ export default function Home() {
               className={`bg-white p-6 shadow-lg flex flex-col justify-center transition-all duration-1000 delay-500 relative z-10 ${
                 hasLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'
               }`}
+              style={{
+                transform: `
+                  translateX(${scrollProgress * 250}px) 
+                  translateZ(${-scrollProgress * 200}px)
+                  rotateY(${scrollProgress * 90}deg) 
+                  rotateX(${scrollProgress * 15}deg)
+                  scale(${1 - scrollProgress * 0.15})
+                `,
+                transformStyle: 'preserve-3d',
+                transformOrigin: 'left center',
+                transition: 'transform 0.15s ease-out',
+                filter: `blur(${scrollProgress * 4}px)`,
+                backfaceVisibility: 'hidden'
+              }}
             >
               <h2 className="mb-4 text-3xl font-semibold text-gray-900 sm:text-4xl" style={{ fontFamily: 'var(--font-playfair)' }}>
                 Intro
@@ -511,46 +555,105 @@ export default function Home() {
             <ScrollDownArrow />
           </div>
           {/* Transparent Spacer Bottom */}
-          <div className="w-full" style={{ height: '7vh' }}></div>
-          {/* Experience Section */}
+          <div className="w-full" style={{ height: '14vh' }}></div>
+          {/* Resume Section */}
           <div 
-            id="experience" 
-            className={`mb-10 w-full bg-gray-100 p-8 shadow-lg transition-all duration-1000 delay-500 ${
+            id="resume" 
+            className={`mb-10 w-full grid grid-cols-1 lg:grid-cols-2 gap-0 transition-all duration-1000 delay-500 ${
               hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
+            style={{ minHeight: '50vh' }}
           >
-            <h2 className="mb-6 text-2xl font-semibold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
-              Experience & Education
-            </h2>
-            <div className="space-y-6">
-              <div className="border-l-4 border-blue-500 pl-4">
-                <h3 className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'var(--font-poppins)' }}>
-                  Bachelor of Engineering — Electrical & Electronics Engineering
-                </h3>
-                <p className="text-sm text-gray-600 mb-2">
-                  National Taiwan University
-                </p>
-                <p className="text-sm text-gray-600 mb-2">
-                  Sep 2025 — Jun 2029
-                </p>
-                <p className="text-gray-700">
-                  Pursuing a comprehensive education in electrical and electronics engineering, focusing on circuit design, systems analysis, and emerging technologies.
-                </p>
-              </div>
-              
-              <div className="border-l-4 border-green-500 pl-4">
-                <h3 className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'var(--font-poppins)' }}>
-                  High School Diploma — Class of Science
-                </h3>
-                <p className="text-sm text-gray-600 mb-2">
-                  Taipei Municipal Jianguo High School
-                </p>
-                <p className="text-sm text-gray-600 mb-2">
-                  Sep 2022 — Jun 2025
-                </p>
-                <p className="text-gray-700">
-                  Completed rigorous science curriculum with focus on mathematics, physics, and chemistry. Served as General Organizer for Science Affairs, leading and coordinating science-related activities and events for the class.
-                </p>
+            {/* Title - Left Side (Blue Background) */}
+            <div className="p-8 flex items-center justify-start">
+              <h2 className="text-7xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
+                Resume
+              </h2>
+            </div>
+            
+            {/* Content - Right Side (White Background) */}
+            <div className="p-8 flex flex-col justify-center">
+              <div className="space-y-8">
+                {/* Education */}
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-playfair)' }}>
+                    Education
+                  </h3>
+                  <div className="border-l-4 border-blue-500 pl-6">
+                    <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
+                      Bachelor of Engineering — Electrical & Electronics Engineering
+                    </h4>
+                    <p className="text-base text-gray-600 mb-1">
+                      National Taiwan University
+                    </p>
+                    <p className="text-sm text-gray-500 mb-2">
+                      Sep 2025 — Jun 2029
+                    </p>
+                    <p className="text-base text-gray-700 leading-relaxed">
+                      Focusing on circuit design, systems analysis, and emerging technologies.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Experience */}
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-playfair)' }}>
+                    Experience
+                  </h3>
+                  <div className="border-l-4 border-green-500 pl-6">
+                    <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
+                      Student & Learner
+                    </h4>
+                    <p className="text-base text-gray-600 mb-1">
+                      National Taiwan University
+                    </p>
+                    <p className="text-sm text-gray-500 mb-2">
+                      Sep 2025 — Present
+                    </p>
+                    <p className="text-base text-gray-700 leading-relaxed">
+                      Actively engaged in coursework and research projects in electrical engineering.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Extracurriculars */}
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-playfair)' }}>
+                    Extracurriculars
+                  </h3>
+                  <div className="border-l-4 border-purple-500 pl-6">
+                    <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
+                      General Organizer for Science Affairs
+                    </h4>
+                    <p className="text-base text-gray-600 mb-1">
+                      Taipei Municipal Jianguo High School
+                    </p>
+                    <p className="text-sm text-gray-500 mb-2">
+                      Sep 2022 — Jun 2025
+                    </p>
+                    <p className="text-base text-gray-700 leading-relaxed">
+                      Led and coordinated science-related activities and events for the class.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Skills */}
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-playfair)' }}>
+                    Skills
+                  </h3>
+                  <div className="border-l-4 border-orange-500 pl-6">
+                    <div className="flex flex-wrap gap-2">
+                      <span className="bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 rounded">Next.js</span>
+                      <span className="bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 rounded">TypeScript</span>
+                      <span className="bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 rounded">React</span>
+                      <span className="bg-green-100 px-3 py-1 text-sm font-medium text-green-800 rounded">Circuit Design</span>
+                      <span className="bg-green-100 px-3 py-1 text-sm font-medium text-green-800 rounded">Python</span>
+                      <span className="bg-purple-100 px-3 py-1 text-sm font-medium text-purple-800 rounded">Photography</span>
+                      <span className="bg-purple-100 px-3 py-1 text-sm font-medium text-purple-800 rounded">Guitar</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
