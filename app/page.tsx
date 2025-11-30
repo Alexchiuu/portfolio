@@ -572,85 +572,183 @@ export default function Home() {
             </div>
             
             {/* Content - Right Side (White Background) */}
-            <div className="p-8 flex flex-col justify-center">
+            <div className="p-8 flex flex-col justify-center bg-white/90 rounded-2xl backdrop-blur-md">
               <div className="space-y-8">
                 {/* Education */}
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-playfair)' }}>
-                    Education
-                  </h3>
-                  <div className="border-l-4 border-blue-500 pl-6">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
-                      Bachelor of Engineering — Electrical & Electronics Engineering
-                    </h4>
-                    <p className="text-base text-gray-600 mb-1">
-                      National Taiwan University
-                    </p>
-                    <p className="text-sm text-gray-500 mb-2">
-                      Sep 2025 — Jun 2029
-                    </p>
-                    <p className="text-base text-gray-700 leading-relaxed">
-                      Focusing on circuit design, systems analysis, and emerging technologies.
-                    </p>
+                <div className="group cursor-pointer">
+                  <div className="flex items-center gap-2">
+                    <svg 
+                      className="w-5 h-5 mb-4 text-gray-400 transition-all duration-300 group-hover:text-blue-600 group-hover:rotate-90" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4 transition-colors group-hover:text-blue-600" style={{ fontFamily: 'var(--font-playfair)' }}>
+                      Education
+                    </h3>
+                  </div>
+                  <div className="relative pl-8 max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100 transition-all duration-500 ease-in-out">
+                    {/* Vertical Timeline Line */}
+                    <div className="absolute left-[9px] top-[8px] bottom-[150px] w-0.5 bg-blue-500"></div>
+                    
+                    <div className="space-y-6 pb-4">
+                      {/* Taipei Municipal Jianguo High School */}
+                      <div className="relative">
+                        {/* Timeline Dot */}
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-md"></div>
+                        <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
+                          High School Diploma, Class of Science
+                        </h4>
+                        <p className="text-base text-gray-600 mb-1">
+                          Taipei Municipal Jianguo High School
+                        </p>
+                        <p className="text-sm text-gray-500 mb-2">
+                          Sep 2022 — Jun 2025
+                        </p>
+                        <p className="text-base text-gray-700 leading-relaxed">
+                          <span className="font-medium text-gray-800">Activities and societies:</span> General organizer of the Science affair in Class of Science
+                        </p>
+                        <p className="text-base text-gray-700 leading-relaxed mt-1">
+                          Project Management
+                        </p>
+                      </div>
+
+                      {/* National Taiwan University */}
+                      <div className="relative">
+                        {/* Timeline Dot */}
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-md"></div>
+                        <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
+                          Bachelor of Engineering - BE, Electrical and Electronics Engineering
+                        </h4>
+                        <p className="text-base text-gray-600 mb-1">
+                          National Taiwan University
+                        </p>
+                        <p className="text-sm text-gray-500 mb-2">
+                          Sep 2025 — Jun 2029
+                        </p>
+                        <p className="text-base text-gray-700 leading-relaxed">
+                          Project Management and Engineering
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 {/* Experience */}
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-playfair)' }}>
-                    Experience
-                  </h3>
-                  <div className="border-l-4 border-green-500 pl-6">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
-                      Student & Learner
-                    </h4>
-                    <p className="text-base text-gray-600 mb-1">
-                      National Taiwan University
-                    </p>
-                    <p className="text-sm text-gray-500 mb-2">
-                      Sep 2025 — Present
-                    </p>
-                    <p className="text-base text-gray-700 leading-relaxed">
-                      Actively engaged in coursework and research projects in electrical engineering.
-                    </p>
+                <div className="group cursor-pointer">
+                  <div className="flex items-center gap-2">
+                    <svg 
+                      className="w-5 h-5 mb-4 text-gray-400 transition-all duration-300 group-hover:text-green-600 group-hover:rotate-90" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4 transition-colors group-hover:text-green-600" style={{ fontFamily: 'var(--font-playfair)' }}>
+                      Experience
+                    </h3>
+                  </div>
+                  <div className="relative pl-8 max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100 transition-all duration-500 ease-in-out">
+                    {/* Vertical Timeline Line */}
+                    <div className="absolute left-[9px] top-5 bottom-4 w-0.5 bg-green-500"></div>
+                    {/* Timeline Dot - Top */}
+                    <div className="absolute left-[2px] top-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-md"></div>
+                    {/* Timeline Dot - Bottom */}
+                    <div className="absolute left-[2px] bottom-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-md"></div>
+                    
+                    <div className="pb-4">
+                      <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
+                        Student & Learner
+                      </h4>
+                      <p className="text-base text-gray-600 mb-1">
+                        National Taiwan University
+                      </p>
+                      <p className="text-sm text-gray-500 mb-2">
+                        Sep 2025 — Present
+                      </p>
+                      <p className="text-base text-gray-700 leading-relaxed">
+                        Actively engaged in coursework and research projects in electrical engineering.
+                      </p>
+                    </div>
                   </div>
                 </div>
 
                 {/* Extracurriculars */}
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-playfair)' }}>
-                    Extracurriculars
-                  </h3>
-                  <div className="border-l-4 border-purple-500 pl-6">
-                    <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
-                      General Organizer for Science Affairs
-                    </h4>
-                    <p className="text-base text-gray-600 mb-1">
-                      Taipei Municipal Jianguo High School
-                    </p>
-                    <p className="text-sm text-gray-500 mb-2">
-                      Sep 2022 — Jun 2025
-                    </p>
-                    <p className="text-base text-gray-700 leading-relaxed">
-                      Led and coordinated science-related activities and events for the class.
-                    </p>
+                <div className="group cursor-pointer">
+                  <div className="flex items-center gap-2">
+                    <svg 
+                      className="w-5 h-5 mb-4 text-gray-400 transition-all duration-300 group-hover:text-purple-600 group-hover:rotate-90" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4 transition-colors group-hover:text-purple-600" style={{ fontFamily: 'var(--font-playfair)' }}>
+                      Extracurriculars
+                    </h3>
+                  </div>
+                  <div className="relative pl-8 max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100 transition-all duration-500 ease-in-out">
+                    {/* Vertical Timeline Line */}
+                    <div className="absolute left-[9px] top-5 bottom-4 w-0.5 bg-purple-500"></div>
+                    {/* Timeline Dot - Top */}
+                    <div className="absolute left-[2px] top-2 w-4 h-4 bg-purple-500 rounded-full border-2 border-white shadow-md"></div>
+                    {/* Timeline Dot - Bottom */}
+                    <div className="absolute left-[2px] bottom-0 w-4 h-4 bg-purple-500 rounded-full border-2 border-white shadow-md"></div>
+                    
+                    <div className="pb-4">
+                      <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
+                        General Organizer for Science Affairs
+                      </h4>
+                      <p className="text-base text-gray-600 mb-1">
+                        Taipei Municipal Jianguo High School
+                      </p>
+                      <p className="text-sm text-gray-500 mb-2">
+                        Sep 2022 — Jun 2025
+                      </p>
+                      <p className="text-base text-gray-700 leading-relaxed">
+                        Led and coordinated science-related activities and events for the class.
+                      </p>
+                    </div>
                   </div>
                 </div>
 
                 {/* Skills */}
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-playfair)' }}>
-                    Skills
-                  </h3>
-                  <div className="border-l-4 border-orange-500 pl-6">
-                    <div className="flex flex-wrap gap-2">
-                      <span className="bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 rounded">Next.js</span>
-                      <span className="bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 rounded">TypeScript</span>
-                      <span className="bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 rounded">React</span>
-                      <span className="bg-green-100 px-3 py-1 text-sm font-medium text-green-800 rounded">Circuit Design</span>
-                      <span className="bg-green-100 px-3 py-1 text-sm font-medium text-green-800 rounded">Python</span>
-                      <span className="bg-purple-100 px-3 py-1 text-sm font-medium text-purple-800 rounded">Photography</span>
-                      <span className="bg-purple-100 px-3 py-1 text-sm font-medium text-purple-800 rounded">Guitar</span>
+                <div className="group cursor-pointer">
+                  <div className="flex items-center gap-2">
+                    <svg 
+                      className="w-5 h-5 mb-4 text-gray-400 transition-all duration-300 group-hover:text-orange-600 group-hover:rotate-90" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4 transition-colors group-hover:text-orange-600" style={{ fontFamily: 'var(--font-playfair)' }}>
+                      Skills
+                    </h3>
+                  </div>
+                  <div className="relative pl-8 max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100 transition-all duration-500 ease-in-out">
+                    {/* Vertical Timeline Line */}
+                    <div className="absolute left-[9px] top-5 bottom-4 w-0.5 bg-orange-500"></div>
+                    {/* Timeline Dot - Top */}
+                    <div className="absolute left-[2px] top-2 w-4 h-4 bg-orange-500 rounded-full border-2 border-white shadow-md"></div>
+                    {/* Timeline Dot - Bottom */}
+                    <div className="absolute left-[2px] bottom-0 w-4 h-4 bg-orange-500 rounded-full border-2 border-white shadow-md"></div>
+                    
+                    <div className="pb-4">
+                      <div className="flex flex-wrap gap-2">
+                        <span className="bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 rounded">Next.js</span>
+                        <span className="bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 rounded">TypeScript</span>
+                        <span className="bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 rounded">React</span>
+                        <span className="bg-green-100 px-3 py-1 text-sm font-medium text-green-800 rounded">Circuit Design</span>
+                        <span className="bg-green-100 px-3 py-1 text-sm font-medium text-green-800 rounded">Python</span>
+                        <span className="bg-purple-100 px-3 py-1 text-sm font-medium text-purple-800 rounded">Photography</span>
+                        <span className="bg-purple-100 px-3 py-1 text-sm font-medium text-purple-800 rounded">Guitar</span>
+                      </div>
                     </div>
                   </div>
                 </div>
