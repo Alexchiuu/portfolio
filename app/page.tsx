@@ -78,6 +78,31 @@ export default function Home() {
   const darkenTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // New: control open/close for resume sections (click-to-toggle)
+  const [openSections, setOpenSections] = useState({
+    education: false,
+    experience: false,
+    extracurriculars: false,
+    skills: false,
+  });
+
+  const toggleSection = (key: 'education' | 'experience' | 'extracurriculars' | 'skills') => {
+    setOpenSections(prev => {
+      // If clicking the same section that's already open, close it
+      if (prev[key]) {
+        return { ...prev, [key]: false };
+      }
+      // Otherwise, close all sections and open the clicked one
+      return {
+        education: false,
+        experience: false,
+        extracurriculars: false,
+        skills: false,
+        [key]: true
+      };
+    });
+  };
+
   // Entry animation effect
   useEffect(() => {
     setHasLoaded(true);
@@ -345,6 +370,16 @@ export default function Home() {
       icon: "M7 2C4.243 2 2 4.243 2 7v10c0 2.757 2.243 5 5 5h10c2.757 0 5-2.243 5-5V7c0-2.757-2.243-5-5-5H7zm10 2c1.654 0 3 1.346 3 3v10c0 1.654-1.346 3-3 3H7c-1.654 0-3-1.346-3-3V7c0-1.654 1.346-3 3-3h10zm-5 3.5A4.5 4.5 0 1 0 16.5 12 4.505 4.505 0 0 0 12 7.5zm0 1A3.5 3.5 0 1 1 8.5 12 3.504 3.504 0 0 1 12 8.5zM17 6.25a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5z",
     },
     {
+      name: "Discord",
+      url: "https://discord.gg/pNEAjDvN",
+      icon: "M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z",
+    },
+    {
+      name: "Facebook",
+      url: "https://www.facebook.com/chiu.alex.417443",
+      icon: "M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z",
+    },
+    {
       name: "Email",
       url: "mailto:b14901022@g.ntu.edu.tw",
       icon: "M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z",
@@ -529,8 +564,8 @@ export default function Home() {
                         strokeLinejoin="round"
                         className="transition-transform duration-300 group-hover:scale-110"
                       >
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                        <circle cx="12" cy="10" r="3"/>
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                        <circle cx="12" cy="10" r="3" />
                       </svg>
                       <span>Taipei, Taiwan</span>
                     </span>
@@ -575,23 +610,30 @@ export default function Home() {
             <div className="p-8 flex flex-col justify-center bg-white/90 rounded-2xl backdrop-blur-md">
               <div className="space-y-8">
                 {/* Education */}
-                <div className="group cursor-pointer">
-                  <div className="flex items-center gap-2">
-                    <svg 
-                      className="w-5 h-5 mb-4 text-gray-400 transition-all duration-300 group-hover:text-blue-600 group-hover:rotate-90" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4 transition-colors group-hover:text-blue-600" style={{ fontFamily: 'var(--font-playfair)' }}>
-                      Education
-                    </h3>
-                  </div>
-                  <div className="relative pl-8 max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100 transition-all duration-500 ease-in-out">
-                    {/* Vertical Timeline Line */}
-                    <div className="absolute left-[9px] top-[8px] bottom-[150px] w-0.5 bg-blue-500"></div>
+                <div className="cursor-pointer">
+                  <div
+                    className="flex items-center gap-2"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => toggleSection('education')}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleSection('education'); }}
+                    aria-expanded={openSections.education}
+                  >
+                     <svg 
+                      className={`w-5 h-5 mb-4 transition-all duration-300 ${openSections.education ? 'text-blue-600 rotate-90' : 'text-gray-400'}`}
+                       fill="none" 
+                       stroke="currentColor" 
+                       viewBox="0 0 24 24"
+                     >
+                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                     </svg>
+                    <h3 className={`text-2xl font-bold text-gray-900 mb-4 transition-colors ${openSections.education ? 'text-blue-600' : ''}`} style={{ fontFamily: 'var(--font-playfair)' }}>
+                       Education
+                     </h3>
+                   </div>
+                  <div className={`relative pl-8 overflow-hidden transition-all duration-500 ease-in-out ${openSections.education ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                    {/* Vertical Timeline Line (starts at first dot, ends at last dot) */}
+                    <div className="absolute left-[9px] top-[6px] bottom-[6px] w-0.5 bg-blue-500"></div>
                     
                     <div className="space-y-6 pb-4">
                       {/* Taipei Municipal Jianguo High School */}
@@ -637,117 +679,237 @@ export default function Home() {
                 </div>
 
                 {/* Experience */}
-                <div className="group cursor-pointer">
-                  <div className="flex items-center gap-2">
-                    <svg 
-                      className="w-5 h-5 mb-4 text-gray-400 transition-all duration-300 group-hover:text-green-600 group-hover:rotate-90" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4 transition-colors group-hover:text-green-600" style={{ fontFamily: 'var(--font-playfair)' }}>
-                      Experience
-                    </h3>
-                  </div>
-                  <div className="relative pl-8 max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100 transition-all duration-500 ease-in-out">
-                    {/* Vertical Timeline Line */}
-                    <div className="absolute left-[9px] top-5 bottom-4 w-0.5 bg-green-500"></div>
-                    {/* Timeline Dot - Top */}
-                    <div className="absolute left-[2px] top-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-md"></div>
-                    {/* Timeline Dot - Bottom */}
-                    <div className="absolute left-[2px] bottom-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-md"></div>
-                    
-                    <div className="pb-4">
-                      <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
-                        Student & Learner
-                      </h4>
-                      <p className="text-base text-gray-600 mb-1">
-                        National Taiwan University
-                      </p>
-                      <p className="text-sm text-gray-500 mb-2">
-                        Sep 2025 — Present
-                      </p>
-                      <p className="text-base text-gray-700 leading-relaxed">
-                        Actively engaged in coursework and research projects in electrical engineering.
-                      </p>
+                <div className="cursor-pointer">
+                  <div
+                    className="flex items-center gap-2"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => toggleSection('experience')}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleSection('experience'); }}
+                    aria-expanded={openSections.experience}
+                  >
+                     <svg 
+                      className={`w-5 h-5 mb-4 transition-all duration-300 ${openSections.experience ? 'text-green-600 rotate-90' : 'text-gray-400'}`}
+                       fill="none" 
+                       stroke="currentColor" 
+                       viewBox="0 0 24 24"
+                     >
+                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                     </svg>
+                    <h3 className={`text-2xl font-bold text-gray-900 mb-4 transition-colors ${openSections.experience ? 'text-green-600' : ''}`} style={{ fontFamily: 'var(--font-playfair)' }}>
+                       Experience
+                     </h3>
+                   </div>
+
+                  <div className={`relative pl-8 overflow-hidden transition-all duration-500 ease-in-out ${openSections.experience ? 'max-h-[700px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                    {/* Vertical Timeline Line (starts at first dot, ends at last dot) */}
+                    <div className="absolute left-[9px] top-[6px] bottom-[6px] w-0.5 bg-green-500"></div>
+
+                    <div className="space-y-6 pb-4">
+                      {/* Research & Project (Senior Research) */}
+                      <div className="relative">
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-md"></div>
+                        <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
+                          Senior Research — Vehicle Roll-Prevention Driver Assistance
+                        </h4>
+                        <p className="text-base text-gray-600 mb-1">Advisor: Prof. 詹魁元 (NTU Mechanical Engineering)</p>
+                        <p className="text-sm text-gray-500 mb-2">High school research / team project</p>
+                        <p className="text-base text-gray-700 leading-relaxed">
+                          Designed and implemented an Ackermann-model test vehicle using Raspberry Pi (control), Arduino (motor PWM), ROS for message passing, and a 6-axis IMU + SLAM-based feedback loop to reduce dynamic roll. Responsibilities included system architecture, sensor integration, control algorithm prototyping, MATLAB simulations, and preparing results for Taiwan International Science Fair submissions.
+                        </p>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 rounded">Raspberry Pi</span>
+                          <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 rounded">ROS / ROS2</span>
+                          <span className="bg-green-100 px-3 py-1 text-xs font-medium text-green-800 rounded">Arduino</span>
+                          <span className="bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800 rounded">MATLAB</span>
+                        </div>
+                      </div>
+
+                      {/* Independent Research (Wind Tunnel) */}
+                      <div className="relative">
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-md"></div>
+                        <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
+                          Independent Research — Truck Roof Spoiler Aerodynamics
+                        </h4>
+                        <p className="text-base text-gray-600 mb-1">NTU Mechanical Lab (wind tunnel experiments)</p>
+                        <p className="text-sm text-gray-500 mb-2">Independent study / senior year</p>
+                        <p className="text-base text-gray-700 leading-relaxed">
+                          3D-modeled and printed truck models, designed roof spoilers, and measured aerodynamic drag in a small wind tunnel. Performed LabVIEW data acquisition and applied post-processing to quantify drag differences. Gained hands-on experience with experimental setup, calibration and result analysis.
+                        </p>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 rounded">3D Printing</span>
+                          <span className="bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800 rounded">LabVIEW</span>
+                          <span className="bg-green-100 px-3 py-1 text-xs font-medium text-green-800 rounded">Wind Tunnel</span>
+                        </div>
+                      </div>
+
+                      {/* Teaching & Mentoring */}
+                      <div className="relative">
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-md"></div>
+                        <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
+                          Teaching & Mentoring — Algorithm Lecturer
+                        </h4>
+                        <p className="text-base text-gray-600 mb-1">建國中學 Student Algorithm Club</p>
+                        <p className="text-sm text-gray-500 mb-2">High school — ongoing</p>
+                        <p className="text-base text-gray-700 leading-relaxed">
+                          Prepared and delivered algorithm and problem-solving lectures for younger students, organized practice sessions for online judges (ZeroJudge, CSES, TIOJ), and mentored peers preparing for APCS and national competitions.
+                        </p>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          <span className="bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800 rounded">Algorithms</span>
+                          <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 rounded">C++</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Extracurriculars */}
-                <div className="group cursor-pointer">
-                  <div className="flex items-center gap-2">
-                    <svg 
-                      className="w-5 h-5 mb-4 text-gray-400 transition-all duration-300 group-hover:text-purple-600 group-hover:rotate-90" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4 transition-colors group-hover:text-purple-600" style={{ fontFamily: 'var(--font-playfair)' }}>
-                      Extracurriculars
-                    </h3>
-                  </div>
-                  <div className="relative pl-8 max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100 transition-all duration-500 ease-in-out">
-                    {/* Vertical Timeline Line */}
-                    <div className="absolute left-[9px] top-5 bottom-4 w-0.5 bg-purple-500"></div>
-                    {/* Timeline Dot - Top */}
-                    <div className="absolute left-[2px] top-2 w-4 h-4 bg-purple-500 rounded-full border-2 border-white shadow-md"></div>
-                    {/* Timeline Dot - Bottom */}
-                    <div className="absolute left-[2px] bottom-0 w-4 h-4 bg-purple-500 rounded-full border-2 border-white shadow-md"></div>
-                    
-                    <div className="pb-4">
-                      <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
-                        General Organizer for Science Affairs
-                      </h4>
-                      <p className="text-base text-gray-600 mb-1">
-                        Taipei Municipal Jianguo High School
-                      </p>
-                      <p className="text-sm text-gray-500 mb-2">
-                        Sep 2022 — Jun 2025
-                      </p>
-                      <p className="text-base text-gray-700 leading-relaxed">
-                        Led and coordinated science-related activities and events for the class.
-                      </p>
+                <div className="cursor-pointer">
+                  <div
+                    className="flex items-center gap-2"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => toggleSection('extracurriculars')}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleSection('extracurriculars'); }}
+                    aria-expanded={openSections.extracurriculars}
+                  >
+                     <svg 
+                      className={`w-5 h-5 mb-4 transition-all duration-300 ${openSections.extracurriculars ? 'text-purple-600 rotate-90' : 'text-gray-400'}`}
+                       fill="none" 
+                       stroke="currentColor" 
+                       viewBox="0 0 24 24"
+                     >
+                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                     </svg>
+                    <h3 className={`text-2xl font-bold text-gray-900 mb-4 transition-colors ${openSections.extracurriculars ? 'text-purple-600' : ''}`} style={{ fontFamily: 'var(--font-playfair)' }}>
+                       Extracurriculars
+                     </h3>
+                   </div>
+
+                  <div className={`relative pl-8 overflow-hidden transition-all duration-500 ease-in-out ${openSections.extracurriculars ? 'max-h-[900px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                    {/* Vertical Timeline Line (starts at first dot, ends at last dot) */}
+                    <div className="absolute left-[9px] top-[6px] bottom-[6px] w-0.5 bg-purple-500"></div>
+
+                    <div className="space-y-6 pb-4">
+                      <div className="relative">
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-purple-500 rounded-full border-2 border-white shadow-md"></div>
+                        <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
+                          Science Fair Coordinator
+                        </h4>
+                        <p className="text-base text-gray-600 mb-1">建國中學 Science Program — Jun 2023 — May 2024</p>
+                        <p className="text-base text-gray-700 leading-relaxed">
+                          Led the annual science fair for the school's science program. Responsible for team coordination, visual design, venue and vendor communication, promotion, video production, and event scheduling. Developed large-event planning, communication, and time-management skills while leading cross-grade teams to a successful exhibition.
+                        </p>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          <span className="bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-800 rounded">Event Management</span>
+                          <span className="bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-800 rounded">Leadership</span>
+                        </div>
+                      </div>
+
+                      <div className="relative">
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-purple-500 rounded-full border-2 border-white shadow-md"></div>
+                        <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
+                          Algorithm Lecturer
+                        </h4>
+                        <p className="text-base text-gray-600 mb-1">建國中學 — ongoing</p>
+                        <p className="text-base text-gray-700 leading-relaxed">
+                          Acted as an algorithm instructor in a student-led study group: created structured teaching materials, demonstrated problem-solving approaches, and led practice contests to prepare younger students for programming competitions.
+                        </p>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          <span className="bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800 rounded">Teaching</span>
+                          <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 rounded">Algorithms</span>
+                        </div>
+                      </div>
+
+                      <div className="relative">
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-purple-500 rounded-full border-2 border-white shadow-md"></div>
+                        <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
+                          Service Learning — Science Camp
+                        </h4>
+                        <p className="text-base text-gray-600 mb-1">介壽國中 Science Camp — dates available on request</p>
+                        <p className="text-base text-gray-700 leading-relaxed">
+                          Designed and taught hands-on experimental workshops (e.g., demonstrations on resonance and 3D-printed mazes), served as a team leader, and supported middle-school students in conducting experiments and exploring scientific concepts.
+                        </p>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          <span className="bg-green-100 px-3 py-1 text-xs font-medium text-green-800 rounded">Community Service</span>
+                          <span className="bg-pink-100 px-3 py-1 text-xs font-medium text-pink-800 rounded">STEM Outreach</span>
+                        </div>
+                      </div>
+
+                      <div className="relative">
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-purple-500 rounded-full border-2 border-white shadow-md"></div>
+                        <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
+                          Competition Achievements
+                        </h4>
+                        <p className="text-base text-gray-600 mb-1">Selected awards & honors</p>
+                        <ul className="list-disc list-inside text-gray-700">
+                          <li>Taiwan International Science Fair — Finalist / Exhibition (selected)</li>
+                          <li>YTP (Turing Program) — Team Bronze (National 3rd)</li>
+                          <li>NTU Internet Programming Contest — Top 10 in preliminary</li>
+                          <li>APCS: Concept 4/5, Practical 5/5</li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Skills */}
-                <div className="group cursor-pointer">
-                  <div className="flex items-center gap-2">
-                    <svg 
-                      className="w-5 h-5 mb-4 text-gray-400 transition-all duration-300 group-hover:text-orange-600 group-hover:rotate-90" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4 transition-colors group-hover:text-orange-600" style={{ fontFamily: 'var(--font-playfair)' }}>
-                      Skills
-                    </h3>
-                  </div>
-                  <div className="relative pl-8 max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100 transition-all duration-500 ease-in-out">
-                    {/* Vertical Timeline Line */}
-                    <div className="absolute left-[9px] top-5 bottom-4 w-0.5 bg-orange-500"></div>
-                    {/* Timeline Dot - Top */}
-                    <div className="absolute left-[2px] top-2 w-4 h-4 bg-orange-500 rounded-full border-2 border-white shadow-md"></div>
-                    {/* Timeline Dot - Bottom */}
-                    <div className="absolute left-[2px] bottom-0 w-4 h-4 bg-orange-500 rounded-full border-2 border-white shadow-md"></div>
-                    
+                <div className="cursor-pointer">
+                  <div
+                    className="flex items-center gap-2"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => toggleSection('skills')}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleSection('skills'); }}
+                    aria-expanded={openSections.skills}
+                  >
+                     <svg 
+                      className={`w-5 h-5 mb-4 transition-all duration-300 ${openSections.skills ? 'text-orange-600 rotate-90' : 'text-gray-400'}`}
+                       fill="none" 
+                       stroke="currentColor" 
+                       viewBox="0 0 24 24"
+                     >
+                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                     </svg>
+                    <h3 className={`text-2xl font-bold text-gray-900 mb-4 transition-colors ${openSections.skills ? 'text-orange-600' : ''}`} style={{ fontFamily: 'var(--font-playfair)' }}>
+                       Skills
+                     </h3>
+                   </div>
+
+                  <div className={`relative pl-8 overflow-hidden transition-all duration-500 ease-in-out ${openSections.skills ? 'max-h-[420px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                    {/* Vertical Timeline Line (starts at first dot, ends at last dot) */}
+                    <div className="absolute left-[9px] top-[6px] bottom-[6px] w-0.5 bg-orange-500"></div>
+
                     <div className="pb-4">
-                      <div className="flex flex-wrap gap-2">
-                        <span className="bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 rounded">Next.js</span>
-                        <span className="bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 rounded">TypeScript</span>
-                        <span className="bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 rounded">React</span>
-                        <span className="bg-green-100 px-3 py-1 text-sm font-medium text-green-800 rounded">Circuit Design</span>
-                        <span className="bg-green-100 px-3 py-1 text-sm font-medium text-green-800 rounded">Python</span>
-                        <span className="bg-purple-100 px-3 py-1 text-sm font-medium text-purple-800 rounded">Photography</span>
-                        <span className="bg-purple-100 px-3 py-1 text-sm font-medium text-purple-800 rounded">Guitar</span>
+                      <div className="mb-3">
+                        <h4 className="text-lg font-medium text-gray-900" style={{ fontFamily: 'var(--font-poppins)' }}>Programming & Tools</h4>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          <span className="bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 rounded">C++</span>
+                          <span className="bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 rounded">Python</span>
+                          <span className="bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 rounded">MATLAB</span>
+                          <span className="bg-gray-100 px-3 py-1 text-sm font-medium text-gray-800 rounded">LabVIEW</span>
+                          <span className="bg-gray-100 px-3 py-1 text-sm font-medium text-gray-800 rounded">ROS</span>
+                        </div>
+                      </div>
+
+                      <div className="mb-3">
+                        <h4 className="text-lg font-medium text-gray-900" style={{ fontFamily: 'var(--font-poppins)' }}>Hardware & Experimentation</h4>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          <span className="bg-green-100 px-3 py-1 text-sm font-medium text-green-800 rounded">Raspberry Pi</span>
+                          <span className="bg-green-100 px-3 py-1 text-sm font-medium text-green-800 rounded">Arduino</span>
+                          <span className="bg-green-100 px-3 py-1 text-sm font-medium text-green-800 rounded">3D Printing</span>
+                          <span className="bg-green-100 px-3 py-1 text-sm font-medium text-green-800 rounded">Wind Tunnel Testing</span>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h4 className="text-lg font-medium text-gray-900" style={{ fontFamily: 'var(--font-poppins)' }}>Languages & Certifications</h4>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          <span className="bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-800 rounded">TOEIC 955</span>
+                          <span className="bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-800 rounded">TOEFL 96</span>
+                          <span className="bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-800 rounded">GEPT Intermediate</span>
+                          <span className="bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-800 rounded">APCS 4/5 (concept), 5/5 (practical)</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -766,45 +928,119 @@ export default function Home() {
             <h2 className="mb-6 text-2xl font-semibold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
               Projects
             </h2>
-            <div className="space-y-6">
-              <div className="group relative border border-gray-300 p-6 transition-all hover:scale-105 hover:shadow-xl bg-white">
+            <div className="grid gap-6 md:grid-cols-2">
+              <a 
+                href="https://github.com/Alexchiuu/Discord_bot_for_Minecraft_server"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative border border-gray-300 p-6 transition-all hover:scale-105 hover:shadow-xl bg-white"
+              >
                 <DualRingEffect />
                 <h3 className="relative z-20 text-lg font-semibold text-gray-900 mb-2" style={{ fontFamily: 'var(--font-poppins)' }}>
-                  Personal Portfolio Website
+                  Discord-Controlled Minecraft Server Bot
                 </h3>
                 <p className="relative z-20 text-gray-700 mb-3">
-                  A modern, responsive portfolio website built with Next.js and Tailwind CSS, featuring dynamic content and smooth animations.
+                  A Discord bot that enables remote control of a local Minecraft server via Discord commands. Solves the challenge of 24/7 hosting costs by allowing on-demand server startup/shutdown.
                 </p>
                 <div className="relative z-20 flex flex-wrap gap-2">
-                  <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
-                    Next.js
+                  <span className="bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800">
+                    JavaScript
+                  </span>
+                  <span className="bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
+                    Node.js
                   </span>
                   <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
-                    TypeScript
+                    Discord.js
                   </span>
-                  <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
-                    Tailwind CSS
+                  <span className="bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800">
+                    MIT License
                   </span>
                 </div>
-              </div>
+              </a>
               
-              <div className="group relative border border-gray-300 p-6 transition-all hover:scale-105 hover:shadow-xl bg-white">
+              <a 
+                href="https://github.com/Alexchiuu/programming_contest_code"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative border border-gray-300 p-6 transition-all hover:scale-105 hover:shadow-xl bg-white"
+              >
                 <DualRingEffect />
                 <h3 className="relative z-20 text-lg font-semibold text-gray-900 mb-2" style={{ fontFamily: 'var(--font-poppins)' }}>
-                  Engineering Projects
+                  Competitive Programming Solutions
                 </h3>
                 <p className="relative z-20 text-gray-700 mb-3">
-                  Various electrical and electronics engineering projects focusing on circuit design, systems analysis, and practical applications.
+                  A collection of algorithms and solutions for competitive programming challenges from CSES, ZeroJudge, TIO Judge, and CodeForces. Focuses on graph theory, dynamic programming, and optimization.
                 </p>
                 <div className="relative z-20 flex flex-wrap gap-2">
-                  <span className="bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800">
-                    Circuit Design
+                  <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
+                    C++
                   </span>
                   <span className="bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800">
-                    Systems Engineering
+                    Algorithms
+                  </span>
+                  <span className="bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
+                    Data Structures
                   </span>
                 </div>
-              </div>
+              </a>
+
+              <a 
+                href="https://github.com/Alexchiuu/rainmeter_desktop_plugin"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative border border-gray-300 p-6 transition-all hover:scale-105 hover:shadow-xl bg-white"
+              >
+                <DualRingEffect />
+                <h3 className="relative z-20 text-lg font-semibold text-gray-900 mb-2" style={{ fontFamily: 'var(--font-poppins)' }}>
+                  Rainmeter Desktop Theme
+                </h3>
+                <p className="relative z-20 text-gray-700 mb-3">
+                  A clean and customizable system monitor skin for Rainmeter featuring CPU/GPU temps, network info, Spotify integration, and animated visualizers. Updated for 2024 with modern design.
+                </p>
+                <div className="relative z-20 flex flex-wrap gap-2">
+                  <span className="bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800 rounded">
+                    Lua
+                  </span>
+                  <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 rounded">
+                    Rainmeter
+                  </span>
+                  <span className="bg-green-100 px-3 py-1 text-xs font-medium text-green-800 rounded">
+                    UI/UX Design
+                  </span>
+                  <span className="bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800 rounded">
+                    MIT License
+                  </span>
+                </div>
+              </a>
+
+              <a 
+                href="https://github.com/Alexchiuu/ROS_ackermann_car"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative border border-gray-300 p-6 transition-all hover:scale-105 hover:shadow-xl bg-white"
+              >
+                <DualRingEffect />
+                <h3 className="relative z-20 text-lg font-semibold text-gray-900 mb-2" style={{ fontFamily: 'var(--font-poppins)' }}>
+                  ROS Ackermann Car Simulation
+                </h3>
+                <p className="relative z-20 text-gray-700 mb-3">
+                  A Robot Operating System (ROS2) package for simulating an Ackermann steering car in Gazebo. Includes launch files, URDF models, and controller configurations for autonomous vehicle development.
+                </p>
+                <div className="relative z-20 flex flex-wrap gap-2">
+                  <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
+                    Python
+                  </span>
+                  <span className="bg-orange-100 px-3 py-1 text-xs font-medium text-orange-800">
+                    ROS2
+                  </span>
+                  <span className="bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
+                    Robotics
+                  </span>
+                  <span className="bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800">
+                    Apache 2.0
+                  </span>
+                </div>
+              </a>
             </div>
           </div>
 
@@ -861,7 +1097,7 @@ export default function Home() {
             <h2 className="mb-6 text-center text-2xl font-semibold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
               Connect With Me
             </h2>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
               {socialLinks.map((link) => (
                 <a
                   key={link.name}
