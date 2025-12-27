@@ -1,0 +1,1128 @@
+{
+  "photos": [
+    {
+      "filename": "A6400887.JPG",
+      "latitude": 37.7156025,
+      "longitude": -119.67690583333334,
+      "city": "Yosemite National Park",
+      "date": "2025-06-20T04:39:12.000Z"
+    },
+    {
+      "filename": "A6400902.JPG",
+      "latitude": 37.72042527777778,
+      "longitude": -119.64839166666667,
+      "city": "Yosemite National Park",
+      "date": "2025-06-20T04:52:03.000Z"
+    },
+    {
+      "filename": "A6400912.JPG",
+      "latitude": 37.72065888888889,
+      "longitude": -119.64853194444446,
+      "city": "Yosemite National Park",
+      "date": "2025-06-20T04:52:54.000Z"
+    },
+    {
+      "filename": "A6400994.JPG",
+      "latitude": 37.743364166666666,
+      "longitude": -119.59873166666667,
+      "city": "Yosemite National Park",
+      "date": "2025-06-20T06:38:29.000Z"
+    },
+    {
+      "filename": "A6401019.JPG",
+      "latitude": 37.72550861111111,
+      "longitude": -119.70543333333333,
+      "city": "Yosemite National Park",
+      "date": "2025-06-20T07:49:12.000Z"
+    },
+    {
+      "filename": "A6400838.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "Yosemite National Park",
+      "date": "2025-06-20T02:29:27.000Z"
+    },
+    {
+      "filename": "A6400850.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "Yosemite National Park",
+      "date": "2025-06-20T02:33:51.000Z"
+    },
+    {
+      "filename": "A6400851.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "Yosemite National Park",
+      "date": "2025-06-20T02:33:54.000Z"
+    },
+    {
+      "filename": "A6400866.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "Yosemite National Park",
+      "date": "2025-06-20T04:03:34.000Z"
+    },
+    {
+      "filename": "A6400948.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "Yosemite National Park",
+      "date": "2025-06-20T05:10:17.000Z"
+    },
+    {
+      "filename": "A6401037.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "Yosemite National Park",
+      "date": "2025-06-20T07:53:16.000Z"
+    },
+    {
+      "filename": "A6401087.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "No GPS Data",
+      "date": "2025-06-21T05:52:46.000Z"
+    },
+    {
+      "filename": "A6401139.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "Boston",
+      "date": "2025-06-21T20:52:02.000Z"
+    },
+    {
+      "filename": "A6401168.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "Boston",
+      "date": "2025-06-21T21:09:36.000Z"
+    },
+    {
+      "filename": "A6401193.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "Boston",
+      "date": "2025-06-21T21:53:58.000Z"
+    },
+    {
+      "filename": "A6401218.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "Boston",
+      "date": "2025-06-21T23:58:23.000Z"
+    },
+    {
+      "filename": "A6401231.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "Boston",
+      "date": "2025-06-22T00:06:06.000Z"
+    },
+    {
+      "filename": "A6401239.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "Boston",
+      "date": "2025-06-22T00:19:34.000Z"
+    },
+    {
+      "filename": "A6401274.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "Boston",
+      "date": "2025-06-22T06:30:20.000Z"
+    },
+    {
+      "filename": "A6401301.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "Boston",
+      "date": "2025-06-22T06:42:47.000Z"
+    },
+    {
+      "filename": "A6401343.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "Boston",
+      "date": "2025-06-22T23:38:57.000Z"
+    },
+    {
+      "filename": "A6401366.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "No GPS Data",
+      "date": "2025-08-10T11:43:41.000Z"
+    },
+    {
+      "filename": "A6401401.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "No GPS Data",
+      "date": "2025-08-10T12:53:12.000Z"
+    },
+    {
+      "filename": "A6401421.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "No GPS Data",
+      "date": "2025-08-10T15:42:45.000Z"
+    },
+    {
+      "filename": "A6401468.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "No GPS Data",
+      "date": "2025-08-10T15:52:00.000Z"
+    },
+    {
+      "filename": "A6401480.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "No GPS Data",
+      "date": "2025-08-10T16:13:06.000Z"
+    },
+    {
+      "filename": "A6401502.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "No GPS Data",
+      "date": "2025-08-10T16:29:25.000Z"
+    },
+    {
+      "filename": "A6401609.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "No GPS Data",
+      "date": "2025-08-12T03:45:29.000Z"
+    },
+    {
+      "filename": "A6401720.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "No GPS Data",
+      "date": "2025-08-12T10:55:26.000Z"
+    },
+    {
+      "filename": "A6401856.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "No GPS Data",
+      "date": "2025-08-13T05:19:33.000Z"
+    },
+    {
+      "filename": "A6402089.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "No GPS Data",
+      "date": "2025-08-14T07:54:26.000Z"
+    },
+    {
+      "filename": "A6402096.JPG",
+      "latitude": null,
+      "longitude": null,
+      "city": "No GPS Data",
+      "date": "2025-08-14T07:58:30.000Z"
+    },
+    {
+      "filename": "A6401813.JPG",
+      "latitude": 35.02397805555555,
+      "longitude": 135.64333444444443,
+      "city": "京都市",
+      "date": "2025-08-13T02:42:19.000Z"
+    },
+    {
+      "filename": "A6401840.JPG",
+      "latitude": 35.016511666666666,
+      "longitude": 135.67036472222222,
+      "city": "京都市",
+      "date": "2025-08-13T03:02:21.000Z"
+    },
+    {
+      "filename": "A6401887.JPG",
+      "latitude": 34.96662277777778,
+      "longitude": 135.77544111111112,
+      "city": "京都市",
+      "date": "2025-08-13T05:31:54.000Z"
+    },
+    {
+      "filename": "A6401916.JPG",
+      "latitude": 34.99482694444445,
+      "longitude": 135.78527805555555,
+      "city": "京都市",
+      "date": "2025-08-13T07:00:41.000Z"
+    },
+    {
+      "filename": "A6401925.JPG",
+      "latitude": 34.99458722222222,
+      "longitude": 135.78550666666666,
+      "city": "京都市",
+      "date": "2025-08-13T07:03:12.000Z"
+    },
+    {
+      "filename": "A6401932.JPG",
+      "latitude": 34.994169166666666,
+      "longitude": 135.78578583333334,
+      "city": "京都市",
+      "date": "2025-08-13T07:05:30.000Z"
+    },
+    {
+      "filename": "A6401942.JPG",
+      "latitude": 34.995087222222224,
+      "longitude": 135.78252361111112,
+      "city": "京都市",
+      "date": "2025-08-13T07:16:32.000Z"
+    },
+    {
+      "filename": "A6401952.JPG",
+      "latitude": 35.003751666666666,
+      "longitude": 135.7773552777778,
+      "city": "京都市",
+      "date": "2025-08-13T08:26:28.000Z"
+    },
+    {
+      "filename": "A6401962.JPG",
+      "latitude": 34.998068333333336,
+      "longitude": 135.7802902777778,
+      "city": "京都市",
+      "date": "2025-08-13T09:15:31.000Z"
+    },
+    {
+      "filename": "A6401964.JPG",
+      "latitude": 34.99812138888889,
+      "longitude": 135.78017611111113,
+      "city": "京都市",
+      "date": "2025-08-13T09:49:01.000Z"
+    },
+    {
+      "filename": "A6401990.JPG",
+      "latitude": 34.9980625,
+      "longitude": 135.780255,
+      "city": "京都市",
+      "date": "2025-08-13T10:12:04.000Z"
+    },
+    {
+      "filename": "A6402027.JPG",
+      "latitude": 35.001490555555556,
+      "longitude": 135.77460694444446,
+      "city": "京都市",
+      "date": "2025-08-13T10:41:05.000Z"
+    },
+    {
+      "filename": "A6401566.JPG",
+      "latitude": 34.66888611111111,
+      "longitude": 135.50129916666666,
+      "city": "大阪市",
+      "date": "2025-08-11T12:01:55.000Z"
+    },
+    {
+      "filename": "A6401574.JPG",
+      "latitude": 34.66914138888889,
+      "longitude": 135.50128972222223,
+      "city": "大阪市",
+      "date": "2025-08-11T12:03:33.000Z"
+    },
+    {
+      "filename": "A6401595.JPG",
+      "latitude": 34.64554166666667,
+      "longitude": 135.51552666666666,
+      "city": "大阪市",
+      "date": "2025-08-11T13:21:40.000Z"
+    },
+    {
+      "filename": "A6401600.JPG",
+      "latitude": 34.64960388888889,
+      "longitude": 135.38594388888887,
+      "city": "大阪市",
+      "date": "2025-08-12T03:37:32.000Z"
+    },
+    {
+      "filename": "A6401619.JPG",
+      "latitude": 34.651604444444445,
+      "longitude": 135.38257305555555,
+      "city": "大阪市",
+      "date": "2025-08-12T04:14:31.000Z"
+    },
+    {
+      "filename": "A6401629.JPG",
+      "latitude": 34.651763055555556,
+      "longitude": 135.3834086111111,
+      "city": "大阪市",
+      "date": "2025-08-12T04:30:50.000Z"
+    },
+    {
+      "filename": "A6401640.JPG",
+      "latitude": 34.64826277777778,
+      "longitude": 135.38392305555556,
+      "city": "大阪市",
+      "date": "2025-08-12T04:51:39.000Z"
+    },
+    {
+      "filename": "A6401655.JPG",
+      "latitude": 34.648115555555556,
+      "longitude": 135.3848536111111,
+      "city": "大阪市",
+      "date": "2025-08-12T05:55:18.000Z"
+    },
+    {
+      "filename": "A6401677.JPG",
+      "latitude": 34.64776194444445,
+      "longitude": 135.38665388888887,
+      "city": "大阪市",
+      "date": "2025-08-12T06:03:35.000Z"
+    },
+    {
+      "filename": "A6401702.JPG",
+      "latitude": 34.65049361111111,
+      "longitude": 135.3798702777778,
+      "city": "大阪市",
+      "date": "2025-08-12T06:24:10.000Z"
+    },
+    {
+      "filename": "A6401714.JPG",
+      "latitude": 34.647101666666664,
+      "longitude": 135.386475,
+      "city": "大阪市",
+      "date": "2025-08-12T10:50:04.000Z"
+    },
+    {
+      "filename": "A6401724.JPG",
+      "latitude": 34.64710138888889,
+      "longitude": 135.38528527777777,
+      "city": "大阪市",
+      "date": "2025-08-12T11:06:10.000Z"
+    },
+    {
+      "filename": "A6401730.JPG",
+      "latitude": 34.647663333333334,
+      "longitude": 135.38527333333332,
+      "city": "大阪市",
+      "date": "2025-08-12T11:07:37.000Z"
+    },
+    {
+      "filename": "A6401765.JPG",
+      "latitude": 34.647468333333336,
+      "longitude": 135.38610666666665,
+      "city": "大阪市",
+      "date": "2025-08-12T11:53:31.000Z"
+    },
+    {
+      "filename": "A6401768.JPG",
+      "latitude": 34.648289444444444,
+      "longitude": 135.3868058333333,
+      "city": "大阪市",
+      "date": "2025-08-12T11:55:25.000Z"
+    },
+    {
+      "filename": "A6401778.JPG",
+      "latitude": 34.649004166666664,
+      "longitude": 135.38700777777777,
+      "city": "大阪市",
+      "date": "2025-08-12T11:59:49.000Z"
+    },
+    {
+      "filename": "A6402136.JPG",
+      "latitude": 35.46652166666667,
+      "longitude": 139.62533583333334,
+      "city": "横浜市",
+      "date": "2025-08-14T11:36:56.000Z"
+    },
+    {
+      "filename": "A6402142.JPG",
+      "latitude": 35.67159916666667,
+      "longitude": 139.70315305555553,
+      "city": "渋谷区",
+      "date": "2025-08-15T06:33:37.000Z"
+    },
+    {
+      "filename": "A6402149.JPG",
+      "latitude": 35.66849055555555,
+      "longitude": 139.70563083333332,
+      "city": "渋谷区",
+      "date": "2025-08-15T08:27:18.000Z"
+    },
+    {
+      "filename": "A6402158.JPG",
+      "latitude": 35.66195083333333,
+      "longitude": 139.70225,
+      "city": "渋谷区",
+      "date": "2025-08-15T08:54:05.000Z"
+    },
+    {
+      "filename": "A6402172.JPG",
+      "latitude": 35.660377777777775,
+      "longitude": 139.6986977777778,
+      "city": "渋谷区",
+      "date": "2025-08-15T11:02:42.000Z"
+    },
+    {
+      "filename": "A6402174.JPG",
+      "latitude": 35.660133055555555,
+      "longitude": 139.69927333333334,
+      "city": "渋谷区",
+      "date": "2025-08-15T11:19:40.000Z"
+    },
+    {
+      "filename": "A6402178.JPG",
+      "latitude": 35.66018972222222,
+      "longitude": 139.6995227777778,
+      "city": "渋谷区",
+      "date": "2025-08-15T11:20:45.000Z"
+    },
+    {
+      "filename": "A6402068.JPG",
+      "latitude": 35.299589166666664,
+      "longitude": 139.47857694444446,
+      "city": "藤沢市",
+      "date": "2025-08-14T06:00:08.000Z"
+    },
+    {
+      "filename": "A6402071.JPG",
+      "latitude": 35.29980472222222,
+      "longitude": 139.47850805555555,
+      "city": "藤沢市",
+      "date": "2025-08-14T06:16:49.000Z"
+    },
+    {
+      "filename": "A6402075.JPG",
+      "latitude": 35.29973138888889,
+      "longitude": 139.4784338888889,
+      "city": "藤沢市",
+      "date": "2025-08-14T06:25:34.000Z"
+    },
+    {
+      "filename": "A6402077.JPG",
+      "latitude": 35.29970083333333,
+      "longitude": 139.4783,
+      "city": "藤沢市",
+      "date": "2025-08-14T06:26:52.000Z"
+    },
+    {
+      "filename": "A6402084.JPG",
+      "latitude": 35.31073555555555,
+      "longitude": 139.4878183333333,
+      "city": "藤沢市",
+      "date": "2025-08-14T07:27:19.000Z"
+    },
+    {
+      "filename": "A6402132.JPG",
+      "latitude": 35.339483333333334,
+      "longitude": 139.48762083333332,
+      "city": "藤沢市",
+      "date": "2025-08-14T09:10:32.000Z"
+    },
+    {
+      "filename": "A6402094.JPG",
+      "latitude": 35.305052499999995,
+      "longitude": 139.51050805555556,
+      "city": "鎌倉市",
+      "date": "2025-08-14T07:57:24.000Z"
+    },
+    {
+      "filename": "A6402097.JPG",
+      "latitude": 35.30603277777777,
+      "longitude": 139.51058305555554,
+      "city": "鎌倉市",
+      "date": "2025-08-14T08:01:59.000Z"
+    },
+    {
+      "filename": "A6402099.JPG",
+      "latitude": 35.30702194444444,
+      "longitude": 139.50212861111112,
+      "city": "鎌倉市",
+      "date": "2025-08-14T08:24:23.000Z"
+    },
+    {
+      "filename": "A6402101.JPG",
+      "latitude": 35.307024166666665,
+      "longitude": 139.5021277777778,
+      "city": "鎌倉市",
+      "date": "2025-08-14T08:24:23.000Z"
+    },
+    {
+      "filename": "A6402103.JPG",
+      "latitude": 35.307024166666665,
+      "longitude": 139.5021277777778,
+      "city": "鎌倉市",
+      "date": "2025-08-14T08:24:24.000Z"
+    }
+  ],
+  "groupedByCity": {
+    "Yosemite National Park": [
+      {
+        "filename": "A6400887.JPG",
+        "latitude": 37.7156025,
+        "longitude": -119.67690583333334,
+        "city": "Yosemite National Park",
+        "date": "2025-06-20T04:39:12.000Z"
+      },
+      {
+        "filename": "A6400902.JPG",
+        "latitude": 37.72042527777778,
+        "longitude": -119.64839166666667,
+        "city": "Yosemite National Park",
+        "date": "2025-06-20T04:52:03.000Z"
+      },
+      {
+        "filename": "A6400912.JPG",
+        "latitude": 37.72065888888889,
+        "longitude": -119.64853194444446,
+        "city": "Yosemite National Park",
+        "date": "2025-06-20T04:52:54.000Z"
+      },
+      {
+        "filename": "A6400994.JPG",
+        "latitude": 37.743364166666666,
+        "longitude": -119.59873166666667,
+        "city": "Yosemite National Park",
+        "date": "2025-06-20T06:38:29.000Z"
+      },
+      {
+        "filename": "A6401019.JPG",
+        "latitude": 37.72550861111111,
+        "longitude": -119.70543333333333,
+        "city": "Yosemite National Park",
+        "date": "2025-06-20T07:49:12.000Z"
+      },
+      {
+        "filename": "A6400838.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "Yosemite National Park",
+        "date": "2025-06-20T02:29:27.000Z"
+      },
+      {
+        "filename": "A6400850.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "Yosemite National Park",
+        "date": "2025-06-20T02:33:51.000Z"
+      },
+      {
+        "filename": "A6400851.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "Yosemite National Park",
+        "date": "2025-06-20T02:33:54.000Z"
+      },
+      {
+        "filename": "A6400866.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "Yosemite National Park",
+        "date": "2025-06-20T04:03:34.000Z"
+      },
+      {
+        "filename": "A6400948.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "Yosemite National Park",
+        "date": "2025-06-20T05:10:17.000Z"
+      },
+      {
+        "filename": "A6401037.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "Yosemite National Park",
+        "date": "2025-06-20T07:53:16.000Z"
+      }
+    ],
+    "No GPS Data": [
+      {
+        "filename": "A6401087.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "No GPS Data",
+        "date": "2025-06-21T05:52:46.000Z"
+      },
+      {
+        "filename": "A6401366.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "No GPS Data",
+        "date": "2025-08-10T11:43:41.000Z"
+      },
+      {
+        "filename": "A6401401.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "No GPS Data",
+        "date": "2025-08-10T12:53:12.000Z"
+      },
+      {
+        "filename": "A6401421.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "No GPS Data",
+        "date": "2025-08-10T15:42:45.000Z"
+      },
+      {
+        "filename": "A6401468.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "No GPS Data",
+        "date": "2025-08-10T15:52:00.000Z"
+      },
+      {
+        "filename": "A6401480.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "No GPS Data",
+        "date": "2025-08-10T16:13:06.000Z"
+      },
+      {
+        "filename": "A6401502.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "No GPS Data",
+        "date": "2025-08-10T16:29:25.000Z"
+      },
+      {
+        "filename": "A6401609.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "No GPS Data",
+        "date": "2025-08-12T03:45:29.000Z"
+      },
+      {
+        "filename": "A6401720.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "No GPS Data",
+        "date": "2025-08-12T10:55:26.000Z"
+      },
+      {
+        "filename": "A6401856.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "No GPS Data",
+        "date": "2025-08-13T05:19:33.000Z"
+      },
+      {
+        "filename": "A6402089.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "No GPS Data",
+        "date": "2025-08-14T07:54:26.000Z"
+      },
+      {
+        "filename": "A6402096.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "No GPS Data",
+        "date": "2025-08-14T07:58:30.000Z"
+      }
+    ],
+    "Boston": [
+      {
+        "filename": "A6401139.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "Boston",
+        "date": "2025-06-21T20:52:02.000Z"
+      },
+      {
+        "filename": "A6401168.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "Boston",
+        "date": "2025-06-21T21:09:36.000Z"
+      },
+      {
+        "filename": "A6401193.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "Boston",
+        "date": "2025-06-21T21:53:58.000Z"
+      },
+      {
+        "filename": "A6401218.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "Boston",
+        "date": "2025-06-21T23:58:23.000Z"
+      },
+      {
+        "filename": "A6401231.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "Boston",
+        "date": "2025-06-22T00:06:06.000Z"
+      },
+      {
+        "filename": "A6401239.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "Boston",
+        "date": "2025-06-22T00:19:34.000Z"
+      },
+      {
+        "filename": "A6401274.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "Boston",
+        "date": "2025-06-22T06:30:20.000Z"
+      },
+      {
+        "filename": "A6401301.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "Boston",
+        "date": "2025-06-22T06:42:47.000Z"
+      },
+      {
+        "filename": "A6401343.JPG",
+        "latitude": null,
+        "longitude": null,
+        "city": "Boston",
+        "date": "2025-06-22T23:38:57.000Z"
+      }
+    ],
+    "京都市": [
+      {
+        "filename": "A6401813.JPG",
+        "latitude": 35.02397805555555,
+        "longitude": 135.64333444444443,
+        "city": "京都市",
+        "date": "2025-08-13T02:42:19.000Z"
+      },
+      {
+        "filename": "A6401840.JPG",
+        "latitude": 35.016511666666666,
+        "longitude": 135.67036472222222,
+        "city": "京都市",
+        "date": "2025-08-13T03:02:21.000Z"
+      },
+      {
+        "filename": "A6401887.JPG",
+        "latitude": 34.96662277777778,
+        "longitude": 135.77544111111112,
+        "city": "京都市",
+        "date": "2025-08-13T05:31:54.000Z"
+      },
+      {
+        "filename": "A6401916.JPG",
+        "latitude": 34.99482694444445,
+        "longitude": 135.78527805555555,
+        "city": "京都市",
+        "date": "2025-08-13T07:00:41.000Z"
+      },
+      {
+        "filename": "A6401925.JPG",
+        "latitude": 34.99458722222222,
+        "longitude": 135.78550666666666,
+        "city": "京都市",
+        "date": "2025-08-13T07:03:12.000Z"
+      },
+      {
+        "filename": "A6401932.JPG",
+        "latitude": 34.994169166666666,
+        "longitude": 135.78578583333334,
+        "city": "京都市",
+        "date": "2025-08-13T07:05:30.000Z"
+      },
+      {
+        "filename": "A6401942.JPG",
+        "latitude": 34.995087222222224,
+        "longitude": 135.78252361111112,
+        "city": "京都市",
+        "date": "2025-08-13T07:16:32.000Z"
+      },
+      {
+        "filename": "A6401952.JPG",
+        "latitude": 35.003751666666666,
+        "longitude": 135.7773552777778,
+        "city": "京都市",
+        "date": "2025-08-13T08:26:28.000Z"
+      },
+      {
+        "filename": "A6401962.JPG",
+        "latitude": 34.998068333333336,
+        "longitude": 135.7802902777778,
+        "city": "京都市",
+        "date": "2025-08-13T09:15:31.000Z"
+      },
+      {
+        "filename": "A6401964.JPG",
+        "latitude": 34.99812138888889,
+        "longitude": 135.78017611111113,
+        "city": "京都市",
+        "date": "2025-08-13T09:49:01.000Z"
+      },
+      {
+        "filename": "A6401990.JPG",
+        "latitude": 34.9980625,
+        "longitude": 135.780255,
+        "city": "京都市",
+        "date": "2025-08-13T10:12:04.000Z"
+      },
+      {
+        "filename": "A6402027.JPG",
+        "latitude": 35.001490555555556,
+        "longitude": 135.77460694444446,
+        "city": "京都市",
+        "date": "2025-08-13T10:41:05.000Z"
+      }
+    ],
+    "大阪市": [
+      {
+        "filename": "A6401566.JPG",
+        "latitude": 34.66888611111111,
+        "longitude": 135.50129916666666,
+        "city": "大阪市",
+        "date": "2025-08-11T12:01:55.000Z"
+      },
+      {
+        "filename": "A6401574.JPG",
+        "latitude": 34.66914138888889,
+        "longitude": 135.50128972222223,
+        "city": "大阪市",
+        "date": "2025-08-11T12:03:33.000Z"
+      },
+      {
+        "filename": "A6401595.JPG",
+        "latitude": 34.64554166666667,
+        "longitude": 135.51552666666666,
+        "city": "大阪市",
+        "date": "2025-08-11T13:21:40.000Z"
+      },
+      {
+        "filename": "A6401600.JPG",
+        "latitude": 34.64960388888889,
+        "longitude": 135.38594388888887,
+        "city": "大阪市",
+        "date": "2025-08-12T03:37:32.000Z"
+      },
+      {
+        "filename": "A6401619.JPG",
+        "latitude": 34.651604444444445,
+        "longitude": 135.38257305555555,
+        "city": "大阪市",
+        "date": "2025-08-12T04:14:31.000Z"
+      },
+      {
+        "filename": "A6401629.JPG",
+        "latitude": 34.651763055555556,
+        "longitude": 135.3834086111111,
+        "city": "大阪市",
+        "date": "2025-08-12T04:30:50.000Z"
+      },
+      {
+        "filename": "A6401640.JPG",
+        "latitude": 34.64826277777778,
+        "longitude": 135.38392305555556,
+        "city": "大阪市",
+        "date": "2025-08-12T04:51:39.000Z"
+      },
+      {
+        "filename": "A6401655.JPG",
+        "latitude": 34.648115555555556,
+        "longitude": 135.3848536111111,
+        "city": "大阪市",
+        "date": "2025-08-12T05:55:18.000Z"
+      },
+      {
+        "filename": "A6401677.JPG",
+        "latitude": 34.64776194444445,
+        "longitude": 135.38665388888887,
+        "city": "大阪市",
+        "date": "2025-08-12T06:03:35.000Z"
+      },
+      {
+        "filename": "A6401702.JPG",
+        "latitude": 34.65049361111111,
+        "longitude": 135.3798702777778,
+        "city": "大阪市",
+        "date": "2025-08-12T06:24:10.000Z"
+      },
+      {
+        "filename": "A6401714.JPG",
+        "latitude": 34.647101666666664,
+        "longitude": 135.386475,
+        "city": "大阪市",
+        "date": "2025-08-12T10:50:04.000Z"
+      },
+      {
+        "filename": "A6401724.JPG",
+        "latitude": 34.64710138888889,
+        "longitude": 135.38528527777777,
+        "city": "大阪市",
+        "date": "2025-08-12T11:06:10.000Z"
+      },
+      {
+        "filename": "A6401730.JPG",
+        "latitude": 34.647663333333334,
+        "longitude": 135.38527333333332,
+        "city": "大阪市",
+        "date": "2025-08-12T11:07:37.000Z"
+      },
+      {
+        "filename": "A6401765.JPG",
+        "latitude": 34.647468333333336,
+        "longitude": 135.38610666666665,
+        "city": "大阪市",
+        "date": "2025-08-12T11:53:31.000Z"
+      },
+      {
+        "filename": "A6401768.JPG",
+        "latitude": 34.648289444444444,
+        "longitude": 135.3868058333333,
+        "city": "大阪市",
+        "date": "2025-08-12T11:55:25.000Z"
+      },
+      {
+        "filename": "A6401778.JPG",
+        "latitude": 34.649004166666664,
+        "longitude": 135.38700777777777,
+        "city": "大阪市",
+        "date": "2025-08-12T11:59:49.000Z"
+      }
+    ],
+    "横浜市": [
+      {
+        "filename": "A6402136.JPG",
+        "latitude": 35.46652166666667,
+        "longitude": 139.62533583333334,
+        "city": "横浜市",
+        "date": "2025-08-14T11:36:56.000Z"
+      }
+    ],
+    "渋谷区": [
+      {
+        "filename": "A6402142.JPG",
+        "latitude": 35.67159916666667,
+        "longitude": 139.70315305555553,
+        "city": "渋谷区",
+        "date": "2025-08-15T06:33:37.000Z"
+      },
+      {
+        "filename": "A6402149.JPG",
+        "latitude": 35.66849055555555,
+        "longitude": 139.70563083333332,
+        "city": "渋谷区",
+        "date": "2025-08-15T08:27:18.000Z"
+      },
+      {
+        "filename": "A6402158.JPG",
+        "latitude": 35.66195083333333,
+        "longitude": 139.70225,
+        "city": "渋谷区",
+        "date": "2025-08-15T08:54:05.000Z"
+      },
+      {
+        "filename": "A6402172.JPG",
+        "latitude": 35.660377777777775,
+        "longitude": 139.6986977777778,
+        "city": "渋谷区",
+        "date": "2025-08-15T11:02:42.000Z"
+      },
+      {
+        "filename": "A6402174.JPG",
+        "latitude": 35.660133055555555,
+        "longitude": 139.69927333333334,
+        "city": "渋谷区",
+        "date": "2025-08-15T11:19:40.000Z"
+      },
+      {
+        "filename": "A6402178.JPG",
+        "latitude": 35.66018972222222,
+        "longitude": 139.6995227777778,
+        "city": "渋谷区",
+        "date": "2025-08-15T11:20:45.000Z"
+      }
+    ],
+    "藤沢市": [
+      {
+        "filename": "A6402068.JPG",
+        "latitude": 35.299589166666664,
+        "longitude": 139.47857694444446,
+        "city": "藤沢市",
+        "date": "2025-08-14T06:00:08.000Z"
+      },
+      {
+        "filename": "A6402071.JPG",
+        "latitude": 35.29980472222222,
+        "longitude": 139.47850805555555,
+        "city": "藤沢市",
+        "date": "2025-08-14T06:16:49.000Z"
+      },
+      {
+        "filename": "A6402075.JPG",
+        "latitude": 35.29973138888889,
+        "longitude": 139.4784338888889,
+        "city": "藤沢市",
+        "date": "2025-08-14T06:25:34.000Z"
+      },
+      {
+        "filename": "A6402077.JPG",
+        "latitude": 35.29970083333333,
+        "longitude": 139.4783,
+        "city": "藤沢市",
+        "date": "2025-08-14T06:26:52.000Z"
+      },
+      {
+        "filename": "A6402084.JPG",
+        "latitude": 35.31073555555555,
+        "longitude": 139.4878183333333,
+        "city": "藤沢市",
+        "date": "2025-08-14T07:27:19.000Z"
+      },
+      {
+        "filename": "A6402132.JPG",
+        "latitude": 35.339483333333334,
+        "longitude": 139.48762083333332,
+        "city": "藤沢市",
+        "date": "2025-08-14T09:10:32.000Z"
+      }
+    ],
+    "鎌倉市": [
+      {
+        "filename": "A6402094.JPG",
+        "latitude": 35.305052499999995,
+        "longitude": 139.51050805555556,
+        "city": "鎌倉市",
+        "date": "2025-08-14T07:57:24.000Z"
+      },
+      {
+        "filename": "A6402097.JPG",
+        "latitude": 35.30603277777777,
+        "longitude": 139.51058305555554,
+        "city": "鎌倉市",
+        "date": "2025-08-14T08:01:59.000Z"
+      },
+      {
+        "filename": "A6402099.JPG",
+        "latitude": 35.30702194444444,
+        "longitude": 139.50212861111112,
+        "city": "鎌倉市",
+        "date": "2025-08-14T08:24:23.000Z"
+      },
+      {
+        "filename": "A6402101.JPG",
+        "latitude": 35.307024166666665,
+        "longitude": 139.5021277777778,
+        "city": "鎌倉市",
+        "date": "2025-08-14T08:24:23.000Z"
+      },
+      {
+        "filename": "A6402103.JPG",
+        "latitude": 35.307024166666665,
+        "longitude": 139.5021277777778,
+        "city": "鎌倉市",
+        "date": "2025-08-14T08:24:24.000Z"
+      }
+    ]
+  },
+  "totalPhotos": 78,
+  "cities": [
+    "Boston",
+    "No GPS Data",
+    "Yosemite National Park",
+    "京都市",
+    "大阪市",
+    "横浜市",
+    "渋谷区",
+    "藤沢市",
+    "鎌倉市"
+  ]
+}

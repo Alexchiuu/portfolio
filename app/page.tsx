@@ -1,21 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
-
-interface Triangle {
-  id: number;
-  x: number;
-  y: number;
-  rotationX: number;
-  rotationY: number;
-  rotationZ: number;
-  rotationSpeed: number;
-  size: number;
-  opacity: number;
-  brightness: number;
-  darkenProgress: number;
-}
+import Link from "next/link";
 
 function DualRingEffect() {
   return (
@@ -63,20 +49,12 @@ function ScrollDownArrow() {
 }
 
 export default function Home() {
-  const [triangles, setTriangles] = useState<Triangle[]>([]);
-  const [isHovering, setIsHovering] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [isMouseMoving, setIsMouseMoving] = useState(false);
-  const [mouseVelocity, setMouseVelocity] = useState({ vx: 0, vy: 0 });
-  const [shouldDarken, setShouldDarken] = useState(false);
   const [showScrollArrow, setShowScrollArrow] = useState(true);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [resumeInView, setResumeInView] = useState(false);
-  const triangleIdCounter = useRef(0);
-  const darkenTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const resumeRef = useRef<HTMLDivElement>(null);
 
@@ -109,203 +87,6 @@ export default function Home() {
   useEffect(() => {
     setHasLoaded(true);
   }, []);
-
-  useEffect(() => {
-    let animationFrameId: number;
-    
-    const animate = () => {
-      setTriangles((prevTriangles) => {
-        return prevTriangles
-          .map((triangle) => {
-            // Calculate distance from mouse to triangle
-            const dx = triangle.x - mousePos.x;
-            const dy = triangle.y - mousePos.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            
-            // Gradually fade out when mouse stops moving (with delay)
-            let newDarkenProgress = triangle.darkenProgress;
-            if (shouldDarken) {
-              // Gradually increase darken progress (0 to 1 over time)
-              newDarkenProgress = Math.min(1, triangle.darkenProgress + 0.02);
-            } else if (isMouseMoving) {
-              // Gradually decrease darken progress when moving
-              newDarkenProgress = Math.max(0, triangle.darkenProgress - 0.05);
-            }
-            
-            // Calculate base opacity from distance (start fading at 100px, gone by 180px)
-            const maxDistance = 180;
-            const fadeStart = 100;
-            let distanceOpacity = 1;
-            
-            if (distance > fadeStart) {
-              // Steeper fade curve - triangles fade faster as they get farther
-              const fadeProgress = (distance - fadeStart) / (maxDistance - fadeStart);
-              distanceOpacity = Math.max(0, 1 - Math.pow(fadeProgress, 0.7)); // Power < 1 for steeper fade
-            }
-            
-            // Apply stop-motion fade: use MAX of distance fade and darken progress
-            // This ensures outer triangles fade first (from distance), then inner ones (from darken)
-            const fadeMultiplier = 1 - newDarkenProgress; // 1 = full opacity, 0 = transparent
-            const newOpacity = Math.min(distanceOpacity, fadeMultiplier) * 0.8; // Reduce overall opacity to 50%
-            
-            // Calculate brightness based on distance (closer = brighter)
-            const maxBrightnessDistance = 160;
-            const brightness = distance < maxBrightnessDistance ? 1 - (distance / maxBrightnessDistance) : 0;
-
-            // Calculate rotation based on mouse movement and proximity
-            let rotationChange = 0;
-            if (isMouseMoving && distance < 160) {
-              // Stronger effect when mouse is closer and moving
-              const influence = 1 - (distance / 160);
-              const velocityMagnitude = Math.sqrt(mouseVelocity.vx * mouseVelocity.vx + mouseVelocity.vy * mouseVelocity.vy);
-              // Use same rotation speed for all triangles (sign determines direction)
-              const direction = triangle.rotationSpeed > 0 ? 1 : -1;
-              // Speed multiplier based on distance (closer = much faster, outer = much slower)
-              const speedMultiplier = 0.1 + (influence * 2.9); // Range from 0.1 (far) to 3.0 (close)
-              rotationChange = direction * influence * Math.min(velocityMagnitude / 2.5, 15) * speedMultiplier;
-            }
-            
-            return {
-              ...triangle,
-              rotationX: triangle.rotationX + rotationChange,
-              rotationY: triangle.rotationY + rotationChange * 0.7,
-              rotationZ: triangle.rotationZ + rotationChange * 1.2,
-              opacity: newOpacity,
-              brightness: brightness,
-              darkenProgress: newDarkenProgress,
-            };
-          })
-          .filter((triangle) => triangle.opacity > 0);
-      });
-      
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    if (isHovering) {
-      animationFrameId = requestAnimationFrame(animate);
-    }
-
-    return () => {
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
-    };
-  }, [isHovering, mousePos, isMouseMoving, mouseVelocity, shouldDarken]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const newX = e.clientX;
-    const newY = e.clientY + window.scrollY; // Add scroll offset
-    
-    // Calculate velocity
-    const vx = newX - mousePos.x;
-    const vy = newY - mousePos.y;
-    setMouseVelocity({ vx, vy });
-    
-    setMousePos({ x: newX, y: newY });
-    setIsMouseMoving(true);
-    
-    if (isHovering) {
-      const maxTriangles = 100; // Keep 100 triangles around the mouse
-      
-      setTriangles((prev) => {
-        // If we have fewer triangles than the max, add more
-        if (prev.length < maxTriangles) {
-          const trianglesToAdd = Math.min(8, maxTriangles - prev.length);
-          const newTriangles = [];
-          
-          for (let i = 0; i < trianglesToAdd; i++) {
-            let attempts = 0;
-            let validPosition = false;
-            let triangleX: number = 0;
-            let triangleY: number = 0;
-            
-            // Try to find a position that doesn't overlap with existing triangles
-            while (!validPosition && attempts < 10) {
-              // Generate random angle and distance from mouse cursor
-              const angle = Math.random() * Math.PI * 2;
-              const distance = Math.random() * 170 + 30; // Random distance between 30-200px from cursor
-              const offsetX = Math.cos(angle) * distance;
-              const offsetY = Math.sin(angle) * distance;
-              
-              triangleX = newX + offsetX;
-              triangleY = newY + offsetY;
-              
-              // Check if this position is far enough from existing triangles
-              const minDistance = 25; // Minimum distance between triangles
-              validPosition = prev.every(triangle => {
-                const dx = triangle.x - triangleX;
-                const dy = triangle.y - triangleY;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                return dist > minDistance;
-              });
-              
-              attempts++;
-            }
-            
-            // Only add if we found a valid position
-            if (validPosition) {
-              triangleIdCounter.current += 1;
-              // Randomly choose between normal (0°) and upside-down (180°)
-              const initialRotationZ = Math.random() < 0.5 ? 0 : 180;
-              newTriangles.push({
-                id: triangleIdCounter.current,
-                x: triangleX,
-                y: triangleY,
-                rotationX: 0,
-                rotationY: 0,
-                rotationZ: initialRotationZ,
-                rotationSpeed: 8,
-                size: 30, // Fixed size for all triangles
-                opacity: 1,
-                brightness: 1,
-                darkenProgress: 0,
-              });
-            }
-          }
-          
-          return [...prev, ...newTriangles];
-        }
-        
-        return prev;
-      });
-    }
-  };
-
-  // Detect when mouse stops moving
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setIsMouseMoving(false);
-    }, 100);
-    
-    return () => clearTimeout(timeout);
-  }, [mousePos]);
-
-  // Delay before starting to darken after mouse stops
-  useEffect(() => {
-    if (!isMouseMoving) {
-      // Clear any existing timeout
-      if (darkenTimeoutRef.current) {
-        clearTimeout(darkenTimeoutRef.current);
-      }
-      // Start darkening after 1 second delay
-      darkenTimeoutRef.current = setTimeout(() => {
-        setShouldDarken(true);
-      }, 1000);
-    } else {
-      // Mouse is moving, cancel darkening immediately
-      if (darkenTimeoutRef.current) {
-        clearTimeout(darkenTimeoutRef.current);
-        darkenTimeoutRef.current = null;
-      }
-      setShouldDarken(false);
-    }
-    
-    return () => {
-      if (darkenTimeoutRef.current) {
-        clearTimeout(darkenTimeoutRef.current);
-      }
-    };
-  }, [isMouseMoving]);
 
   // Hide scroll arrow and manage nav visibility on scroll
   useEffect(() => {
@@ -354,14 +135,6 @@ export default function Home() {
     };
   }, [resumeInView]);
 
-  const handleMouseEnter = () => {
-    setIsHovering(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovering(false);
-    setTriangles([]);
-  };
   const socialLinks = [
     {
       name: "GitHub",
@@ -388,11 +161,6 @@ export default function Home() {
       url: "https://www.facebook.com/chiu.alex.417443",
       icon: "M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z",
     },
-    {
-      name: "Email",
-      url: "mailto:b14901022@g.ntu.edu.tw",
-      icon: "M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z",
-    },
   ];
 
   return (
@@ -405,11 +173,12 @@ export default function Home() {
       >
         <div className="max-w-6xl mx-auto px-8 py-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>Chiu Alex</h2>
+            <Link href="/" className="text-xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>Chiu Alex</Link>
             <div className="flex gap-6" style={{ fontFamily: 'var(--font-poppins)' }}>
               <a href="#about" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Intro</a>
               <a href="#resume" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Resume</a>
               <a href="#projects" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Projects</a>
+              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Photography</Link>
               <a href="#contact" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Contact</a>
             </div>
           </div>
@@ -422,41 +191,7 @@ export default function Home() {
           background: 'linear-gradient(to right, #dbeafe 0%, #dbeafe 40%, #ffffff 40%, #ffffff 100%)',
           fontFamily: 'var(--font-inter)'
         }}
-        onMouseMove={handleMouseMove}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
       >
-        {/* Animated Triangles */}
-        {triangles.map((triangle) => (
-          <div
-            key={triangle.id}
-            className="absolute pointer-events-none z-0"
-            style={{
-              left: triangle.x,
-              top: triangle.y,
-              transform: `translate(-50%, -50%) rotateX(${triangle.rotationX}deg) rotateY(${triangle.rotationY}deg) rotateZ(${triangle.rotationZ}deg)`,
-              transformStyle: 'preserve-3d',
-              opacity: triangle.opacity,
-            }}
-          >
-            <svg
-              width={triangle.size}
-              height={triangle.size}
-              viewBox="0 0 100 100"
-              style={{
-                filter: `brightness(${triangle.brightness}) drop-shadow(0 0 2px rgba(255, 255, 255, ${triangle.brightness * 0.5}))`,
-              }}
-            >
-              <polygon
-                points="50,10 90,90 10,90"
-                fill="none"
-                stroke="black"
-                strokeWidth="3"
-              />
-            </svg>
-          </div>
-        ))}
-
         <main className="flex w-full max-w-6xl flex-col items-center mx-auto px-8 py-16 relative z-10">
           {/* Transparent Spacer Bottom */}
           <div className="w-full" style={{ height: '5vh' }}></div>
@@ -493,18 +228,6 @@ export default function Home() {
                 backfaceVisibility: 'hidden'
               }}
             >
-              <div className="mb-4 inline-block">
-                <div className="relative h-52 w-52 overflow-hidden rounded-full mx-auto">
-                  <Image
-                    src="/image.jpg"
-                    alt="Chiu Alex Profile Picture"
-                    width={208}
-                    height={208}
-                    className="object-cover"
-                  />
-                </div>
-              </div>
-
               <h1 className="mb-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl" style={{ fontFamily: 'var(--font-playfair)' }}>
                 Chiu Alex
               </h1>
@@ -950,7 +673,8 @@ export default function Home() {
             }`}
             style={{ 
               minHeight: '80vh',
-              perspective: '1500px'
+              perspective: '1500px',
+              marginTop: '20rem'
             }}
           >
             <div className="projects-background">
@@ -1143,50 +867,116 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Social Links */}
-          <div 
-            id="contact" 
-            className={`w-full mb-10 transition-all duration-1000 delay-[1300ms] ${
-              hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
-          >
-            <h2 className="mb-6 text-center text-2xl font-semibold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
-              Connect With Me
-            </h2>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-              {socialLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group relative flex flex-col items-center justify-center gap-3 bg-gray-100 p-6 shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl"
-                >
-                  <DualRingEffect />
-                  <svg
-                    className="relative z-20 h-8 w-8 fill-gray-700"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d={link.icon} />
-                  </svg>
-                  <span className="relative z-20 text-sm font-medium text-gray-700">
-                    {link.name}
-                  </span>
-                </a>
-              ))}
+        </main>
+
+        {/* Footer */}
+        <footer 
+          id="contact"
+          className={`w-full bg-gray-900 text-gray-300 transition-all duration-1000 delay-[1500ms] ${
+            hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}
+        >
+          <div className="w-full px-8 py-12">
+            <div className="max-w-6xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                {/* Quick Links */}
+                <div>
+                  <h3 className="text-white font-semibold mb-4 text-lg" style={{ fontFamily: 'var(--font-playfair)' }}>
+                    Quick Links
+                  </h3>
+                  <ul className="space-y-2">
+                    <li>
+                      <a href="#about" className="hover:text-white transition-colors duration-200" style={{ fontFamily: 'var(--font-poppins)' }}>
+                        Intro
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#resume" className="hover:text-white transition-colors duration-200" style={{ fontFamily: 'var(--font-poppins)' }}>
+                        Resume
+                      </a>
+                    </li>
+                      <li>
+                        <a href="#projects" className="hover:text-white transition-colors duration-200" style={{ fontFamily: 'var(--font-poppins)' }}>
+                          Projects
+                        </a>
+                      </li>
+                      <li>
+                        <Link href="/photography" className="hover:text-white transition-colors duration-200" style={{ fontFamily: 'var(--font-poppins)' }}>
+                          Photography
+                        </Link>
+                      </li>
+                      <li>
+                        <a href="#contact" className="hover:text-white transition-colors duration-200" style={{ fontFamily: 'var(--font-poppins)' }}>
+                          Contact
+                        </a>
+                      </li>
+                  </ul>
+                </div>
+
+                {/* Contact Info */}
+                <div>
+                  <h3 className="text-white font-semibold mb-4 text-lg" style={{ fontFamily: 'var(--font-playfair)' }}>
+                    Contact
+                  </h3>
+                  <ul className="space-y-2" style={{ fontFamily: 'var(--font-poppins)' }}>
+                    <li>
+                      <a 
+                        href="mailto:b14901022@g.ntu.edu.tw" 
+                        className="hover:text-white transition-colors duration-200"
+                      >
+                        b14901022@g.ntu.edu.tw
+                      </a>
+                    </li>
+                    <li className="text-gray-400">
+                      Taipei, Taiwan
+                    </li>
+                    <li className="text-gray-400">
+                      National Taiwan University
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Social Media - All Links */}
+                <div className="md:col-span-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                    {socialLinks.map((link) => (
+                      <a
+                        key={link.name}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group relative flex flex-col items-center justify-center gap-2 bg-gray-800 p-4 rounded-lg hover:bg-gray-700 transition-all duration-300 hover:scale-105"
+                      >
+                        <svg
+                          className="h-6 w-6 fill-gray-300 group-hover:fill-white transition-colors"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d={link.icon} />
+                        </svg>
+                        <span className="text-xs font-medium text-gray-300 group-hover:text-white transition-colors" style={{ fontFamily: 'var(--font-poppins)' }}>
+                          {link.name}
+                        </span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className="border-t border-gray-800 pt-8">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                  <p className="text-sm text-gray-400" style={{ fontFamily: 'var(--font-poppins)' }}>
+                    © 2025 Chiu Alex. All rights reserved.
+                  </p>
+                  <p className="text-sm text-gray-500" style={{ fontFamily: 'var(--font-poppins)' }}>
+                    Built with Next.js & Tailwind CSS
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-
-          {/* Footer */}
-          <footer 
-            className={`mt-16 text-center text-sm text-gray-600 transition-all duration-1000 delay-[1500ms] ${
-              hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
-          >
-            <p>© 2025 Chiu Alex. Built with Next.js & Tailwind CSS</p>
-          </footer>
-        </main>
+        </footer>
       </div>
     </>
   );
