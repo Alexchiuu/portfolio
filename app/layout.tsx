@@ -20,7 +20,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Your Name - Personal Website",
+  title: "Chiu Alex",
   description: "Personal website showcasing my work and connecting with the community. Software Developer & Designer.",
 };
 

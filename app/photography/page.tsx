@@ -109,8 +109,8 @@ export default function PhotographyPage() {
             </Link>
             <div className="flex gap-6" style={{ fontFamily: 'var(--font-poppins)' }}>
               <Link href="/#about" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Intro</Link>
-              <Link href="/#resume" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Resume</Link>
-              <Link href="/#projects" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Projects</Link>
+              <Link href="/resume" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Resume</Link>
+              <Link href="/projects" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Projects</Link>
               <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Photography</Link>
               <Link href="/#contact" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Contact</Link>
             </div>
