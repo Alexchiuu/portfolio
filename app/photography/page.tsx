@@ -291,17 +291,18 @@ export default function PhotographyPage() {
           hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full'
         }`}
       >
-        <div className="max-w-6xl mx-auto px-8 py-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-8 py-3 sm:py-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="text-xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
+            <Link href="/" className="text-lg sm:text-xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
               Chiu Alex
             </Link>
-            <div className="flex gap-6" style={{ fontFamily: 'var(--font-poppins)' }}>
-              <Link href="/" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Intro</Link>
-              <Link href="/resume" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Resume</Link>
-              <Link href="/projects" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Projects</Link>
-              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Photography</Link>
-              <Link href="/#contact" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Contact</Link>
+            <div className="flex gap-2 sm:gap-4 md:gap-6 text-sm sm:text-base" style={{ fontFamily: 'var(--font-poppins)' }}>
+              <Link href="/" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">Intro</Link>
+              <Link href="/resume" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">Resume</Link>
+              <Link href="/projects" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">Projects</Link>
+              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden sm:inline">Photo</Link>
+              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap sm:hidden">Photo</Link>
+              <Link href="/#contact" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden md:inline">Contact</Link>
             </div>
           </div>
         </div>
@@ -328,13 +329,7 @@ export default function PhotographyPage() {
             >
               Photography
             </h1>
-            <div className="w-24 h-1 bg-blue-600 mx-auto mb-6"></div>
-            <p 
-              className="text-lg text-gray-600 max-w-2xl mx-auto" 
-              style={{ fontFamily: 'var(--font-poppins)' }}
-            >
-              Capturing moments and perspectives from around the world
-            </p>
+            <div className="w-24 h-1 bg-blue-600 mx-auto"></div>
           </div>
 
           {/* City Filter */}
@@ -382,10 +377,10 @@ export default function PhotographyPage() {
                   }}
                 >
                   <div 
-                    className="flex items-center gap-8 py-12" 
+                    className="flex items-center gap-4 sm:gap-8 py-8 sm:py-12" 
                     style={{ 
-                      paddingLeft: 'calc(50vw - 400px)', 
-                      paddingRight: 'calc(50vw - 400px)',
+                      paddingLeft: 'max(1rem, calc(50vw - min(400px, 45vw)))', 
+                      paddingRight: 'max(1rem, calc(50vw - min(400px, 45vw)))',
                       minWidth: 'max-content',
                       overflow: 'visible'
                     }}
@@ -406,8 +401,8 @@ export default function PhotographyPage() {
                           style={{
                             opacity: opacity,
                             transform: `scale(${scale})`,
-                            width: '800px',
-                            height: '600px'
+                            width: 'min(800px, 90vw)',
+                            height: 'min(600px, calc(90vw * 0.75))'
                           }}
                           onClick={() => handlePhotoClick(photo)}
                         >
@@ -417,7 +412,7 @@ export default function PhotographyPage() {
                             alt={photo.alt}
                             fill
                               className="object-contain rounded-2xl"
-                              sizes="800px"
+                              sizes="(max-width: 768px) 90vw, 800px"
                             />
                     </div>
                   </div>
