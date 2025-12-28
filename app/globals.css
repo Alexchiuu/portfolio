@@ -271,3 +271,8 @@ body {
   border-color: rgba(99, 102, 241, 0.3);
   transform: translateY(-2px);
 }
+
+/* Hide scrollbar for thumbnail strip */
+.thumbnail-scroll::-webkit-scrollbar {
+  display: none;
+}

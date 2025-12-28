@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -25,10 +25,17 @@ interface PhotoMetadata {
 
 export default function PhotographyPage() {
   const [hasLoaded, setHasLoaded] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [cities, setCities] = useState<string[]>([]);
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [exifData, setExifData] = useState<any>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const photoRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isScrollingRef = useRef(false);
 
   const categories = ["all", "landscape", "urban", "nature"];
 
@@ -70,9 +77,15 @@ export default function PhotographyPage() {
           return cityA.localeCompare(cityB);
         });
 
+        const validCities = citiesList.filter(city => city !== 'No GPS Data');
         setPhotos(photosList);
         setCities(citiesList);
+        // Set initial category to first valid city
+        if (validCities.length > 0) {
+          setSelectedCategory(validCities[0]);
+        }
         setHasLoaded(true);
+        photoRefs.current = new Array(photosList.length).fill(null);
       } catch (error) {
         console.error('Error loading photo metadata:', error);
         setHasLoaded(true);
@@ -82,17 +95,196 @@ export default function PhotographyPage() {
     loadPhotos();
   }, []);
 
-  const filteredPhotos = selectedCategory === "all" 
-    ? photos 
-    : photos.filter(photo => photo.city === selectedCategory);
+  const filteredPhotos = photos.filter(photo => photo.city === selectedCategory);
 
-  const openModal = (photo: Photo) => {
+  // Reset to first photo when category changes
+  useEffect(() => {
+    setCurrentPhotoIndex(0);
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollLeft = 0;
+    }
+    // Clear any pending scroll timeout
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
+    }
+  }, [selectedCategory]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Scroll to center photo when index changes (only if not user scrolling)
+  useEffect(() => {
+    if (!isScrollingRef.current && photoRefs.current[currentPhotoIndex] && scrollContainerRef.current) {
+      const photoElement = photoRefs.current[currentPhotoIndex];
+      const container = scrollContainerRef.current;
+      const containerWidth = container.offsetWidth;
+      const photoLeft = photoElement.offsetLeft;
+      const photoWidth = photoElement.offsetWidth;
+      const scrollPosition = photoLeft - (containerWidth / 2) + (photoWidth / 2);
+      
+      container.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      });
+    }
+  }, [currentPhotoIndex, filteredPhotos.length]);
+
+  // Handle scroll to detect current photo and snap to center
+  const handleScroll = () => {
+    if (!scrollContainerRef.current) return;
+    
+    isScrollingRef.current = true;
+    const container = scrollContainerRef.current;
+    const containerCenter = container.scrollLeft + container.offsetWidth / 2;
+    
+    let closestIndex = 0;
+    let closestDistance = Infinity;
+
+    photoRefs.current.forEach((ref, index) => {
+      if (ref) {
+        const photoCenter = ref.offsetLeft + ref.offsetWidth / 2;
+        const distance = Math.abs(photoCenter - containerCenter);
+        
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      }
+    });
+
+    if (closestIndex !== currentPhotoIndex) {
+      setCurrentPhotoIndex(closestIndex);
+    }
+
+    // Clear existing timeout
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
+    }
+
+    // Set timeout to snap to center after scrolling stops
+    scrollTimeoutRef.current = setTimeout(() => {
+      snapToCenter();
+      isScrollingRef.current = false;
+    }, 150);
+  };
+
+  // Snap to center photo
+  const snapToCenter = () => {
+    if (!scrollContainerRef.current || filteredPhotos.length === 0) return;
+
+    const container = scrollContainerRef.current;
+    const containerCenter = container.scrollLeft + container.offsetWidth / 2;
+    
+    let closestIndex = 0;
+    let closestDistance = Infinity;
+    let closestPhotoElement: HTMLDivElement | null = null;
+
+    photoRefs.current.forEach((ref, index) => {
+      if (ref) {
+        const photoCenter = ref.offsetLeft + ref.offsetWidth / 2;
+        const distance = Math.abs(photoCenter - containerCenter);
+        
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+          closestPhotoElement = ref;
+        }
+      }
+    });
+
+    // Snap to the closest photo
+    if (closestPhotoElement) {
+      const photoLeft = closestPhotoElement.offsetLeft;
+      const photoWidth = closestPhotoElement.offsetWidth;
+      const scrollPosition = photoLeft - (container.offsetWidth / 2) + (photoWidth / 2);
+      
+      container.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      });
+
+      setCurrentPhotoIndex(closestIndex);
+    }
+  };
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        goToPrevious();
+      } else if (e.key === 'ArrowRight') {
+        goToNext();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [currentPhotoIndex, filteredPhotos.length]);
+
+  const goToPrevious = () => {
+    isScrollingRef.current = false;
+    setCurrentPhotoIndex((prev) => 
+      prev === 0 ? filteredPhotos.length - 1 : prev - 1
+    );
+  };
+
+  const goToNext = () => {
+    isScrollingRef.current = false;
+    setCurrentPhotoIndex((prev) => 
+      prev === filteredPhotos.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const currentPhoto = filteredPhotos[currentPhotoIndex];
+
+  // Handle photo click to open modal
+  const handlePhotoClick = async (photo: Photo) => {
     setSelectedPhoto(photo);
+    setIsModalOpen(true);
+    setExifData(null);
+    
+    // Extract EXIF data from the image
+    try {
+      const exifrModule = await import('exifr');
+      const exif = await exifrModule.default.parse(photo.src, {
+        exif: true,
+        gps: true,
+        iptc: true,
+        ifd0: true,
+        ifd1: true,
+        translateKeys: true,
+        translateValues: true,
+        reviveValues: true,
+      });
+      setExifData(exif);
+    } catch (error) {
+      console.error('Error extracting EXIF data:', error);
+    }
   };
 
+  // Close modal
   const closeModal = () => {
+    setIsModalOpen(false);
     setSelectedPhoto(null);
+    setExifData(null);
   };
+
+  // Handle keyboard escape to close modal
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isModalOpen) {
+        closeModal();
+      }
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isModalOpen]);
 
   return (
     <>
@@ -119,13 +311,14 @@ export default function PhotographyPage() {
       </nav>
 
       <div 
-        className="min-h-screen relative overflow-hidden pt-20"
+        className="min-h-screen relative pt-20"
         style={{ 
           background: 'linear-gradient(to right, #dbeafe 0%, #dbeafe 40%, #ffffff 40%, #ffffff 100%)',
-          fontFamily: 'var(--font-inter)'
+          fontFamily: 'var(--font-inter)',
+          overflowY: 'visible'
         }}
       >
-        <main className="flex w-full max-w-7xl flex-col items-center mx-auto px-8 py-16 relative z-10">
+        <main className="flex w-full max-w-7xl flex-col items-center mx-auto px-0 py-16 relative z-10" style={{ overflow: 'visible' }}>
           {/* Header */}
           <div 
             className={`w-full text-center mb-12 transition-all duration-1000 delay-300 ${
@@ -153,17 +346,6 @@ export default function PhotographyPage() {
                 hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
             >
-              <button
-                onClick={() => setSelectedCategory("all")}
-                className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
-                  selectedCategory === "all"
-                    ? 'bg-gray-900 text-white shadow-lg'
-                    : 'bg-white text-gray-700 hover:bg-gray-100 shadow-md'
-                }`}
-                style={{ fontFamily: 'var(--font-poppins)' }}
-              >
-                All Cities
-              </button>
               {cities.filter(city => city !== 'No GPS Data').map((city) => (
                 <button
                   key={city}
@@ -181,101 +363,74 @@ export default function PhotographyPage() {
             </div>
           )}
 
-          {/* Photo Gallery */}
+          {/* Film Strip Gallery */}
+          {filteredPhotos.length > 0 && (
           <div 
-            className={`w-full transition-all duration-1000 delay-700 ${
+              className={`w-screen transition-all duration-1000 delay-700 ${
               hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
-          >
-            {selectedCategory === "all" ? (
-              // Group by city when showing all
-              cities.map((city) => {
-                const cityPhotos = photos.filter(photo => photo.city === city);
-                if (cityPhotos.length === 0) return null;
+              style={{ overflow: 'visible', marginLeft: 'calc(-50vw + 50%)', marginRight: 'calc(-50vw + 50%)' }}
+            >
+              {/* Scrollable Container */}
+              <div className="relative w-full" style={{ overflow: 'visible' }}>
+                <div
+                  ref={scrollContainerRef}
+                  onScroll={handleScroll}
+                  className="w-full overflow-x-auto pb-8"
+                  style={{
+                    scrollbarWidth: 'none',
+                    msOverflowStyle: 'none',
+                    overflowY: 'visible'
+                  }}
+                >
+                  <div 
+                    className="flex items-center gap-8 py-12" 
+                    style={{ 
+                      paddingLeft: 'calc(50vw - 400px)', 
+                      paddingRight: 'calc(50vw - 400px)',
+                      minWidth: 'max-content',
+                      overflow: 'visible'
+                    }}
+                  >
+                    {filteredPhotos.map((photo, index) => {
+                      const isActive = index === currentPhotoIndex;
+                      const distance = Math.abs(index - currentPhotoIndex);
+                      const opacity = isActive ? 1 : Math.max(0.2, 1 - distance * 0.25);
+                      const scale = isActive ? 1 : Math.max(0.5, 1 - distance * 0.12);
                 
                 return (
-                  <div key={city} className="mb-12">
-                    <h2 
-                      className="text-3xl font-bold text-gray-900 mb-6" 
-                      style={{ fontFamily: 'var(--font-playfair)' }}
-                    >
-                      {city === 'No GPS Data' ? 'Other Photos' : city} <span className="text-lg font-normal text-gray-500">({cityPhotos.length})</span>
-                    </h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {cityPhotos.map((photo, index) => (
                         <div
                           key={photo.id}
-                          className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer bg-gray-100 aspect-[4/3]"
-                          onClick={() => openModal(photo)}
-                          style={{
-                            animationDelay: `${index * 100}ms`
+                          ref={(el) => {
+                            photoRefs.current[index] = el;
                           }}
+                          className="flex-shrink-0 transition-all duration-500 ease-out cursor-pointer"
+                          style={{
+                            opacity: opacity,
+                            transform: `scale(${scale})`,
+                            width: '800px',
+                            height: '600px'
+                          }}
+                          onClick={() => handlePhotoClick(photo)}
                         >
+                          <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl">
                           <Image
                             src={photo.src}
                             alt={photo.alt}
                             fill
-                            className="object-cover"
-                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                          />
-                          
-                          {/* Overlay on hover */}
-                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center">
-                            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-center p-4">
-                              <h3 className="font-semibold text-lg mb-1" style={{ fontFamily: 'var(--font-playfair)' }}>
-                                {photo.title}
-                              </h3>
-                              {photo.location && (
-                                <p className="text-sm" style={{ fontFamily: 'var(--font-poppins)' }}>
-                                  {photo.location}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
+                              className="object-contain rounded-2xl"
+                              sizes="800px"
+                            />
                     </div>
                   </div>
                 );
-              })
-            ) : (
-              // Show photos in grid when a specific city is selected
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredPhotos.map((photo, index) => (
-                  <div
-                    key={photo.id}
-                    className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer bg-gray-100 aspect-[4/3]"
-                    onClick={() => openModal(photo)}
-                    style={{
-                      animationDelay: `${index * 100}ms`
-                    }}
-                  >
-                    <Image
-                      src={photo.src}
-                      alt={photo.alt}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    />
-                    
-                    {/* Overlay on hover */}
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center">
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-center p-4">
-                        <h3 className="font-semibold text-lg mb-1" style={{ fontFamily: 'var(--font-playfair)' }}>
-                          {photo.title}
-                        </h3>
-                        {photo.location && (
-                          <p className="text-sm" style={{ fontFamily: 'var(--font-poppins)' }}>
-                            {photo.location}
-                          </p>
-                        )}
-                      </div>
+                    })}
                     </div>
                   </div>
-                ))}
+              </div>
+
               </div>
             )}
-          </div>
 
           {/* Empty State */}
           {filteredPhotos.length === 0 && (
@@ -286,58 +441,122 @@ export default function PhotographyPage() {
             </div>
           )}
         </main>
+      </div>
 
-        {/* Modal for full-size photo view */}
-        {selectedPhoto && (
+      {/* Photo Modal */}
+      {isModalOpen && selectedPhoto && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          onClick={closeModal}
+        >
+          {/* Black low opacity backdrop */}
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+          
+          {/* Modal Content */}
           <div 
-            className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
-            onClick={closeModal}
+            className="relative z-10 max-w-5xl w-full max-h-[90vh] overflow-auto"
+            onClick={(e) => e.stopPropagation()}
           >
-            <div 
-              className="relative max-w-5xl max-h-[90vh] w-full"
-              onClick={(e) => e.stopPropagation()}
-            >
+            {/* Photo Frame/Case */}
+            <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-12">
+              {/* Close Button */}
               <button
                 onClick={closeModal}
-                className="absolute top-4 right-4 z-10 text-white hover:text-gray-300 transition-colors bg-black/50 rounded-full p-2"
-                aria-label="Close"
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-3xl font-light z-20"
+                style={{ fontFamily: 'var(--font-poppins)' }}
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                ×
               </button>
               
-              <div className="bg-white rounded-lg overflow-hidden">
-                <div className="relative w-full aspect-video bg-gray-100">
+              {/* Photo in Frame */}
+              <div className="relative w-full mb-6">
+                <div className="relative rounded-lg overflow-hidden bg-black p-4 shadow-inner" style={{ aspectRatio: '4/3' }}>
+                  <div className="relative w-full h-full rounded-md overflow-hidden bg-gray-900">
                   <Image
                     src={selectedPhoto.src}
                     alt={selectedPhoto.alt}
                     fill
                     className="object-contain"
-                    sizes="90vw"
+                      sizes="(max-width: 768px) 100vw, 1200px"
+                      priority
                   />
+                  </div>
                 </div>
-                <div className="p-6">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'var(--font-playfair)' }}>
-                    {selectedPhoto.title}
-                  </h2>
+              </div>
+
+              {/* Photo Information */}
+              <div className="space-y-4" style={{ fontFamily: 'var(--font-poppins)' }}>
+                {/* Basic Info */}
                   {selectedPhoto.location && (
-                    <p className="text-gray-600 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
-                      📍 {selectedPhoto.location}
-                    </p>
-                  )}
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Location</h3>
+                    <p className="text-lg text-gray-900">{selectedPhoto.location}</p>
+                  </div>
+                )}
+                
                   {selectedPhoto.date && (
-                    <p className="text-gray-500 text-sm" style={{ fontFamily: 'var(--font-poppins)' }}>
-                      {selectedPhoto.date}
-                    </p>
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Date</h3>
+                    <p className="text-lg text-gray-900">{selectedPhoto.date}</p>
+                  </div>
+                )}
+
+                {/* EXIF Data */}
+                {exifData && (
+                  <div className="pt-4 border-t border-gray-200">
+                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Camera Settings</h3>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {exifData.Make && exifData.Model && (
+                        <div>
+                          <p className="text-xs text-gray-500 uppercase">Camera</p>
+                          <p className="text-sm text-gray-900">{exifData.Make} {exifData.Model}</p>
+                        </div>
+                      )}
+                      {exifData.FocalLength && (
+                        <div>
+                          <p className="text-xs text-gray-500 uppercase">Focal Length</p>
+                          <p className="text-sm text-gray-900">{exifData.FocalLength}{exifData.FocalLengthIn35mmFormat && ` (${exifData.FocalLengthIn35mmFormat}mm equiv.)`}</p>
+                        </div>
+                      )}
+                      {exifData.FNumber && (
+                        <div>
+                          <p className="text-xs text-gray-500 uppercase">Aperture</p>
+                          <p className="text-sm text-gray-900">f/{exifData.FNumber}</p>
+                        </div>
+                      )}
+                      {exifData.ExposureTime && (
+                        <div>
+                          <p className="text-xs text-gray-500 uppercase">Shutter Speed</p>
+                          <p className="text-sm text-gray-900">{exifData.ExposureTime}s</p>
+                        </div>
+                      )}
+                      {exifData.ISO && (
+                        <div>
+                          <p className="text-xs text-gray-500 uppercase">ISO</p>
+                          <p className="text-sm text-gray-900">{exifData.ISO}</p>
+                        </div>
+                      )}
+                      {exifData.LensModel && (
+                        <div>
+                          <p className="text-xs text-gray-500 uppercase">Lens</p>
+                          <p className="text-sm text-gray-900">{exifData.LensModel}</p>
+                        </div>
+                      )}
+                      {exifData.ImageWidth && exifData.ImageHeight && (
+                        <div>
+                          <p className="text-xs text-gray-500 uppercase">Resolution</p>
+                          <p className="text-sm text-gray-900">{exifData.ImageWidth} × {exifData.ImageHeight}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                   )}
                 </div>
               </div>
             </div>
           </div>
         )}
-      </div>
+
     </>
   );
 }
-
