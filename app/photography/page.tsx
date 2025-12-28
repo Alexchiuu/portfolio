@@ -33,7 +33,7 @@ export default function PhotographyPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [exifData, setExifData] = useState<any>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const photoRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const photoRefs = useRef<Array<HTMLDivElement | null>>([]);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isScrollingRef = useRef(false);
 
@@ -77,7 +77,7 @@ export default function PhotographyPage() {
           return cityA.localeCompare(cityB);
         });
 
-        const validCities = citiesList.filter(city => city !== 'No GPS Data');
+        const validCities = citiesList.filter((city: string) => city !== 'No GPS Data');
         setPhotos(photosList);
         setCities(citiesList);
         // Set initial category to first valid city
@@ -183,7 +183,6 @@ export default function PhotographyPage() {
     
     let closestIndex = 0;
     let closestDistance = Infinity;
-    let closestPhotoElement: HTMLDivElement | null = null;
 
     photoRefs.current.forEach((ref, index) => {
       if (ref) {
@@ -193,12 +192,12 @@ export default function PhotographyPage() {
         if (distance < closestDistance) {
           closestDistance = distance;
           closestIndex = index;
-          closestPhotoElement = ref;
         }
       }
     });
 
     // Snap to the closest photo
+    const closestPhotoElement = photoRefs.current[closestIndex];
     if (closestPhotoElement) {
       const photoLeft = closestPhotoElement.offsetLeft;
       const photoWidth = closestPhotoElement.offsetWidth;
@@ -256,8 +255,6 @@ export default function PhotographyPage() {
         exif: true,
         gps: true,
         iptc: true,
-        ifd0: true,
-        ifd1: true,
         translateKeys: true,
         translateValues: true,
         reviveValues: true,
@@ -346,7 +343,7 @@ export default function PhotographyPage() {
                 hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
             >
-              {cities.filter(city => city !== 'No GPS Data').map((city) => (
+              {cities.filter((city: string) => city !== 'No GPS Data').map((city) => (
                 <button
                   key={city}
                   onClick={() => setSelectedCategory(city)}
