@@ -55,6 +55,8 @@ export default function Home() {
   const [isAtTop, setIsAtTop] = useState(true);
   const [scrollProgress, setScrollProgress] = useState(0);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const backgroundRef = useRef<HTMLDivElement>(null);
 
   // Entry animation effect
   useEffect(() => {
@@ -67,6 +69,19 @@ export default function Home() {
     if (typeof window !== 'undefined' && !window.location.hash) {
       window.scrollTo({ top: 0, behavior: 'instant' });
     }
+  }, []);
+
+  // Track mouse position for interactive background
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth) * 100,
+        y: (e.clientY / window.innerHeight) * 100,
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   // Hide scroll arrow and manage nav visibility on scroll
@@ -170,10 +185,71 @@ export default function Home() {
       <div 
         className="min-h-screen relative overflow-hidden pt-20"
         style={{ 
-          background: 'linear-gradient(to bottom, #f0f9ff 0%, #ffffff 100%)',
           fontFamily: 'var(--font-inter)'
         }}
+        ref={backgroundRef}
       >
+        {/* Interactive Background */}
+        <div 
+          className="fixed inset-0 -z-10 transition-opacity duration-1000"
+          style={{
+            background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                        linear-gradient(to bottom, #f0f9ff 0%, #ffffff 100%)`,
+          }}
+        />
+        
+        {/* Animated Gradient Orbs */}
+        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+          <div 
+            className="absolute rounded-full opacity-20 blur-3xl"
+            style={{
+              width: '600px',
+              height: '600px',
+              background: 'radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, transparent 70%)',
+              top: '10%',
+              left: '10%',
+              animation: 'float 20s ease-in-out infinite',
+            }}
+          />
+          <div 
+            className="absolute rounded-full opacity-15 blur-3xl"
+            style={{
+              width: '500px',
+              height: '500px',
+              background: 'radial-gradient(circle, rgba(37, 99, 235, 0.3) 0%, transparent 70%)',
+              bottom: '15%',
+              right: '15%',
+              animation: 'float 25s ease-in-out infinite reverse',
+              animationDelay: '2s',
+            }}
+          />
+          <div 
+            className="absolute rounded-full opacity-10 blur-3xl"
+            style={{
+              width: '400px',
+              height: '400px',
+              background: 'radial-gradient(circle, rgba(29, 78, 216, 0.3) 0%, transparent 70%)',
+              top: '50%',
+              left: '50%',
+              transform: `translate(calc(-50% + ${(mousePosition.x - 50) * 0.3}px), calc(-50% + ${(mousePosition.y - 50) * 0.3}px))`,
+              transition: 'transform 0.3s ease-out',
+            }}
+          />
+        </div>
+
+        {/* Animated Grid Pattern */}
+        <div 
+          className="fixed inset-0 -z-10 opacity-[0.03]"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(37, 99, 235, 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(37, 99, 235, 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '50px 50px',
+            transform: `translate(${(mousePosition.x - 50) * 0.1}px, ${(mousePosition.y - 50) * 0.1}px)`,
+            transition: 'transform 0.5s ease-out',
+          }}
+        />
         <main className="flex w-full max-w-6xl flex-col items-center mx-auto px-8 py-20 md:py-32 relative z-10">
 
           {/* Hero Section - Centered and Minimal */}
@@ -228,29 +304,29 @@ export default function Home() {
                 Passionate about technology, innovation, and creative problem-solving.
               </p>
               
-              <a 
-                href="https://www.google.com/maps/place/Taipei,+Taiwan"
-                target="_blank"
-                rel="noopener noreferrer"
+                  <a 
+                    href="https://www.google.com/maps/place/Taipei,+Taiwan"
+                    target="_blank"
+                    rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors duration-200 group"
                 style={{ fontFamily: 'var(--font-poppins)' }}
-              >
-                <svg 
+                  >
+                      <svg 
                   width="18" 
                   height="18" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        stroke="currentColor" 
                   strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                   className="transition-transform duration-200 group-hover:scale-110"
-                >
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                  <circle cx="12" cy="10" r="3" />
-                </svg>
+                      >
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                      </svg>
                 <span className="text-sm">Taipei, Taiwan</span>
-              </a>
+                  </a>
             </div>
           </div>
 
@@ -269,6 +345,203 @@ export default function Home() {
             <ScrollDownArrow />
           </div>
 
+          {/* Explore Section - About Me, Projects & Photography Preview */}
+          <div 
+            className={`mt-48 md:mt-64 mb-20 w-full max-w-6xl mx-auto transition-all duration-1000 delay-700 ${
+              hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
+          >
+            <h2 
+              className="text-4xl md:text-5xl font-bold text-gray-900 mb-12 text-center"
+              style={{ fontFamily: 'var(--font-playfair)' }}
+            >
+              Explore More
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* About Me Preview Card */}
+              <Link 
+                href="/resume"
+                className="group relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-200"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                {/* Preview Image */}
+                <div className="relative h-48 overflow-hidden bg-gradient-to-br from-blue-100 to-blue-200">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <svg 
+                      className="w-24 h-24 text-blue-300 opacity-50" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="relative p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <h3 
+                        className="text-2xl font-bold text-gray-900 mb-1 group-hover:text-blue-700 transition-colors"
+                        style={{ fontFamily: 'var(--font-playfair)' }}
+                      >
+                        About Me
+                      </h3>
+                      <p 
+                        className="text-gray-600 text-sm"
+                        style={{ fontFamily: 'var(--font-poppins)' }}
+                      >
+                        Education & Experience
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2 mb-4">
+                    <div className="flex items-center gap-2 text-gray-700">
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                      <span className="text-xs" style={{ fontFamily: 'var(--font-poppins)' }}>NTU Engineering</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-700">
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                      <span className="text-xs" style={{ fontFamily: 'var(--font-poppins)' }}>Research Projects</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center text-blue-600 font-medium text-sm group-hover:gap-2 transition-all duration-300" style={{ fontFamily: 'var(--font-poppins)' }}>
+                    <span>Learn More</span>
+                    <svg 
+                      className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </div>
+                </div>
+              </Link>
+
+              {/* Projects Preview Card */}
+              <Link 
+                href="/projects"
+                className="group relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-200"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                {/* Preview Image - Using project cover */}
+                <div className="relative h-48 overflow-hidden">
+                  <img 
+                    src="/projects/discord-bot.jpg" 
+                    alt="Projects" 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                </div>
+                <div className="relative p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <h3 
+                        className="text-2xl font-bold text-gray-900 mb-1 group-hover:text-blue-700 transition-colors"
+                        style={{ fontFamily: 'var(--font-playfair)' }}
+                      >
+                        Projects
+                      </h3>
+                      <p 
+                        className="text-gray-600 text-sm"
+                        style={{ fontFamily: 'var(--font-poppins)' }}
+                      >
+                        Technical Creations
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2 mb-4">
+                    <div className="flex items-center gap-2 text-gray-700">
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                      <span className="text-xs" style={{ fontFamily: 'var(--font-poppins)' }}>Discord Bot & Web Dev</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-700">
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                      <span className="text-xs" style={{ fontFamily: 'var(--font-poppins)' }}>ROS & Robotics</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center text-blue-600 font-medium text-sm group-hover:gap-2 transition-all duration-300" style={{ fontFamily: 'var(--font-poppins)' }}>
+                    <span>View Projects</span>
+                    <svg 
+                      className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </div>
+                </div>
+              </Link>
+
+              {/* Photography Preview Card */}
+              <Link 
+                href="/photography"
+                className="group relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-200"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                {/* Preview Image - Using photography image */}
+                <div className="relative h-48 overflow-hidden">
+                  <img 
+                    src="/photography/A6400838.JPG" 
+                    alt="Photography" 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/photography/A6400850.JPG';
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                </div>
+                <div className="relative p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <h3 
+                        className="text-2xl font-bold text-gray-900 mb-1 group-hover:text-blue-700 transition-colors"
+                        style={{ fontFamily: 'var(--font-playfair)' }}
+                      >
+                        Photography
+                      </h3>
+                      <p 
+                        className="text-gray-600 text-sm"
+                        style={{ fontFamily: 'var(--font-poppins)' }}
+                      >
+                        Travel Collection
+                      </p>
+                    </div>
+              </div>
+                  
+                  <div className="space-y-2 mb-4">
+                    <div className="flex items-center gap-2 text-gray-700">
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                      <span className="text-xs" style={{ fontFamily: 'var(--font-poppins)' }}>Landscape & Urban</span>
+              </div>
+                    <div className="flex items-center gap-2 text-gray-700">
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                      <span className="text-xs" style={{ fontFamily: 'var(--font-poppins)' }}>World Perspectives</span>
+              </div>
+              </div>
+
+                  <div className="flex items-center text-blue-600 font-medium text-sm group-hover:gap-2 transition-all duration-300" style={{ fontFamily: 'var(--font-poppins)' }}>
+                    <span>View Gallery</span>
+                    <svg 
+                      className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+              </div>
+              </div>
+              </Link>
+            </div>
+          </div>
 
         </main>
 
