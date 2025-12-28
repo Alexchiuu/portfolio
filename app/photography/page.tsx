@@ -310,24 +310,25 @@ export default function PhotographyPage() {
       <div 
         className="min-h-screen relative pt-20"
         style={{ 
-          background: 'linear-gradient(to right, #dbeafe 0%, #dbeafe 40%, #ffffff 40%, #ffffff 100%)',
+          background: 'linear-gradient(to bottom, #f0f9ff 0%, #ffffff 100%)',
           fontFamily: 'var(--font-inter)',
           overflowY: 'visible'
         }}
       >
-        <main className="flex w-full max-w-7xl flex-col items-center mx-auto px-0 py-16 relative z-10" style={{ overflow: 'visible' }}>
+        <main className="flex w-full max-w-7xl flex-col items-center mx-auto px-0 py-20 md:py-32 relative z-10" style={{ overflow: 'visible' }}>
           {/* Header */}
           <div 
-            className={`w-full text-center mb-12 transition-all duration-1000 delay-300 ${
+            className={`w-full text-center mb-16 transition-all duration-1000 delay-300 ${
               hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
             <h1 
-              className="mb-4 text-5xl font-bold text-gray-900 sm:text-6xl" 
+              className="mb-4 text-6xl md:text-7xl font-bold text-gray-900" 
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               Photography
             </h1>
+            <div className="w-24 h-1 bg-blue-600 mx-auto mb-6"></div>
             <p 
               className="text-lg text-gray-600 max-w-2xl mx-auto" 
               style={{ fontFamily: 'var(--font-poppins)' }}

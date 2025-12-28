@@ -43,7 +43,7 @@ export default function ResumePage() {
     const handleScroll = () => {
       if (resumeRef.current) {
         const rect = resumeRef.current.getBoundingClientRect();
-        const isInView = rect.top < window.innerHeight * 0.7 && rect.bottom > 0;
+        const isInView = rect.top < window.innerHeight * 0.8 && rect.bottom > 0;
         setResumeInView(isInView);
       }
     };
@@ -80,33 +80,35 @@ export default function ResumePage() {
       <div 
         className="min-h-screen relative overflow-hidden pt-20"
         style={{ 
-          background: 'linear-gradient(to right, #dbeafe 0%, #dbeafe 40%, #ffffff 40%, #ffffff 100%)',
+          background: 'linear-gradient(to bottom, #f0f9ff 0%, #ffffff 100%)',
           fontFamily: 'var(--font-inter)'
         }}
       >
-        <main className="flex w-full max-w-6xl flex-col items-center mx-auto px-8 py-16 relative z-10">
+        <main className="flex w-full max-w-6xl flex-col items-center mx-auto px-8 py-20 md:py-32 relative z-10">
+          {/* Title Section */}
+          <div 
+            className={`mb-16 w-full text-center transition-all duration-1000 delay-300 ${
+              hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
+          >
+            <h2 
+              className="text-6xl md:text-7xl font-bold text-gray-900 mb-4"
+              style={{ fontFamily: 'var(--font-playfair)' }}
+            >
+              Resume
+            </h2>
+            <div className="w-24 h-1 bg-blue-600 mx-auto"></div>
+          </div>
+
           {/* Resume Section */}
           <div 
             ref={resumeRef}
-            className={`mb-10 w-full grid grid-cols-1 lg:grid-cols-2 gap-0 transition-all duration-1000 delay-500 ${
+            className={`w-full transition-all duration-1000 delay-500 ${
               hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
-            style={{ minHeight: '50vh' }}
           >
-            {/* Title - Left Side (Blue Background) */}
-            <div className="p-8 flex items-center justify-start">
-              <h2 
-                className={`text-7xl font-bold text-gray-900 transition-all duration-1000 ease-out ${
-                  resumeInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-full'
-                }`}
-                style={{ fontFamily: 'var(--font-playfair)' }}
-              >
-                Resume
-              </h2>
-            </div>
-            
-            {/* Content - Right Side (White Background) */}
-            <div className="p-8 flex flex-col justify-center bg-white/90 rounded-2xl backdrop-blur-md">
+            {/* Content */}
+            <div className="w-full max-w-4xl mx-auto bg-white rounded-lg shadow-sm border border-gray-200 p-8 md:p-12">
               <div className="space-y-8">
                 {/* Education */}
                 <div className="cursor-pointer">

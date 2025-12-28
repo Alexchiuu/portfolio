@@ -91,24 +91,24 @@ export default function ProjectsPage() {
       <div 
         className="min-h-screen relative overflow-hidden pt-20"
         style={{ 
-          background: 'linear-gradient(to right, #dbeafe 0%, #dbeafe 40%, #ffffff 40%, #ffffff 100%)',
+          background: 'linear-gradient(to bottom, #f0f9ff 0%, #ffffff 100%)',
           fontFamily: 'var(--font-inter)'
         }}
       >
-        <main className="flex w-full max-w-6xl flex-col items-center mx-auto px-8 py-16 relative z-10">
+        <main className="flex w-full max-w-6xl flex-col items-center mx-auto px-8 py-20 md:py-32 relative z-10">
           {/* Title Section */}
           <div 
-            className={`mb-12 w-full transition-all duration-1000 delay-300 ${
+            className={`mb-16 w-full text-center transition-all duration-1000 delay-300 ${
               hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
             <h2 
-              className="text-6xl md:text-7xl font-bold text-gray-900"
+              className="text-6xl md:text-7xl font-bold text-gray-900 mb-4"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               Projects
             </h2>
-            <div className="w-24 h-1 bg-blue-900 mt-4"></div>
+            <div className="w-24 h-1 bg-blue-600 mx-auto"></div>
           </div>
           
           {/* Projects Grid */}
