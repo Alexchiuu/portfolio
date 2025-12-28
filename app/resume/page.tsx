@@ -67,7 +67,7 @@ export default function ResumePage() {
           <div className="flex items-center justify-between">
             <Link href="/" className="text-xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>Chiu Alex</Link>
             <div className="flex gap-6" style={{ fontFamily: 'var(--font-poppins)' }}>
-              <Link href="/#about" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Intro</Link>
+              <Link href="/" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Intro</Link>
               <Link href="/resume" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Resume</Link>
               <Link href="/projects" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Projects</Link>
               <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Photography</Link>
