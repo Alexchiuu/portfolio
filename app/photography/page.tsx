@@ -13,6 +13,8 @@ interface Photo {
   date?: string;
   category?: string;
   city?: string;
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 interface PhotoMetadata {
@@ -21,6 +23,13 @@ interface PhotoMetadata {
   longitude: number | null;
   city: string;
   date: string | null;
+}
+
+interface Comment {
+  id: string;
+  author: string;
+  text: string;
+  timestamp: string;
 }
 
 export default function PhotographyPage() {
@@ -32,10 +41,17 @@ export default function PhotographyPage() {
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [exifData, setExifData] = useState<any>(null);
+  const [detailedLocation, setDetailedLocation] = useState<string | null>(null);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [commentAuthor, setCommentAuthor] = useState<string>("");
+  const [commentText, setCommentText] = useState<string>("");
+  const [showPhotoControls, setShowPhotoControls] = useState(true);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const photoRefs = useRef<Array<HTMLDivElement | null>>([]);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isScrollingRef = useRef(false);
+  const photoControlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const categories = ["all", "landscape", "urban", "nature"];
 
@@ -52,18 +68,20 @@ export default function PhotographyPage() {
         // Create photos array with city information, sorted by city
         const photosList: Photo[] = photoMetadata.map((meta, index) => {
           const dateStr = meta.date 
-            ? new Date(meta.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })
+            ? new Date(meta.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
             : null;
           
           return {
             id: index + 1,
             src: `/photography/${meta.filename}`,
             alt: `Photo from ${meta.city}`,
-            title: meta.filename.replace('.JPG', '').replace('.jpg', ''),
+            title: undefined,
             location: meta.city !== 'No GPS Data' ? meta.city : undefined,
             date: dateStr || undefined,
             category: "all",
-            city: meta.city
+            city: meta.city,
+            latitude: meta.latitude,
+            longitude: meta.longitude
           };
         });
 
@@ -171,7 +189,7 @@ export default function PhotographyPage() {
     scrollTimeoutRef.current = setTimeout(() => {
       snapToCenter();
       isScrollingRef.current = false;
-    }, 150);
+    }, 50);
   };
 
   // Snap to center photo
@@ -242,11 +260,87 @@ export default function PhotographyPage() {
 
   const currentPhoto = filteredPhotos[currentPhotoIndex];
 
-  // Handle photo click to open modal
-  const handlePhotoClick = async (photo: Photo) => {
+  // Load comments for a photo from localStorage
+  const loadComments = (photoSrc: string): Comment[] => {
+    if (typeof window === 'undefined') return [];
+    try {
+      const stored = localStorage.getItem(`photo_comments_${photoSrc}`);
+      return stored ? JSON.parse(stored) : [];
+    } catch (error) {
+      console.error('Error loading comments:', error);
+      return [];
+    }
+  };
+
+  // Save comments for a photo to localStorage
+  const saveComments = (photoSrc: string, comments: Comment[]) => {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.setItem(`photo_comments_${photoSrc}`, JSON.stringify(comments));
+    } catch (error) {
+      console.error('Error saving comments:', error);
+    }
+  };
+
+  // Load photo data for modal
+  const loadPhotoData = async (photo: Photo) => {
     setSelectedPhoto(photo);
-    setIsModalOpen(true);
     setExifData(null);
+    setDetailedLocation(null);
+    setCommentAuthor("");
+    setCommentText("");
+    
+    // Load comments for this photo
+    const photoComments = loadComments(photo.src);
+    setComments(photoComments);
+    
+    // Fetch detailed location from GPS coordinates using Nominatim (OpenStreetMap)
+    if (photo.latitude !== null && photo.latitude !== undefined && 
+        photo.longitude !== null && photo.longitude !== undefined) {
+      try {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${photo.latitude}&lon=${photo.longitude}&zoom=18&addressdetails=1&accept-language=en`,
+          {
+            headers: {
+              'User-Agent': 'Personal Photography Website',
+              'Accept-Language': 'en'
+            }
+          }
+        );
+        const data = await response.json();
+        
+        if (data.address) {
+          const address = data.address;
+          const locationParts: string[] = [];
+          
+          // Build location string in format: country/city/district
+          // Start with country (most general)
+          if (address.country) {
+            locationParts.push(address.country);
+          }
+          
+          // Add state/region if available
+          if (address.state || address.region) {
+            locationParts.push(address.state || address.region);
+          }
+          
+          // Add city/town/village
+          if (address.city || address.town || address.village) {
+            locationParts.push(address.city || address.town || address.village);
+          }
+          
+          // Add district/neighbourhood/suburb (most specific)
+          if (address.neighbourhood || address.suburb || address.city_district || address.county) {
+            locationParts.push(address.neighbourhood || address.suburb || address.city_district || address.county);
+          }
+          
+          // Join with forward slashes for hierarchical display
+          setDetailedLocation(locationParts.join(' / '));
+        }
+      } catch (error) {
+        console.error('Error fetching location details:', error);
+      }
+    }
     
     // Extract EXIF data from the image
     try {
@@ -265,12 +359,104 @@ export default function PhotographyPage() {
     }
   };
 
+  // Handle photo click - slide to photo if not center, open modal if center
+  const handlePhotoClick = async (photo: Photo) => {
+    const clickedIndex = filteredPhotos.findIndex(p => p.src === photo.src);
+    
+    // If clicking on a side photo, slide to it
+    if (clickedIndex !== currentPhotoIndex && clickedIndex !== -1) {
+      isScrollingRef.current = false;
+      setCurrentPhotoIndex(clickedIndex);
+      return;
+    }
+    
+    // If clicking on the center photo, open modal
+    if (clickedIndex === currentPhotoIndex) {
+      setIsModalOpen(true);
+      setShowPhotoControls(true);
+      await loadPhotoData(photo);
+    }
+  };
+
+  // Handle mouse enter on photo section
+  const handlePhotoMouseEnter = () => {
+    setShowPhotoControls(true);
+    if (photoControlsTimeoutRef.current) {
+      clearTimeout(photoControlsTimeoutRef.current);
+    }
+  };
+
+  // Handle mouse leave on photo section
+  const handlePhotoMouseLeave = () => {
+    if (photoControlsTimeoutRef.current) {
+      clearTimeout(photoControlsTimeoutRef.current);
+    }
+    photoControlsTimeoutRef.current = setTimeout(() => {
+      setShowPhotoControls(false);
+    }, 2000); // Hide after 2 seconds
+  };
+
+  // Navigate to previous photo in modal
+  const handlePreviousPhoto = async () => {
+    if (!selectedPhoto) return;
+    const currentIndex = filteredPhotos.findIndex(p => p.src === selectedPhoto.src);
+    if (currentIndex === -1) return;
+    const prevIndex = currentIndex === 0 ? filteredPhotos.length - 1 : currentIndex - 1;
+    await loadPhotoData(filteredPhotos[prevIndex]);
+  };
+
+  // Navigate to next photo in modal
+  const handleNextPhoto = async () => {
+    if (!selectedPhoto) return;
+    const currentIndex = filteredPhotos.findIndex(p => p.src === selectedPhoto.src);
+    if (currentIndex === -1) return;
+    const nextIndex = currentIndex === filteredPhotos.length - 1 ? 0 : currentIndex + 1;
+    await loadPhotoData(filteredPhotos[nextIndex]);
+  };
+
+  // Handle adding a new comment
+  const handleAddComment = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedPhoto || !commentText.trim()) return;
+
+    const newComment: Comment = {
+      id: Date.now().toString(),
+      author: commentAuthor.trim() || "Anonymous",
+      text: commentText.trim(),
+      timestamp: new Date().toISOString(),
+    };
+
+    const updatedComments = [...comments, newComment];
+    setComments(updatedComments);
+    saveComments(selectedPhoto.src, updatedComments);
+    setCommentText("");
+    setCommentAuthor("");
+  };
+
   // Close modal
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedPhoto(null);
     setExifData(null);
+    setDetailedLocation(null);
+    setComments([]);
+    setCommentAuthor("");
+    setCommentText("");
+    setShowPhotoControls(true);
+    setIsFullscreen(false);
+    if (photoControlsTimeoutRef.current) {
+      clearTimeout(photoControlsTimeoutRef.current);
+    }
   };
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (photoControlsTimeoutRef.current) {
+        clearTimeout(photoControlsTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Handle keyboard escape to close modal
   useEffect(() => {
@@ -298,7 +484,7 @@ export default function PhotographyPage() {
             </Link>
             <div className="flex gap-2 sm:gap-4 md:gap-6 text-sm sm:text-base" style={{ fontFamily: 'var(--font-poppins)' }}>
               <Link href="/" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">Intro</Link>
-              <Link href="/resume" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">Resume</Link>
+              <Link href="/resume" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">About Me</Link>
               <Link href="/projects" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">Projects</Link>
               <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden sm:inline">Photo</Link>
               <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap sm:hidden">Photo</Link>
@@ -435,116 +621,288 @@ export default function PhotographyPage() {
           )}
         </main>
 
-        {/* Photo Modal */}
-        {isModalOpen && selectedPhoto && (
+      {/* Photo Modal */}
+      {isModalOpen && selectedPhoto && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          onClick={closeModal}
+        >
+          {/* Black low opacity backdrop */}
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+          
+            {/* Modal Content - Full viewport fit, no scrolling */}
           <div 
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            onClick={closeModal}
+              className="relative z-10 w-full h-full max-w-7xl max-h-[95vh] flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
           >
-            {/* Black low opacity backdrop */}
-            <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-            
-            {/* Modal Content */}
-            <div 
-              className="relative z-10 max-w-5xl w-full max-h-[90vh] overflow-auto"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Photo Frame/Case */}
-              <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-12">
-                {/* Close Button */}
-                <button
-                  onClick={closeModal}
-                  className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-3xl font-light z-20"
-                  style={{ fontFamily: 'var(--font-poppins)' }}
+            {/* Photo Frame/Case */}
+              <div className="bg-white rounded-2xl shadow-2xl w-full h-full max-h-[95vh] flex flex-col md:flex-row overflow-hidden">
+              {/* Close Button */}
+              <button
+                onClick={closeModal}
+                  className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-3xl font-light z-20 bg-white/90 rounded-full w-10 h-10 flex items-center justify-center hover:bg-white transition-colors"
+                style={{ fontFamily: 'var(--font-poppins)' }}
+              >
+                ×
+              </button>
+              
+                {/* Photo Section - Left side on desktop, top on mobile */}
+                <div 
+                  className="relative w-full md:w-3/5 h-2/5 md:h-full flex-shrink-0 bg-black flex items-center justify-center p-4 md:p-8"
+                  onMouseEnter={handlePhotoMouseEnter}
+                  onMouseLeave={handlePhotoMouseLeave}
                 >
-                  ×
-                </button>
-                
-                {/* Photo in Frame */}
-                <div className="relative w-full mb-6">
-                  <div className="relative rounded-lg overflow-hidden bg-black p-4 shadow-inner" style={{ aspectRatio: '4/3' }}>
-                    <div className="relative w-full h-full rounded-md overflow-hidden bg-gray-900">
-                      <Image
-                        src={selectedPhoto.src}
-                        alt={selectedPhoto.alt}
-                        fill
-                        className="object-contain"
-                        sizes="(max-width: 768px) 100vw, 1200px"
-                        priority
-                      />
+                  {/* Navigation Buttons - Left and Right */}
+                  {filteredPhotos.length > 1 && (
+                    <>
+                      <button
+                        onClick={handlePreviousPhoto}
+                        className={`absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/90 hover:bg-white text-gray-700 hover:text-gray-900 shadow-lg hover:scale-110 transition-opacity duration-500 ease-in-out ${
+                          showPhotoControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                        }`}
+                        aria-label="Previous photo"
+                      >
+                        <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={handleNextPhoto}
+                        className={`absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/90 hover:bg-white text-gray-700 hover:text-gray-900 shadow-lg hover:scale-110 transition-opacity duration-500 ease-in-out ${
+                          showPhotoControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                        }`}
+                        aria-label="Next photo"
+                      >
+                        <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                      {/* Photo Counter */}
+                      <div className={`absolute bottom-4 left-1/2 -translate-x-1/2 z-20 px-3 py-1 rounded-full bg-black/70 text-white text-xs font-medium transition-opacity duration-500 ease-in-out ${
+                        showPhotoControls ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                      }`}>
+                        {filteredPhotos.findIndex(p => p.src === selectedPhoto.src) + 1} / {filteredPhotos.length}
+                      </div>
+                    </>
+                  )}
+                  <div 
+                    className="relative w-full h-full max-h-full cursor-zoom-in"
+                    onClick={() => setIsFullscreen(true)}
+                  >
+                  <Image
+                    src={selectedPhoto.src}
+                    alt={selectedPhoto.alt}
+                    fill
+                    className="object-contain"
+                      sizes="(max-width: 768px) 100vw, 60vw"
+                      priority
+                  />
+                  </div>
+              </div>
+
+                {/* Details Section - Right side on desktop, bottom on mobile */}
+                <div className="w-full md:w-2/5 h-3/5 md:h-full flex flex-col bg-white p-6 md:p-8 relative" style={{ fontFamily: 'var(--font-poppins)' }}>
+                  {/* Scrollable Content */}
+                  <div className="flex-1 overflow-y-auto mb-4">
+              {/* Photo Information */}
+                    <div className="mb-6">
+                    <div className="space-y-3">
+                      {detailedLocation ? (
+                        <div>
+                          <h3 className="text-xs font-semibold text-gray-800 uppercase tracking-wide mb-1">Location</h3>
+                          <p className="text-base md:text-lg text-gray-900 font-medium">{detailedLocation}</p>
+                        </div>
+                      ) : selectedPhoto.location && (
+                        <div>
+                          <h3 className="text-xs font-semibold text-gray-800 uppercase tracking-wide mb-1">Location</h3>
+                          <p className="text-base md:text-lg text-gray-900 font-medium">{selectedPhoto.location}</p>
+                        </div>
+                      )}
+                      
+                      {selectedPhoto.latitude !== null && selectedPhoto.latitude !== undefined && 
+                       selectedPhoto.longitude !== null && selectedPhoto.longitude !== undefined && (
+                        <div>
+                          <h3 className="text-xs font-semibold text-gray-800 uppercase tracking-wide mb-1">Coordinates</h3>
+                          <div className="flex flex-col gap-1">
+                            <p className="text-sm text-gray-900 font-mono font-medium">
+                              {selectedPhoto.latitude.toFixed(6)}, {selectedPhoto.longitude.toFixed(6)}
+                            </p>
+                            <a
+                              href={`https://www.google.com/maps?q=${selectedPhoto.latitude},${selectedPhoto.longitude}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm text-blue-600 hover:text-blue-800 underline inline-flex items-center gap-1 font-medium"
+                            >
+                              View on Google Maps
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                              </svg>
+                            </a>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {selectedPhoto.date && (
+                        <div>
+                          <h3 className="text-xs font-semibold text-gray-800 uppercase tracking-wide mb-1">Date</h3>
+                          <p className="text-base md:text-lg text-gray-900 font-medium">{selectedPhoto.date}</p>
+                        </div>
+                      )}
                     </div>
                   </div>
-                </div>
 
-                {/* Photo Information */}
-                <div className="space-y-4" style={{ fontFamily: 'var(--font-poppins)' }}>
-                  {/* Basic Info */}
-                  {selectedPhoto.location && (
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Location</h3>
-                      <p className="text-lg text-gray-900">{selectedPhoto.location}</p>
-                    </div>
-                  )}
-                  
-                  {selectedPhoto.date && (
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Date</h3>
-                      <p className="text-lg text-gray-900">{selectedPhoto.date}</p>
-                    </div>
-                  )}
-
-                  {/* EXIF Data */}
-                  {exifData && (
-                    <div className="pt-4 border-t border-gray-200">
-                      <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Camera Settings</h3>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        {exifData.Make && exifData.Model && (
-                          <div>
-                            <p className="text-xs text-gray-500 uppercase">Camera</p>
-                            <p className="text-sm text-gray-900">{exifData.Make} {exifData.Model}</p>
-                          </div>
-                        )}
-                        {exifData.FocalLength && (
-                          <div>
-                            <p className="text-xs text-gray-500 uppercase">Focal Length</p>
-                            <p className="text-sm text-gray-900">{exifData.FocalLength}{exifData.FocalLengthIn35mmFormat && ` (${exifData.FocalLengthIn35mmFormat}mm equiv.)`}</p>
-                          </div>
-                        )}
-                        {exifData.FNumber && (
-                          <div>
-                            <p className="text-xs text-gray-500 uppercase">Aperture</p>
-                            <p className="text-sm text-gray-900">f/{exifData.FNumber}</p>
-                          </div>
-                        )}
-                        {exifData.ExposureTime && (
-                          <div>
-                            <p className="text-xs text-gray-500 uppercase">Shutter Speed</p>
-                            <p className="text-sm text-gray-900">{exifData.ExposureTime}s</p>
-                          </div>
-                        )}
-                        {exifData.ISO && (
-                          <div>
-                            <p className="text-xs text-gray-500 uppercase">ISO</p>
-                            <p className="text-sm text-gray-900">{exifData.ISO}</p>
-                          </div>
-                        )}
-                        {exifData.LensModel && (
-                          <div>
-                            <p className="text-xs text-gray-500 uppercase">Lens</p>
-                            <p className="text-sm text-gray-900">{exifData.LensModel}</p>
-                          </div>
-                        )}
-                        {exifData.ImageWidth && exifData.ImageHeight && (
-                          <div>
-                            <p className="text-xs text-gray-500 uppercase">Resolution</p>
-                            <p className="text-sm text-gray-900">{exifData.ImageWidth} × {exifData.ImageHeight}</p>
-                          </div>
-                        )}
+                    {/* Camera Settings */}
+                    {exifData && (
+                      <div className="pt-4 border-t border-gray-200 mb-6">
+                        <div className="grid grid-cols-2 gap-4">
+                          {exifData.Make && exifData.Model && (
+                            <div className="bg-gray-50 p-3 rounded-lg">
+                              <p className="text-xs text-gray-800 uppercase mb-1 font-semibold">Camera</p>
+                              <p className="text-sm font-medium text-gray-900">{exifData.Make} {exifData.Model}</p>
+                            </div>
+                          )}
+                          {exifData.FocalLength && (
+                            <div className="bg-gray-50 p-3 rounded-lg">
+                              <p className="text-xs text-gray-800 uppercase mb-1 font-semibold">Focal Length</p>
+                              <p className="text-sm font-medium text-gray-900">{exifData.FocalLength}{exifData.FocalLengthIn35mmFormat && ` (${exifData.FocalLengthIn35mmFormat}mm equiv.)`}</p>
+                            </div>
+                          )}
+                          {exifData.FNumber && (
+                            <div className="bg-gray-50 p-3 rounded-lg">
+                              <p className="text-xs text-gray-800 uppercase mb-1 font-semibold">Aperture</p>
+                              <p className="text-sm font-medium text-gray-900">f/{exifData.FNumber}</p>
+                            </div>
+                          )}
+                          {exifData.ExposureTime && (
+                            <div className="bg-gray-50 p-3 rounded-lg">
+                              <p className="text-xs text-gray-800 uppercase mb-1 font-semibold">Shutter Speed</p>
+                              <p className="text-sm font-medium text-gray-900">{exifData.ExposureTime}s</p>
+                        </div>
+                      )}
+                      {exifData.ISO && (
+                            <div className="bg-gray-50 p-3 rounded-lg">
+                              <p className="text-xs text-gray-800 uppercase mb-1 font-semibold">ISO</p>
+                              <p className="text-sm font-medium text-gray-900">{exifData.ISO}</p>
+                        </div>
+                      )}
+                      {exifData.LensModel && (
+                            <div className="bg-gray-50 p-3 rounded-lg">
+                              <p className="text-xs text-gray-800 uppercase mb-1 font-semibold">Lens</p>
+                              <p className="text-sm font-medium text-gray-900">{exifData.LensModel}</p>
+                        </div>
+                      )}
+                      {exifData.ImageWidth && exifData.ImageHeight && (
+                            <div className="bg-gray-50 p-3 rounded-lg">
+                              <p className="text-xs text-gray-800 uppercase mb-1 font-semibold">Resolution</p>
+                              <p className="text-sm font-medium text-gray-900">{exifData.ImageWidth} × {exifData.ImageHeight}</p>
+                            </div>
+                          )}
+                        </div>
                       </div>
+                    )}
+                    
+                    {/* Show message if no EXIF data */}
+                    {!exifData && (
+                      <div className="pt-4 border-t border-gray-200 mb-6 text-center">
+                        <p className="text-sm text-gray-700">Loading camera settings...</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Comments - Sticky to bottom */}
+                  <div className="pt-4 border-t border-gray-200 flex-shrink-0">
+                    {/* Comments List */}
+                    <div className="space-y-3 mb-4 max-h-48 overflow-y-auto">
+                      {comments.length === 0 ? (
+                        <p className="text-sm text-gray-800 italic font-medium">No comments yet. Be the first to comment!</p>
+                      ) : (
+                        comments.map((comment) => (
+                          <div key={comment.id} className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                            <div className="flex items-start justify-between mb-1">
+                              <p className="text-sm font-semibold text-gray-900">{comment.author}</p>
+                              <p className="text-xs text-gray-700 font-medium">
+                                {new Date(comment.timestamp).toLocaleDateString('en-US', { 
+                                  year: 'numeric', 
+                                  month: 'short', 
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </p>
+                            </div>
+                            <p className="text-sm text-gray-900 font-medium">{comment.text}</p>
+                          </div>
+                        ))
+                      )}
                     </div>
-                  )}
+
+                    {/* Comment Form */}
+                    <form onSubmit={handleAddComment} className="space-y-3">
+                      <div>
+                        <label className="block text-xs font-semibold text-gray-800 uppercase tracking-wide mb-1">
+                          Your Name (Optional)
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Enter your name"
+                          value={commentAuthor}
+                          onChange={(e) => setCommentAuthor(e.target.value)}
+                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-gray-800 uppercase tracking-wide mb-1">
+                          Your Comment <span className="text-red-600">*</span>
+                        </label>
+                        <textarea
+                          placeholder="Write your comment here..."
+                          value={commentText}
+                          onChange={(e) => setCommentText(e.target.value)}
+                          rows={3}
+                          required
+                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-gray-900 placeholder-gray-400"
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        disabled={!commentText.trim()}
+                        className="w-full px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed disabled:text-gray-500"
+                      >
+                        Post Comment
+                      </button>
+                    </form>
+                  </div>
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Fullscreen Photo View */}
+        {isFullscreen && selectedPhoto && (
+          <div 
+            className="fixed inset-0 z-[60] bg-black flex items-center justify-center"
+            onClick={() => setIsFullscreen(false)}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setIsFullscreen(false)}
+              className="absolute top-4 right-4 text-white hover:text-gray-300 text-3xl font-light z-20 bg-black/50 rounded-full w-12 h-12 flex items-center justify-center hover:bg-black/70 transition-colors"
+              aria-label="Close fullscreen"
+            >
+              ×
+            </button>
+            
+            {/* Fullscreen Image */}
+            <div className="relative w-full h-full flex items-center justify-center p-8">
+              <Image
+                src={selectedPhoto.src}
+                alt={selectedPhoto.alt}
+                fill
+                className="object-contain"
+                sizes="100vw"
+                priority
+              />
             </div>
           </div>
         )}
@@ -570,7 +928,7 @@ export default function PhotographyPage() {
                     </li>
                     <li>
                       <Link href="/resume" className="hover:text-white transition-colors duration-200" style={{ fontFamily: 'var(--font-poppins)' }}>
-                        Resume
+                        About Me
                       </Link>
                     </li>
                     <li>

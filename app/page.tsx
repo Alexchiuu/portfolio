@@ -55,33 +55,10 @@ export default function Home() {
   const [isAtTop, setIsAtTop] = useState(true);
   const [scrollProgress, setScrollProgress] = useState(0);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const backgroundRef = useRef<HTMLDivElement>(null);
 
   // Entry animation effect
   useEffect(() => {
     setHasLoaded(true);
-  }, []);
-
-  // Scroll to top when navigating from other pages
-  useEffect(() => {
-    // Only scroll to top if there's no hash in the URL
-    if (typeof window !== 'undefined' && !window.location.hash) {
-      window.scrollTo({ top: 0, behavior: 'instant' });
-    }
-  }, []);
-
-  // Track mouse position for interactive background
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth) * 100,
-        y: (e.clientY / window.innerHeight) * 100,
-      });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   // Hide scroll arrow and manage nav visibility on scroll
@@ -160,387 +137,199 @@ export default function Home() {
           hasLoaded && (isScrolling || isAtTop) ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full'
         }`}
       >
-        <div className="max-w-6xl mx-auto px-4 sm:px-8 py-3 sm:py-4">
+        <div className="max-w-6xl mx-auto px-8 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="text-lg sm:text-xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>Chiu Alex</Link>
-            <div className="flex gap-2 sm:gap-4 md:gap-6 text-sm sm:text-base" style={{ fontFamily: 'var(--font-poppins)' }}>
-              <a 
-                href="#" 
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap"
-              >
-                Intro
-              </a>
-              <Link href="/resume" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">Resume</Link>
-              <Link href="/projects" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">Projects</Link>
-              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden sm:inline">Photo</Link>
-              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap sm:hidden">Photo</Link>
-              <a href="#contact" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden md:inline">Contact</a>
+            <Link href="/" className="text-xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>Chiu Alex</Link>
+            <div className="flex gap-6" style={{ fontFamily: 'var(--font-poppins)' }}>
+              <a href="#about" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Intro</a>
+              <Link href="/resume" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Resume</Link>
+              <Link href="/projects" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Projects</Link>
+              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Photography</Link>
+              <a href="#contact" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Contact</a>
             </div>
           </div>
         </div>
       </nav>
       <div 
-        className="min-h-screen relative overflow-hidden pt-20"
+        className="min-h-screen relative overflow-hidden pt-20" // Added pt-20 for padding
         style={{ 
+          perspective: '2000px',
+          background: 'linear-gradient(to right, #dbeafe 0%, #dbeafe 40%, #ffffff 40%, #ffffff 100%)',
           fontFamily: 'var(--font-inter)'
         }}
-        ref={backgroundRef}
       >
-        {/* Interactive Background */}
-        <div 
-          className="fixed inset-0 -z-10 transition-opacity duration-1000"
-          style={{
-            background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-                        linear-gradient(to bottom, #f0f9ff 0%, #ffffff 100%)`,
-          }}
-        />
-        
-        {/* Animated Gradient Orbs */}
-        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-          <div 
-            className="absolute rounded-full opacity-20 blur-3xl"
-            style={{
-              width: '600px',
-              height: '600px',
-              background: 'radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, transparent 70%)',
-              top: '10%',
-              left: '10%',
-              animation: 'float 20s ease-in-out infinite',
-            }}
-          />
-          <div 
-            className="absolute rounded-full opacity-15 blur-3xl"
-            style={{
-              width: '500px',
-              height: '500px',
-              background: 'radial-gradient(circle, rgba(37, 99, 235, 0.3) 0%, transparent 70%)',
-              bottom: '15%',
-              right: '15%',
-              animation: 'float 25s ease-in-out infinite reverse',
-              animationDelay: '2s',
-            }}
-          />
-          <div 
-            className="absolute rounded-full opacity-10 blur-3xl"
-            style={{
-              width: '400px',
-              height: '400px',
-              background: 'radial-gradient(circle, rgba(29, 78, 216, 0.3) 0%, transparent 70%)',
-              top: '50%',
-              left: '50%',
-              transform: `translate(calc(-50% + ${(mousePosition.x - 50) * 0.3}px), calc(-50% + ${(mousePosition.y - 50) * 0.3}px))`,
-              transition: 'transform 0.3s ease-out',
-            }}
-          />
-        </div>
+        <main className="flex w-full max-w-6xl flex-col items-center mx-auto px-8 py-16 relative z-10">
+          {/* Transparent Spacer Bottom */}
+          <div className="w-full" style={{ height: '5vh' }}></div>
 
-        {/* Animated Grid Pattern */}
-        <div 
-          className="fixed inset-0 -z-10 opacity-[0.03]"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(37, 99, 235, 0.1) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(37, 99, 235, 0.1) 1px, transparent 1px)
-            `,
-            backgroundSize: '50px 50px',
-            transform: `translate(${(mousePosition.x - 50) * 0.1}px, ${(mousePosition.y - 50) * 0.1}px)`,
-            transition: 'transform 0.5s ease-out',
-          }}
-        />
-        <main className="flex w-full max-w-6xl flex-col items-center mx-auto px-8 py-20 md:py-32 relative z-10">
-
-          {/* Hero Section - Centered and Minimal */}
+          {/* Profile and About Section - Side by Side */}
           <div 
-            id="about"
-            className="mb-20 w-full max-w-4xl mx-auto text-center"
+            className="mb-10 w-full grid grid-cols-1 lg:grid-cols-2 gap-0" 
             style={{ 
-              transform: `translateY(${scrollProgress * 40}px)`,
-              opacity: 1 - scrollProgress * 0.8,
-              transition: 'transform 0.2s ease-out, opacity 0.2s ease-out',
+              minHeight: '60vh',
+              transform: `translateY(${scrollProgress * 80}px) scale(${1 - scrollProgress * 0.25})`,
+              opacity: 1 - scrollProgress * 1.1,
+              transition: 'transform 0.15s ease-out, opacity 0.15s ease-out',
+              transformStyle: 'preserve-3d',
+              perspective: '1500px'
             }}
           >
+            {/* Profile Section */}
             <div 
-              className={`transition-all duration-1000 delay-300 ${
-                hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              className={`bg-blue-50 p-6 shadow-lg text-center flex flex-col justify-center transition-all duration-1000 delay-500 relative z-20 ${
+                hasLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-20'
               }`}
+              style={{
+                transform: `
+                  translateX(${-scrollProgress * 250}px) 
+                  translateZ(${-scrollProgress * 200}px)
+                  rotateY(${-scrollProgress * 90}deg) 
+                  rotateX(${scrollProgress * 15}deg)
+                  scale(${1 - scrollProgress * 0.15})
+                `,
+                transformStyle: 'preserve-3d',
+                transformOrigin: 'right center',
+                transition: 'transform 0.15s ease-out',
+                filter: `blur(${scrollProgress * 4}px)`,
+                backfaceVisibility: 'hidden'
+              }}
             >
-              <h1 
-                className="text-6xl md:text-7xl font-bold text-gray-900 mb-6 tracking-tight"
-                style={{ fontFamily: 'var(--font-playfair)' }}
-              >
+              <h1 className="mb-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl" style={{ fontFamily: 'var(--font-playfair)' }}>
                 Chiu Alex
               </h1>
-              
-              <div className="w-24 h-1 bg-blue-600 mx-auto mb-8"></div>
-              
-              <p 
-                className="text-xl md:text-2xl text-gray-600 mb-4 font-light"
-                style={{ fontFamily: 'var(--font-poppins)' }}
-              >
-                Electrical Engineering Student
-              </p>
-              
-              <p 
-                className="text-lg text-gray-500 mb-8"
-                style={{ fontFamily: 'var(--font-poppins)' }}
-              >
-                National Taiwan University
+              <div className="w-32 h-0.5 bg-blue-900 mx-auto mb-2"></div>
+              <p className="mb-2 text-lg text-gray-700 font-medium" style={{ fontFamily: 'var(--font-poppins)' }}>
+                Student
+                <br />
+                <br />
+                Currently studying Electrical Engineering
+                <br />
+                at National Taiwan University.
               </p>
             </div>
 
-            {/* Intro Text - Minimal */}
+            {/* Intro Section */}
             <div 
-              className={`mt-12 max-w-2xl mx-auto transition-all duration-1000 delay-500 ${
-                hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              id="about" 
+              className={`bg-white p-6 shadow-lg flex flex-col justify-center transition-all duration-1000 delay-500 relative z-10 ${
+                hasLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'
               }`}
+              style={{
+                transform: `
+                  translateX(${scrollProgress * 250}px) 
+                  translateZ(${-scrollProgress * 200}px)
+                  rotateY(${scrollProgress * 90}deg) 
+                  rotateX(${scrollProgress * 15}deg)
+                  scale(${1 - scrollProgress * 0.15})
+                `,
+                transformStyle: 'preserve-3d',
+                transformOrigin: 'left center',
+                transition: 'transform 0.15s ease-out',
+                filter: `blur(${scrollProgress * 4}px)`,
+                backfaceVisibility: 'hidden'
+              }}
             >
-              <p 
-                className="text-lg md:text-xl text-gray-700 leading-relaxed mb-8 font-light"
-                style={{ fontFamily: 'var(--font-poppins)' }}
-              >
-                Passionate about technology, innovation, and creative problem-solving.
-              </p>
-              
+              <h2 className="mb-4 text-3xl font-semibold text-gray-900 sm:text-4xl" style={{ fontFamily: 'var(--font-playfair)' }}>
+                Intro
+              </h2>
+              <div className="space-y-4 text-lg text-gray-700 leading-relaxed">
+                <p>
+                  Hello! I'm Alex, a passionate electrical engineering student at National Taiwan University with a deep interest in technology and innovation.
+                </p>
+                <p>
+                  When I'm not studying, you can find me coding, playing guitar, or exploring new places with my camera. I love traveling, photography, and capturing unique perspectives from around the world.
+                </p>
+                <div className="flex items-center gap-3 pt-2">
                   <a 
                     href="https://www.google.com/maps/place/Taipei,+Taiwan"
                     target="_blank"
                     rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors duration-200 group"
-                style={{ fontFamily: 'var(--font-poppins)' }}
+                    className="location-button group relative inline-block cursor-pointer border-none px-8 py-3.5 font-bold text-base rounded-full overflow-hidden bg-white text-gray-900 shadow-md hover:shadow-xl transition-all duration-300 border-2 border-gray-200"
+                    style={{ fontFamily: 'var(--font-poppins)', letterSpacing: '0.05rem' }}
                   >
+                    <span 
+                      className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-blue-500 to-blue-600 -translate-x-full group-hover:translate-x-0 transition-transform duration-[400ms] ease-[cubic-bezier(0.3,1,0.8,1)]"
+                    ></span>
+                    <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-400">
                       <svg 
-                  width="18" 
-                  height="18" 
+                        width="20" 
+                        height="20" 
                         viewBox="0 0 24 24" 
                         fill="none" 
                         stroke="currentColor" 
-                  strokeWidth="2"
+                        strokeWidth="2.5"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                  className="transition-transform duration-200 group-hover:scale-110"
+                        className="transition-transform duration-300 group-hover:scale-110"
                       >
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                         <circle cx="12" cy="10" r="3" />
                       </svg>
-                <span className="text-sm">Taipei, Taiwan</span>
+                      <span>Taipei, Taiwan</span>
+                    </span>
                   </a>
+                </div>
+              </div>
             </div>
           </div>
 
 
           {/* Scroll Down Arrow */}
           <div 
-            className={`mt-16 ease-in-out overflow-hidden ${
+            className={`ease-in-out overflow-hidden ${
               hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
             style={{ 
-              height: showScrollArrow ? '10vh' : '0',
+              height: showScrollArrow ? '13vh' : '0',
               opacity: showScrollArrow && hasLoaded ? 1 : 0,
               transition: hasLoaded && !showScrollArrow ? 'all 0.5s ease-in-out' : 'all 1s ease-in-out 3s'
             }}
           >
             <ScrollDownArrow />
           </div>
+          {/* Transparent Spacer Bottom */}
+          <div className="w-full" style={{ height: '14vh' }}></div>
 
-          {/* Explore Section - About Me, Projects & Photography Preview */}
+          {/* Interests Section */}
           <div 
-            className={`mt-48 md:mt-64 mb-20 w-full max-w-6xl mx-auto transition-all duration-1000 delay-700 ${
+            className={`mb-10 w-full bg-gray-100 p-8 shadow-lg transition-all duration-1000 delay-[900ms] ${
               hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
           >
-            <h2 
-              className="text-4xl md:text-5xl font-bold text-gray-900 mb-12 text-center"
-              style={{ fontFamily: 'var(--font-playfair)' }}
-            >
-              Explore More
+            <h2 className="mb-6 text-2xl font-semibold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
+              Interests & Hobbies
             </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* About Me Preview Card */}
-              <Link 
-                href="/resume"
-                className="group relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-200"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                {/* Preview Image */}
-                <div className="relative h-48 overflow-hidden bg-gradient-to-br from-blue-100 to-blue-200">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <svg 
-                      className="w-24 h-24 text-blue-300 opacity-50" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                  </div>
-                </div>
-                <div className="relative p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <h3 
-                        className="text-2xl font-bold text-gray-900 mb-1 group-hover:text-blue-700 transition-colors"
-                        style={{ fontFamily: 'var(--font-playfair)' }}
-                      >
-                        About Me
-                      </h3>
-                      <p 
-                        className="text-gray-600 text-sm"
-                        style={{ fontFamily: 'var(--font-poppins)' }}
-                      >
-                        Education & Experience
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center gap-2 text-gray-700">
-                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                      <span className="text-xs" style={{ fontFamily: 'var(--font-poppins)' }}>NTU Engineering</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-gray-700">
-                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                      <span className="text-xs" style={{ fontFamily: 'var(--font-poppins)' }}>Research Projects</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center text-blue-600 font-medium text-sm group-hover:gap-2 transition-all duration-300" style={{ fontFamily: 'var(--font-poppins)' }}>
-                    <span>Learn More</span>
-                    <svg 
-                      className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </div>
-                </div>
-              </Link>
-
-              {/* Projects Preview Card */}
-              <Link 
-                href="/projects"
-                className="group relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-200"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                {/* Preview Image - Using project cover */}
-                <div className="relative h-48 overflow-hidden">
-                  <img 
-                    src="/projects/discord-bot.jpg" 
-                    alt="Projects" 
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                </div>
-                <div className="relative p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <h3 
-                        className="text-2xl font-bold text-gray-900 mb-1 group-hover:text-blue-700 transition-colors"
-                        style={{ fontFamily: 'var(--font-playfair)' }}
-                      >
-                        Projects
-                      </h3>
-                      <p 
-                        className="text-gray-600 text-sm"
-                        style={{ fontFamily: 'var(--font-poppins)' }}
-                      >
-                        Technical Creations
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center gap-2 text-gray-700">
-                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                      <span className="text-xs" style={{ fontFamily: 'var(--font-poppins)' }}>Discord Bot & Web Dev</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-gray-700">
-                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                      <span className="text-xs" style={{ fontFamily: 'var(--font-poppins)' }}>ROS & Robotics</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center text-blue-600 font-medium text-sm group-hover:gap-2 transition-all duration-300" style={{ fontFamily: 'var(--font-poppins)' }}>
-                    <span>View Projects</span>
-                    <svg 
-                      className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </div>
-                </div>
-              </Link>
-
-              {/* Photography Preview Card */}
-              <Link 
-                href="/photography"
-                className="group relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-200"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                {/* Preview Image - Using photography image */}
-                <div className="relative h-48 overflow-hidden">
-                  <img 
-                    src="/photography/A6400838.JPG" 
-                    alt="Photography" 
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = '/photography/A6400850.JPG';
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                </div>
-                <div className="relative p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <h3 
-                        className="text-2xl font-bold text-gray-900 mb-1 group-hover:text-blue-700 transition-colors"
-                        style={{ fontFamily: 'var(--font-playfair)' }}
-                      >
-                        Photography
-                      </h3>
-                      <p 
-                        className="text-gray-600 text-sm"
-                        style={{ fontFamily: 'var(--font-poppins)' }}
-                      >
-                        Travel Collection
-                      </p>
-                    </div>
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+              <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
+                <DualRingEffect />
+                <span className="relative z-20 text-2xl">💻</span>
+                <span className="relative z-20 text-sm font-medium text-gray-700">Coding</span>
               </div>
-                  
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center gap-2 text-gray-700">
-                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                      <span className="text-xs" style={{ fontFamily: 'var(--font-poppins)' }}>Landscape & Urban</span>
+              <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
+                <DualRingEffect />
+                <span className="relative z-20 text-2xl">🎸</span>
+                <span className="relative z-20 text-sm font-medium text-gray-700">Guitar</span>
               </div>
-                    <div className="flex items-center gap-2 text-gray-700">
-                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                      <span className="text-xs" style={{ fontFamily: 'var(--font-poppins)' }}>World Perspectives</span>
+              <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
+                <DualRingEffect />
+                <span className="relative z-20 text-2xl">✈️</span>
+                <span className="relative z-20 text-sm font-medium text-gray-700">Traveling</span>
               </div>
+              <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
+                <DualRingEffect />
+                <span className="relative z-20 text-2xl">�</span>
+                <span className="relative z-20 text-sm font-medium text-gray-700">Photography</span>
               </div>
-
-                  <div className="flex items-center text-blue-600 font-medium text-sm group-hover:gap-2 transition-all duration-300" style={{ fontFamily: 'var(--font-poppins)' }}>
-                    <span>View Gallery</span>
-                    <svg 
-                      className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
+              <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
+                <DualRingEffect />
+                <span className="relative z-20 text-2xl">🔬</span>
+                <span className="relative z-20 text-sm font-medium text-gray-700">Science</span>
               </div>
+              <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
+                <DualRingEffect />
+                <span className="relative z-20 text-2xl">🌐</span>
+                <span className="relative z-20 text-sm font-medium text-gray-700">Web Dev</span>
               </div>
-              </Link>
             </div>
           </div>
 
@@ -563,15 +352,7 @@ export default function Home() {
                   </h3>
                   <ul className="space-y-2">
                     <li>
-                      <a 
-                        href="#" 
-                        onClick={(e) => {
-                          e.preventDefault();
-                          window.scrollTo({ top: 0, behavior: 'smooth' });
-                        }}
-                        className="hover:text-white transition-colors duration-200" 
-                        style={{ fontFamily: 'var(--font-poppins)' }}
-                      >
+                      <a href="#about" className="hover:text-white transition-colors duration-200" style={{ fontFamily: 'var(--font-poppins)' }}>
                         Intro
                       </a>
                     </li>
