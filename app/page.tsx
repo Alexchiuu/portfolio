@@ -2,86 +2,31 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-
-function DualRingEffect() {
-  return (
-    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none overflow-visible">
-      {/* Light ring effect */}
-      <div className="absolute inset-0 transition-opacity duration-300 overflow-hidden">
-        <div className="absolute inset-[-200%] animate-spin-slow" style={{
-          background: 'conic-gradient(from 0deg, red, orange, yellow, lime, cyan, blue, magenta, red)'
-        }}></div>
-        <div className="absolute inset-[1px] bg-white"></div>
-      </div>
-      {/* Blur rainbow effect */}
-      <div className="gradient-container">
-        <div className="gradient"></div>
-      </div>
-      <div className="absolute inset-[3px] bg-white"></div>
-    </div>
-  );
-}
-
-function ScrollDownArrow() {
-  return (
-    <div 
-      className="flex justify-center items-center overflow-hidden cursor-pointer animate-bounce transition-all duration-500 ease-in-out"
-      style={{ 
-        height: '13vh',
-        paddingLeft: '20px',
-        paddingRight: '20px'
-      }}
-      onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
-    >
-      <svg 
-        width="40" 
-        height="40" 
-        viewBox="0 0 24 24" 
-        fill="none" 
-        stroke="currentColor" 
-        strokeWidth="2"
-        className="text-gray-700"
-      >
-        <path d="M19 12l-7 7-7-7"/>
-      </svg>
-    </div>
-  );
-}
+import Image from "next/image";
+import InteractiveBackground from "./components/InteractiveBackground";
 
 export default function Home() {
-  const [showScrollArrow, setShowScrollArrow] = useState(true);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [showScrollArrow, setShowScrollArrow] = useState(true);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Entry animation effect
   useEffect(() => {
     setHasLoaded(true);
   }, []);
 
-  // Hide scroll arrow and manage nav visibility on scroll
   useEffect(() => {
     const handleScroll = () => {
-      // Manage scroll arrow visibility
-      if (window.scrollY > 50) {
+      setIsAtTop(window.scrollY < 50);
+      setIsScrolling(true);
+      
+      // Hide scroll arrow when user scrolls down
+      if (window.scrollY > 100) {
         setShowScrollArrow(false);
       } else {
         setShowScrollArrow(true);
       }
-
-      // Calculate scroll progress for profile/intro animation (0 to 1)
-      // Start fading at 100px, fully hidden by 600px (slower)
-      const fadeStart = 100;
-      const fadeEnd = 600;
-      const scrollY = window.scrollY;
-      const progress = Math.min(Math.max((scrollY - fadeStart) / (fadeEnd - fadeStart), 0), 1);
-      setScrollProgress(progress);
-
-      // Manage nav bar visibility
-      setIsAtTop(window.scrollY < 50);
-      setIsScrolling(true);
 
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
@@ -89,7 +34,7 @@ export default function Home() {
 
       scrollTimeoutRef.current = setTimeout(() => {
         setIsScrolling(false);
-      }, 2000); // Hide nav after 2 seconds of inactivity
+      }, 2000);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -129,6 +74,30 @@ export default function Home() {
     },
   ];
 
+  const exploreItems = [
+    {
+      title: "Resume",
+      description: "View my professional experience, education, and skills.",
+      link: "/resume",
+      image: "/projects/desktop.png",
+      color: "from-blue-500 to-cyan-500"
+    },
+    {
+      title: "Projects",
+      description: "Explore my coding projects and technical work.",
+      link: "/projects",
+      image: "/projects/discord-bot.jpg",
+      color: "from-purple-500 to-pink-500"
+    },
+    {
+      title: "Photography",
+      description: "Discover my travel photography and visual stories.",
+      link: "/photography",
+      image: "/photography/A6400887.JPG",
+      color: "from-orange-500 to-red-500"
+    }
+  ];
+
   return (
     <>
       {/* Navigation Header */}
@@ -141,7 +110,6 @@ export default function Home() {
           <div className="flex items-center justify-between">
             <Link href="/" className="text-xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>Chiu Alex</Link>
             <div className="flex gap-6" style={{ fontFamily: 'var(--font-poppins)' }}>
-              <a href="#about" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Intro</a>
               <Link href="/resume" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Resume</Link>
               <Link href="/projects" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Projects</Link>
               <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Photography</Link>
@@ -150,195 +118,155 @@ export default function Home() {
           </div>
         </div>
       </nav>
-      <div 
-        className="min-h-screen relative overflow-hidden pt-20" // Added pt-20 for padding
-        style={{ 
-          perspective: '2000px',
-          background: 'linear-gradient(to right, #dbeafe 0%, #dbeafe 40%, #ffffff 40%, #ffffff 100%)',
-          fontFamily: 'var(--font-inter)'
-        }}
-      >
-        <main className="flex w-full max-w-6xl flex-col items-center mx-auto px-8 py-16 relative z-10">
-          {/* Transparent Spacer Bottom */}
-          <div className="w-full" style={{ height: '5vh' }}></div>
 
-          {/* Profile and About Section - Side by Side */}
+      {/* Interactive Background */}
+      <InteractiveBackground />
+
+      {/* Main Content */}
+      <div className="relative min-h-screen z-10 pt-20">
+        <main className="flex flex-col items-center justify-center min-h-screen px-8 py-32 relative">
+          {/* Hero Section */}
           <div 
-            className="mb-10 w-full grid grid-cols-1 lg:grid-cols-2 gap-0" 
-            style={{ 
-              minHeight: '60vh',
-              transform: `translateY(${scrollProgress * 80}px) scale(${1 - scrollProgress * 0.25})`,
-              opacity: 1 - scrollProgress * 1.1,
-              transition: 'transform 0.15s ease-out, opacity 0.15s ease-out',
-              transformStyle: 'preserve-3d',
-              perspective: '1500px'
-            }}
+            id="about"
+            className={`text-center mb-40 transition-all duration-1000 ${
+              hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
           >
-            {/* Profile Section */}
-            <div 
-              className={`bg-blue-50 p-6 shadow-lg text-center flex flex-col justify-center transition-all duration-1000 delay-500 relative z-20 ${
-                hasLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-20'
-              }`}
-              style={{
-                transform: `
-                  translateX(${-scrollProgress * 250}px) 
-                  translateZ(${-scrollProgress * 200}px)
-                  rotateY(${-scrollProgress * 90}deg) 
-                  rotateX(${scrollProgress * 15}deg)
-                  scale(${1 - scrollProgress * 0.15})
-                `,
-                transformStyle: 'preserve-3d',
-                transformOrigin: 'right center',
-                transition: 'transform 0.15s ease-out',
-                filter: `blur(${scrollProgress * 4}px)`,
-                backfaceVisibility: 'hidden'
-              }}
+            <h1 
+              className="text-6xl md:text-7xl font-bold mb-12 text-gray-900 drop-shadow-sm"
+              style={{ fontFamily: 'var(--font-playfair)' }}
             >
-              <h1 className="mb-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl" style={{ fontFamily: 'var(--font-playfair)' }}>
                 Chiu Alex
               </h1>
-              <div className="w-32 h-0.5 bg-blue-900 mx-auto mb-2"></div>
-              <p className="mb-2 text-lg text-gray-700 font-medium" style={{ fontFamily: 'var(--font-poppins)' }}>
-                Student
-                <br />
-                <br />
-                Currently studying Electrical Engineering
-                <br />
-                at National Taiwan University.
-              </p>
-            </div>
-
-            {/* Intro Section */}
-            <div 
-              id="about" 
-              className={`bg-white p-6 shadow-lg flex flex-col justify-center transition-all duration-1000 delay-500 relative z-10 ${
-                hasLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'
-              }`}
-              style={{
-                transform: `
-                  translateX(${scrollProgress * 250}px) 
-                  translateZ(${-scrollProgress * 200}px)
-                  rotateY(${scrollProgress * 90}deg) 
-                  rotateX(${scrollProgress * 15}deg)
-                  scale(${1 - scrollProgress * 0.15})
-                `,
-                transformStyle: 'preserve-3d',
-                transformOrigin: 'left center',
-                transition: 'transform 0.15s ease-out',
-                filter: `blur(${scrollProgress * 4}px)`,
-                backfaceVisibility: 'hidden'
-              }}
+            <div className="w-32 h-1 bg-blue-500 mx-auto mb-12"></div>
+            <p 
+              className="text-xl md:text-2xl text-gray-800 mb-8 font-light"
+              style={{ fontFamily: 'var(--font-poppins)' }}
             >
-              <h2 className="mb-4 text-3xl font-semibold text-gray-900 sm:text-4xl" style={{ fontFamily: 'var(--font-playfair)' }}>
-                Intro
-              </h2>
-              <div className="space-y-4 text-lg text-gray-700 leading-relaxed">
-                <p>
-                  Hello! I'm Alex, a passionate electrical engineering student at National Taiwan University with a deep interest in technology and innovation.
-                </p>
-                <p>
-                  When I'm not studying, you can find me coding, playing guitar, or exploring new places with my camera. I love traveling, photography, and capturing unique perspectives from around the world.
-                </p>
-                <div className="flex items-center gap-3 pt-2">
+              Electrical Engineering Student
+            </p>
+            <p 
+              className="text-lg text-gray-700 mb-10"
+              style={{ fontFamily: 'var(--font-poppins)' }}
+            >
+              National Taiwan University
+            </p>
+            <p 
+              className="text-lg text-gray-700 max-w-2xl mx-auto mb-12"
+              style={{ fontFamily: 'var(--font-poppins)' }}
+            >
+              Passionate about technology and innovation
+            </p>
                   <a 
                     href="https://www.google.com/maps/place/Taipei,+Taiwan"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="location-button group relative inline-block cursor-pointer border-none px-8 py-3.5 font-bold text-base rounded-full overflow-hidden bg-white text-gray-900 shadow-md hover:shadow-xl transition-all duration-300 border-2 border-gray-200"
-                    style={{ fontFamily: 'var(--font-poppins)', letterSpacing: '0.05rem' }}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-50 backdrop-blur-md text-gray-800 rounded-full hover:bg-blue-100 transition-all duration-300 border border-blue-200"
+              style={{ fontFamily: 'var(--font-poppins)' }}
                   >
-                    <span 
-                      className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-blue-500 to-blue-600 -translate-x-full group-hover:translate-x-0 transition-transform duration-[400ms] ease-[cubic-bezier(0.3,1,0.8,1)]"
-                    ></span>
-                    <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-400">
                       <svg 
                         width="20" 
                         height="20" 
                         viewBox="0 0 24 24" 
                         fill="none" 
                         stroke="currentColor" 
-                        strokeWidth="2.5"
+                strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className="transition-transform duration-300 group-hover:scale-110"
                       >
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                         <circle cx="12" cy="10" r="3" />
                       </svg>
-                      <span>Taipei, Taiwan</span>
-                    </span>
+                      <span className="text-gray-800">Taipei, Taiwan</span>
                   </a>
                 </div>
-              </div>
+
+          {/* Scroll Arrow Indicator */}
+          <div 
+            className={`w-full flex justify-center mt-20 mb-20 transition-all duration-500 ${
+              showScrollArrow && hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+            }`}
+            onClick={() => window.scrollBy({ top: window.innerHeight * 0.8, behavior: 'smooth' })}
+          >
+            <div className="flex flex-col items-center cursor-pointer group">
+              <svg 
+                className="animate-bounce w-6 h-6 text-gray-600 group-hover:text-gray-900 transition-colors"
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
             </div>
           </div>
 
-
-          {/* Scroll Down Arrow */}
-          <div 
-            className={`ease-in-out overflow-hidden ${
+          {/* Explore More Section */}
+          <div className="w-full max-w-6xl mt-32">
+            <h2 
+              className="text-4xl font-bold text-gray-900 text-center mb-16 drop-shadow-sm"
+              style={{ fontFamily: 'var(--font-playfair)' }}
+            >
+              Explore More
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+              {exploreItems.map((item, index) => (
+                <Link
+                  key={item.title}
+                  href={item.link}
+                  className={`group relative overflow-hidden rounded-2xl bg-white/80 backdrop-blur-md border border-gray-200 hover:bg-white hover:shadow-xl transition-all duration-300 hover:scale-105 ${
               hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}
             style={{ 
-              height: showScrollArrow ? '13vh' : '0',
-              opacity: showScrollArrow && hasLoaded ? 1 : 0,
-              transition: hasLoaded && !showScrollArrow ? 'all 0.5s ease-in-out' : 'all 1s ease-in-out 3s'
-            }}
-          >
-            <ScrollDownArrow />
+                    transitionDelay: `${index * 150}ms`
+                  }}
+                >
+                  {/* Image */}
+                  <div className="relative h-48 overflow-hidden">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
           </div>
-          {/* Transparent Spacer Bottom */}
-          <div className="w-full" style={{ height: '14vh' }}></div>
-
-          {/* Interests Section */}
-          <div 
-            className={`mb-10 w-full bg-gray-100 p-8 shadow-lg transition-all duration-1000 delay-[900ms] ${
-              hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
-          >
-            <h2 className="mb-6 text-2xl font-semibold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
-              Interests & Hobbies
-            </h2>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-              <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
-                <DualRingEffect />
-                <span className="relative z-20 text-2xl">💻</span>
-                <span className="relative z-20 text-sm font-medium text-gray-700">Coding</span>
+                  
+                  {/* Content */}
+                  <div className="p-6">
+                    <h3 
+                      className="text-2xl font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors"
+                      style={{ fontFamily: 'var(--font-playfair)' }}
+                    >
+                      {item.title}
+                    </h3>
+                    <p 
+                      className="text-gray-700 text-sm leading-relaxed"
+                      style={{ fontFamily: 'var(--font-poppins)' }}
+                    >
+                      {item.description}
+                    </p>
+                    <div className="mt-4 flex items-center text-blue-600 group-hover:text-blue-700 transition-colors">
+                      <span className="text-sm font-medium" style={{ fontFamily: 'var(--font-poppins)' }}>Explore</span>
+                      <svg 
+                        className="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform"
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
               </div>
-              <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
-                <DualRingEffect />
-                <span className="relative z-20 text-2xl">🎸</span>
-                <span className="relative z-20 text-sm font-medium text-gray-700">Guitar</span>
               </div>
-              <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
-                <DualRingEffect />
-                <span className="relative z-20 text-2xl">✈️</span>
-                <span className="relative z-20 text-sm font-medium text-gray-700">Traveling</span>
-              </div>
-              <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
-                <DualRingEffect />
-                <span className="relative z-20 text-2xl">�</span>
-                <span className="relative z-20 text-sm font-medium text-gray-700">Photography</span>
-              </div>
-              <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
-                <DualRingEffect />
-                <span className="relative z-20 text-2xl">🔬</span>
-                <span className="relative z-20 text-sm font-medium text-gray-700">Science</span>
-              </div>
-              <div className="group relative flex items-center gap-3 bg-white p-4 transition-all hover:scale-105 hover:shadow-lg">
-                <DualRingEffect />
-                <span className="relative z-20 text-2xl">🌐</span>
-                <span className="relative z-20 text-sm font-medium text-gray-700">Web Dev</span>
-              </div>
+                </Link>
+              ))}
             </div>
           </div>
-
         </main>
 
         {/* Footer */}
         <footer 
           id="contact"
-          className={`w-full bg-gray-900 text-gray-300 transition-all duration-1000 delay-[1500ms] ${
+          className={`w-full bg-gray-900 text-gray-300 transition-all duration-1000 ${
             hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >
@@ -351,11 +279,6 @@ export default function Home() {
                     Quick Links
                   </h3>
                   <ul className="space-y-2">
-                    <li>
-                      <a href="#about" className="hover:text-white transition-colors duration-200" style={{ fontFamily: 'var(--font-poppins)' }}>
-                        Intro
-                      </a>
-                    </li>
                     <li>
                       <Link href="/resume" className="hover:text-white transition-colors duration-200" style={{ fontFamily: 'var(--font-poppins)' }}>
                         Resume
@@ -402,7 +325,7 @@ export default function Home() {
                   </ul>
                 </div>
 
-                {/* Social Media - All Links */}
+                {/* Social Media */}
                 <div className="md:col-span-2">
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
                     {socialLinks.map((link) => (

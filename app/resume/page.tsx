@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import InteractiveBackground from "../components/InteractiveBackground";
 
 export default function ResumePage() {
   const [hasLoaded, setHasLoaded] = useState(false);
@@ -81,10 +82,11 @@ export default function ResumePage() {
       <div 
         className="min-h-screen relative overflow-hidden pt-20"
         style={{ 
-          background: 'linear-gradient(to bottom, #f0f9ff 0%, #ffffff 100%)',
           fontFamily: 'var(--font-inter)'
         }}
       >
+        {/* Interactive Background */}
+        <InteractiveBackground />
         <main className="flex w-full max-w-6xl flex-col items-center mx-auto px-8 py-20 md:py-32 relative z-10">
           {/* Title Section */}
           <div 
@@ -433,7 +435,7 @@ export default function ResumePage() {
         {/* Footer */}
         <footer 
           id="contact"
-          className="w-full bg-gray-900 text-gray-300 mt-20"
+          className="w-full bg-gray-900 text-gray-300 mt-20 relative z-10"
         >
           <div className="w-full px-8 py-12">
             <div className="max-w-6xl mx-auto">
