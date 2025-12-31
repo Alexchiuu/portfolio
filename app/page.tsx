@@ -7,10 +7,7 @@ import InteractiveBackground from "./components/InteractiveBackground";
 
 export default function Home() {
   const [hasLoaded, setHasLoaded] = useState(false);
-  const [isScrolling, setIsScrolling] = useState(false);
-  const [isAtTop, setIsAtTop] = useState(true);
   const [showScrollArrow, setShowScrollArrow] = useState(true);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setHasLoaded(true);
@@ -18,31 +15,17 @@ export default function Home() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsAtTop(window.scrollY < 50);
-      setIsScrolling(true);
-      
       // Hide scroll arrow when user scrolls down
       if (window.scrollY > 100) {
         setShowScrollArrow(false);
       } else {
         setShowScrollArrow(true);
       }
-
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-
-      scrollTimeoutRef.current = setTimeout(() => {
-        setIsScrolling(false);
-      }, 2000);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
     };
   }, []);
 
@@ -76,10 +59,10 @@ export default function Home() {
 
   const exploreItems = [
     {
-      title: "Resume",
+      title: "About Me",
       description: "View my professional experience, education, and skills.",
       link: "/resume",
-      image: "/projects/desktop.png",
+      image: "/profile.png",
       color: "from-blue-500 to-cyan-500"
     },
     {
@@ -103,17 +86,19 @@ export default function Home() {
       {/* Navigation Header */}
       <nav 
         className={`fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md shadow-sm transition-all duration-300 ${
-          hasLoaded && (isScrolling || isAtTop) ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full'
+          hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full'
         }`}
       >
-        <div className="max-w-6xl mx-auto px-8 py-4">
+        <div className="max-w-6xl mx-auto px-2 sm:px-8 py-2 sm:py-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="text-xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>Chiu Alex</Link>
-            <div className="flex gap-6" style={{ fontFamily: 'var(--font-poppins)' }}>
-              <Link href="/resume" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Resume</Link>
-              <Link href="/projects" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Projects</Link>
-              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Photography</Link>
-              <a href="#contact" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Contact</a>
+            <Link href="/" className="text-base sm:text-xl font-bold text-gray-900 shrink-0" style={{ fontFamily: 'var(--font-playfair)' }}>Chiu Alex</Link>
+            <div className="flex gap-1 sm:gap-4 md:gap-6 text-xs sm:text-base" style={{ fontFamily: 'var(--font-poppins)' }}>
+              <Link href="/" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden min-[375px]:inline">Intro</Link>
+              <Link href="/resume" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">About Me</Link>
+              <Link href="/projects" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">Projects</Link>
+              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden sm:inline">Photo</Link>
+              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap sm:hidden">Photo</Link>
+              <a href="#contact" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden md:inline">Contact</a>
             </div>
           </div>
         </div>

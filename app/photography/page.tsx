@@ -478,13 +478,13 @@ export default function PhotographyPage() {
           hasLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full'
         }`}
       >
-        <div className="max-w-6xl mx-auto px-4 sm:px-8 py-3 sm:py-4">
+        <div className="max-w-6xl mx-auto px-2 sm:px-8 py-2 sm:py-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="text-lg sm:text-xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
+            <Link href="/" className="text-base sm:text-xl font-bold text-gray-900 shrink-0" style={{ fontFamily: 'var(--font-playfair)' }}>
               Chiu Alex
             </Link>
-            <div className="flex gap-2 sm:gap-4 md:gap-6 text-sm sm:text-base" style={{ fontFamily: 'var(--font-poppins)' }}>
-              <Link href="/" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">Intro</Link>
+            <div className="flex gap-1 sm:gap-4 md:gap-6 text-xs sm:text-base" style={{ fontFamily: 'var(--font-poppins)' }}>
+              <Link href="/" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden min-[375px]:inline">Intro</Link>
               <Link href="/resume" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">About Me</Link>
               <Link href="/projects" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">Projects</Link>
               <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden sm:inline">Photo</Link>
