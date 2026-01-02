@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import InteractiveBackground from "../components/InteractiveBackground";
 
 export default function ResumePage() {
@@ -67,7 +68,7 @@ export default function ResumePage() {
         <div className="max-w-6xl mx-auto px-2 sm:px-8 py-2 sm:py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="text-base sm:text-xl font-bold text-gray-900 shrink-0" style={{ fontFamily: 'var(--font-playfair)' }}>Chiu Alex</Link>
-            <div className="flex gap-1 sm:gap-4 md:gap-6 text-xs sm:text-base" style={{ fontFamily: 'var(--font-poppins)' }}>
+            <div className="flex gap-1 sm:gap-4 md:gap-6 text-sm sm:text-base" style={{ fontFamily: 'var(--font-poppins)' }}>
               <Link href="/" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden min-[375px]:inline">Intro</Link>
               <Link href="/resume" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">About Me</Link>
               <Link href="/projects" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">Projects</Link>
@@ -130,37 +131,47 @@ export default function ResumePage() {
                     aria-expanded={openSections.education}
                   >
                      <svg 
-                      className={`w-5 h-5 mb-4 transition-all duration-300 ${openSections.education ? 'text-blue-600 rotate-90' : 'text-gray-400'}`}
+                      className={`w-5 h-5 mb-4 transition-all duration-300 ${openSections.education ? 'text-blue-600 rotate-90' : 'text-blue-400'}`}
                        fill="none" 
                        stroke="currentColor" 
                        viewBox="0 0 24 24"
                      >
                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                      </svg>
-                    <h3 className={`text-2xl font-bold text-gray-900 mb-4 transition-colors ${openSections.education ? 'text-blue-600' : ''}`} style={{ fontFamily: 'var(--font-playfair)' }}>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-playfair)' }}>
                        Education
                      </h3>
                    </div>
                   <div className={`relative pl-8 overflow-hidden transition-all duration-500 ease-in-out ${openSections.education ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
                     {/* Vertical Timeline Line (starts at first dot, ends at last dot) */}
-                    <div className="absolute left-[9px] top-[6px] bottom-[6px] w-0.5 bg-blue-500"></div>
+                    <div className="absolute left-[9px] top-[6px] bottom-[6px] w-0.5 bg-blue-600/50"></div>
                     
                     <div className="space-y-6 pb-4">
                       {/* Taipei Municipal Jianguo High School */}
                       <div className="relative">
                         {/* Timeline Dot */}
-                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-md"></div>
-                        <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
-                          High School Diploma, Class of Science
-                        </h4>
-                        <p className="text-base text-gray-600 mb-1">
-                          Taipei Municipal Jianguo High School
-                        </p>
-                        <p className="text-sm text-gray-500 mb-2">
-                          Sep 2022 — Jun 2025
-                        </p>
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-400 rounded-full border-2 border-white shadow-md"></div>
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-12 h-12 flex-shrink-0">
+                            <Image 
+                              src="/CKHS_Taipei_Logo.png" 
+                              alt="CKHS Logo" 
+                              width={48} 
+                              height={48}
+                              className="object-contain"
+                            />
+                          </div>
+                          <div>
+                            <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
+                              High School Diploma, Class of Science
+                            </h4>
+                            <p className="text-base text-gray-600 mb-1">
+                              Taipei Municipal Chien Kuo High School
+                            </p>
+                          </div>
+                        </div>
                         <p className="text-base text-gray-700 leading-relaxed">
-                          <span className="font-medium text-gray-800">Activities and societies:</span> General organizer of the Science affair in Class of Science
+                          <span className="font-medium text-gray-800">Activities and societies:</span> Science program organizer
                         </p>
                         <p className="text-base text-gray-700 leading-relaxed mt-1">
                           Project Management
@@ -170,16 +181,26 @@ export default function ResumePage() {
                       {/* National Taiwan University */}
                       <div className="relative">
                         {/* Timeline Dot */}
-                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-md"></div>
-                        <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
-                          Bachelor of Engineering - BE, Electrical and Electronics Engineering
-                        </h4>
-                        <p className="text-base text-gray-600 mb-1">
-                          National Taiwan University
-                        </p>
-                        <p className="text-sm text-gray-500 mb-2">
-                          Sep 2025 — Jun 2029
-                        </p>
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-400 rounded-full border-2 border-white shadow-md"></div>
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-12 h-12 flex-shrink-0">
+                            <Image 
+                              src="/ntu logo.jpg" 
+                              alt="NTU Logo" 
+                              width={48} 
+                              height={48}
+                              className="object-contain"
+                            />
+                          </div>
+                          <div>
+                            <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
+                              Bachelor of Engineering - BE, Electrical and Electronics Engineering
+                            </h4>
+                            <p className="text-base text-gray-600 mb-1">
+                              National Taiwan University
+                            </p>
+                          </div>
+                        </div>
                         <p className="text-base text-gray-700 leading-relaxed">
                           Project Management and Engineering
                         </p>
@@ -205,76 +226,49 @@ export default function ResumePage() {
                     aria-expanded={openSections.experience}
                   >
                      <svg 
-                      className={`w-5 h-5 mb-4 transition-all duration-300 ${openSections.experience ? 'text-green-600 rotate-90' : 'text-gray-400'}`}
+                      className={`w-5 h-5 mb-4 transition-all duration-300 ${openSections.experience ? 'text-blue-600 rotate-90' : 'text-blue-400'}`}
                        fill="none" 
                        stroke="currentColor" 
                        viewBox="0 0 24 24"
                      >
                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                      </svg>
-                    <h3 className={`text-2xl font-bold text-gray-900 mb-4 transition-colors ${openSections.experience ? 'text-green-600' : ''}`} style={{ fontFamily: 'var(--font-playfair)' }}>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-playfair)' }}>
                        Experience
                      </h3>
                    </div>
 
                   <div className={`relative pl-8 overflow-hidden transition-all duration-500 ease-in-out ${openSections.experience ? 'max-h-[700px] opacity-100' : 'max-h-0 opacity-0'}`}>
                     {/* Vertical Timeline Line (starts at first dot, ends at last dot) */}
-                    <div className="absolute left-[9px] top-[6px] bottom-[6px] w-0.5 bg-green-500"></div>
+                    <div className="absolute left-[9px] top-[6px] bottom-[6px] w-0.5 bg-blue-600/50"></div>
 
                     <div className="space-y-6 pb-4">
                       {/* Research & Project (Senior Research) */}
                       <div className="relative">
-                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-md"></div>
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-400 rounded-full border-2 border-white shadow-md"></div>
                         <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
                           Senior Research — Vehicle Roll-Prevention Driver Assistance
                         </h4>
-                        <p className="text-base text-gray-600 mb-1">Advisor: Prof. 詹魁元 (NTU Mechanical Engineering)</p>
+                        <p className="text-base text-gray-600 mb-1">Advisor: NTU Mechanical Engineering</p>
                         <p className="text-sm text-gray-500 mb-2">High school research / team project</p>
                         <p className="text-base text-gray-700 leading-relaxed">
-                          Designed and implemented an Ackermann-model test vehicle using Raspberry Pi (control), Arduino (motor PWM), ROS for message passing, and a 6-axis IMU + SLAM-based feedback loop to reduce dynamic roll. Responsibilities included system architecture, sensor integration, control algorithm prototyping, MATLAB simulations, and preparing results for Taiwan International Science Fair submissions.
+                          Designed and implemented a vehicle roll-prevention system using Raspberry Pi, Arduino, and ROS. Worked on system architecture, sensor integration, and control algorithms.
                         </p>
-                        <div className="mt-2 flex flex-wrap gap-2">
-                          <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 rounded">Raspberry Pi</span>
-                          <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 rounded">ROS / ROS2</span>
-                          <span className="bg-green-100 px-3 py-1 text-xs font-medium text-green-800 rounded">Arduino</span>
-                          <span className="bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800 rounded">MATLAB</span>
-                        </div>
                       </div>
 
                       {/* Independent Research (Wind Tunnel) */}
                       <div className="relative">
-                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-md"></div>
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-400 rounded-full border-2 border-white shadow-md"></div>
                         <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
                           Independent Research — Truck Roof Spoiler Aerodynamics
                         </h4>
                         <p className="text-base text-gray-600 mb-1">NTU Mechanical Lab (wind tunnel experiments)</p>
                         <p className="text-sm text-gray-500 mb-2">Independent study / senior year</p>
                         <p className="text-base text-gray-700 leading-relaxed">
-                          3D-modeled and printed truck models, designed roof spoilers, and measured aerodynamic drag in a small wind tunnel. Performed LabVIEW data acquisition and applied post-processing to quantify drag differences. Gained hands-on experience with experimental setup, calibration and result analysis.
+                          Conducted wind tunnel experiments on truck aerodynamics. Designed and 3D-printed models, performed data acquisition and analysis.
                         </p>
-                        <div className="mt-2 flex flex-wrap gap-2">
-                          <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 rounded">3D Printing</span>
-                          <span className="bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800 rounded">LabVIEW</span>
-                          <span className="bg-green-100 px-3 py-1 text-xs font-medium text-green-800 rounded">Wind Tunnel</span>
-                        </div>
                       </div>
 
-                      {/* Teaching & Mentoring */}
-                      <div className="relative">
-                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-md"></div>
-                        <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
-                          Teaching & Mentoring — Algorithm Lecturer
-                        </h4>
-                        <p className="text-base text-gray-600 mb-1">建國中學 Student Algorithm Club</p>
-                        <p className="text-sm text-gray-500 mb-2">High school — ongoing</p>
-                        <p className="text-base text-gray-700 leading-relaxed">
-                          Prepared and delivered algorithm and problem-solving lectures for younger students, organized practice sessions for online judges (ZeroJudge, CSES, TIOJ), and mentored peers preparing for APCS and national competitions.
-                        </p>
-                        <div className="mt-2 flex flex-wrap gap-2">
-                          <span className="bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800 rounded">Algorithms</span>
-                          <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 rounded">C++</span>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -296,64 +290,55 @@ export default function ResumePage() {
                     aria-expanded={openSections.extracurriculars}
                   >
                      <svg 
-                      className={`w-5 h-5 mb-4 transition-all duration-300 ${openSections.extracurriculars ? 'text-purple-600 rotate-90' : 'text-gray-400'}`}
+                      className={`w-5 h-5 mb-4 transition-all duration-300 ${openSections.extracurriculars ? 'text-blue-600 rotate-90' : 'text-blue-400'}`}
                        fill="none" 
                        stroke="currentColor" 
                        viewBox="0 0 24 24"
                      >
                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                      </svg>
-                    <h3 className={`text-2xl font-bold text-gray-900 mb-4 transition-colors ${openSections.extracurriculars ? 'text-purple-600' : ''}`} style={{ fontFamily: 'var(--font-playfair)' }}>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-playfair)' }}>
                        Extracurriculars
                      </h3>
                    </div>
 
                   <div className={`relative pl-8 overflow-hidden transition-all duration-500 ease-in-out ${openSections.extracurriculars ? 'max-h-[900px] opacity-100' : 'max-h-0 opacity-0'}`}>
                     {/* Vertical Timeline Line (starts at first dot, ends at last dot) */}
-                    <div className="absolute left-[9px] top-[6px] bottom-[6px] w-0.5 bg-purple-500"></div>
+                    <div className="absolute left-[9px] top-[6px] bottom-[6px] w-0.5 bg-blue-600/50"></div>
 
                     <div className="space-y-6 pb-4">
                       <div className="relative">
-                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-purple-500 rounded-full border-2 border-white shadow-md"></div>
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-400 rounded-full border-2 border-white shadow-md"></div>
                         <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
                           Science Fair Coordinator
                         </h4>
-                        <p className="text-base text-gray-600 mb-1">建國中學 Science Program — Jun 2023 — May 2024</p>
+                        <p className="text-base text-gray-600 mb-1">Science Program</p>
                         <p className="text-base text-gray-700 leading-relaxed">
-                          Led the annual science fair for the school's science program. Responsible for team coordination, visual design, venue and vendor communication, promotion, video production, and event scheduling. Developed large-event planning, communication, and time-management skills while leading cross-grade teams to a successful exhibition.
+                          Led the annual science fair. Coordinated teams, managed event planning, and organized exhibitions.
                         </p>
-                        <div className="mt-2 flex flex-wrap gap-2">
-                          <span className="bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-800 rounded">Event Management</span>
-                          <span className="bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-800 rounded">Leadership</span>
-                        </div>
                       </div>
 
                       <div className="relative">
-                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-purple-500 rounded-full border-2 border-white shadow-md"></div>
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-400 rounded-full border-2 border-white shadow-md"></div>
                         <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
                           Algorithm Lecturer
                         </h4>
-                        <p className="text-base text-gray-600 mb-1">建國中學 — ongoing</p>
+                        <p className="text-base text-gray-600 mb-1">High School — ongoing</p>
                         <p className="text-base text-gray-700 leading-relaxed">
-                          Acted as an algorithm instructor in a student-led study group: created structured teaching materials, demonstrated problem-solving approaches, and led practice contests to prepare younger students for programming competitions.
+                          Taught algorithms and problem-solving to younger students. Created teaching materials and organized practice sessions.
                         </p>
-                        <div className="mt-2 flex flex-wrap gap-2">
-                          <span className="bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800 rounded">Teaching</span>
-                          <span className="bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 rounded">Algorithms</span>
-                        </div>
                       </div>
 
                       <div className="relative">
-                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-purple-500 rounded-full border-2 border-white shadow-md"></div>
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-400 rounded-full border-2 border-white shadow-md"></div>
                         <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
                           Competition Achievements
                         </h4>
                         <p className="text-base text-gray-600 mb-1">Selected awards & honors</p>
                         <ul className="list-disc list-inside text-gray-700">
-                          <li>Taiwan International Science Fair — Finalist / Exhibition (selected)</li>
-                          <li>YTP (Turing Program) — Team Bronze (National 3rd)</li>
-                          <li>NTU Internet Programming Contest — Top 10 in preliminary</li>
-                          <li>APCS: Concept 4/5, Practical 5/5</li>
+                          <li>Taiwan International Science Fair — Finalist</li>
+                          <li>Programming Competitions — Multiple awards</li>
+                          <li>Science Fair — Selected for exhibition</li>
                         </ul>
                       </div>
                     </div>
@@ -377,51 +362,51 @@ export default function ResumePage() {
                     aria-expanded={openSections.skills}
                   >
                      <svg 
-                      className={`w-5 h-5 mb-4 transition-all duration-300 ${openSections.skills ? 'text-orange-600 rotate-90' : 'text-gray-400'}`}
+                      className={`w-5 h-5 mb-4 transition-all duration-300 ${openSections.skills ? 'text-blue-600 rotate-90' : 'text-blue-400'}`}
                        fill="none" 
                        stroke="currentColor" 
                        viewBox="0 0 24 24"
                      >
                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                      </svg>
-                    <h3 className={`text-2xl font-bold text-gray-900 mb-4 transition-colors ${openSections.skills ? 'text-orange-600' : ''}`} style={{ fontFamily: 'var(--font-playfair)' }}>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-playfair)' }}>
                        Skills
                      </h3>
                    </div>
 
                   <div className={`relative pl-8 overflow-hidden transition-all duration-500 ease-in-out ${openSections.skills ? 'max-h-[420px] opacity-100' : 'max-h-0 opacity-0'}`}>
                     {/* Vertical Timeline Line (starts at first dot, ends at last dot) */}
-                    <div className="absolute left-[9px] top-[6px] bottom-[6px] w-0.5 bg-orange-500"></div>
+                    <div className="absolute left-[9px] top-[6px] bottom-[6px] w-0.5 bg-blue-600/50"></div>
 
                     <div className="pb-4">
                       <div className="mb-3">
                         <h4 className="text-lg font-medium text-gray-900" style={{ fontFamily: 'var(--font-poppins)' }}>Programming & Tools</h4>
                         <div className="mt-2 flex flex-wrap gap-2">
-                          <span className="bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 rounded">C++</span>
-                          <span className="bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 rounded">Python</span>
-                          <span className="bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800 rounded">MATLAB</span>
-                          <span className="bg-gray-100 px-3 py-1 text-sm font-medium text-gray-800 rounded">LabVIEW</span>
-                          <span className="bg-gray-100 px-3 py-1 text-sm font-medium text-gray-800 rounded">ROS</span>
+                          <span className="px-3 py-1 text-sm font-medium text-gray-700">C++</span>
+                          <span className="px-3 py-1 text-sm font-medium text-gray-700">Python</span>
+                          <span className="px-3 py-1 text-sm font-medium text-gray-700">MATLAB</span>
+                          <span className="px-3 py-1 text-sm font-medium text-gray-700">LabVIEW</span>
+                          <span className="px-3 py-1 text-sm font-medium text-gray-700">ROS</span>
                         </div>
                       </div>
 
                       <div className="mb-3">
                         <h4 className="text-lg font-medium text-gray-900" style={{ fontFamily: 'var(--font-poppins)' }}>Hardware & Experimentation</h4>
                         <div className="mt-2 flex flex-wrap gap-2">
-                          <span className="bg-green-100 px-3 py-1 text-sm font-medium text-green-800 rounded">Raspberry Pi</span>
-                          <span className="bg-green-100 px-3 py-1 text-sm font-medium text-green-800 rounded">Arduino</span>
-                          <span className="bg-green-100 px-3 py-1 text-sm font-medium text-green-800 rounded">3D Printing</span>
-                          <span className="bg-green-100 px-3 py-1 text-sm font-medium text-green-800 rounded">Wind Tunnel Testing</span>
+                          <span className="px-3 py-1 text-sm font-medium text-gray-700">Raspberry Pi</span>
+                          <span className="px-3 py-1 text-sm font-medium text-gray-700">Arduino</span>
+                          <span className="px-3 py-1 text-sm font-medium text-gray-700">3D Printing</span>
+                          <span className="px-3 py-1 text-sm font-medium text-gray-700">Wind Tunnel Testing</span>
                         </div>
                       </div>
 
                       <div>
                         <h4 className="text-lg font-medium text-gray-900" style={{ fontFamily: 'var(--font-poppins)' }}>Languages & Certifications</h4>
                         <div className="mt-2 flex flex-wrap gap-2">
-                          <span className="bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-800 rounded">TOEIC 955</span>
-                          <span className="bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-800 rounded">TOEFL 96</span>
-                          <span className="bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-800 rounded">GEPT Intermediate</span>
-                          <span className="bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-800 rounded">APCS 4/5 (concept), 5/5 (practical)</span>
+                          <span className="px-3 py-1 text-sm font-medium text-gray-700">TOEIC</span>
+                          <span className="px-3 py-1 text-sm font-medium text-gray-700">TOEFL</span>
+                          <span className="px-3 py-1 text-sm font-medium text-gray-700">GEPT Intermediate</span>
+                          <span className="px-3 py-1 text-sm font-medium text-gray-700">APCS</span>
                         </div>
                       </div>
                     </div>
@@ -482,10 +467,10 @@ export default function ResumePage() {
                   <ul className="space-y-2" style={{ fontFamily: 'var(--font-poppins)' }}>
                     <li>
                       <a 
-                        href="mailto:b14901022@g.ntu.edu.tw" 
+                        href="#contact" 
                         className="hover:text-white transition-colors duration-200"
                       >
-                        b14901022@g.ntu.edu.tw
+                        Contact via social media
                       </a>
                     </li>
                     <li className="text-gray-400">

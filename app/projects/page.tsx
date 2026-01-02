@@ -78,7 +78,7 @@ export default function ProjectsPage() {
         <div className="max-w-6xl mx-auto px-2 sm:px-8 py-2 sm:py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="text-base sm:text-xl font-bold text-gray-900 shrink-0" style={{ fontFamily: 'var(--font-playfair)' }}>Chiu Alex</Link>
-            <div className="flex gap-1 sm:gap-4 md:gap-6 text-xs sm:text-base" style={{ fontFamily: 'var(--font-poppins)' }}>
+            <div className="flex gap-1 sm:gap-4 md:gap-6 text-sm sm:text-base" style={{ fontFamily: 'var(--font-poppins)' }}>
               <Link href="/" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden min-[375px]:inline">Intro</Link>
               <Link href="/resume" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">About Me</Link>
               <Link href="/projects" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">Projects</Link>
@@ -248,10 +248,10 @@ export default function ProjectsPage() {
                   <ul className="space-y-2" style={{ fontFamily: 'var(--font-poppins)' }}>
                     <li>
                       <a 
-                        href="mailto:b14901022@g.ntu.edu.tw" 
+                        href="#contact" 
                         className="hover:text-white transition-colors duration-200"
                       >
-                        b14901022@g.ntu.edu.tw
+                        Contact via social media
                       </a>
                     </li>
                     <li className="text-gray-400">
