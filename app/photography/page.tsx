@@ -490,6 +490,7 @@ export default function PhotographyPage() {
               <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden sm:inline">Memories</Link>
               <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap sm:hidden">Memories</Link>
               <Link href="/#contact" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden md:inline">Contact</Link>
+              <Link href="/admin/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden md:inline" title="Photo Manager">⚙️</Link>
             </div>
           </div>
         </div>
