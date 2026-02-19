@@ -63,21 +63,21 @@ export default function Home() {
       description: "View my professional experience, education, and skills.",
       link: "/resume",
       image: "/profile.png",
-      color: "from-blue-500 to-cyan-500"
+      color: "from-gray-700 to-gray-900"
     },
     {
       title: "Projects",
       description: "Explore my coding projects and technical work.",
       link: "/projects",
       image: "/projects/discord-bot.jpg",
-      color: "from-purple-500 to-pink-500"
+      color: "from-gray-600 to-gray-900"
     },
     {
-      title: "Photography",
+      title: "Memories",
       description: "Discover my travel photography and visual stories.",
       link: "/photography",
       image: "/photography/A6400887.JPG",
-      color: "from-orange-500 to-red-500"
+      color: "from-gray-500 to-gray-900"
     }
   ];
 
@@ -91,13 +91,13 @@ export default function Home() {
       >
         <div className="max-w-6xl mx-auto px-2 sm:px-8 py-2 sm:py-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="text-base sm:text-xl font-bold text-gray-900 shrink-0" style={{ fontFamily: 'var(--font-playfair)' }}>Chiu Alex</Link>
+            <Link href="/" className="text-base sm:text-xl font-bold text-gray-900 shrink-0" style={{ fontFamily: 'var(--font-playfair)' }}>CALEX</Link>
             <div className="flex gap-1 sm:gap-4 md:gap-6 text-sm sm:text-base" style={{ fontFamily: 'var(--font-poppins)' }}>
               <Link href="/" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden min-[375px]:inline">Intro</Link>
               <Link href="/resume" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">About Me</Link>
               <Link href="/projects" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">Projects</Link>
-              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden sm:inline">Photo</Link>
-              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap sm:hidden">Photo</Link>
+              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden sm:inline">Memories</Link>
+              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap sm:hidden">Memories</Link>
               <a href="#contact" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden md:inline">Contact</a>
             </div>
           </div>
@@ -121,9 +121,9 @@ export default function Home() {
               className="text-6xl md:text-7xl font-bold mb-12 text-gray-900 drop-shadow-sm"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
-                Chiu Alex
+                Hi I&apos;m Alex
               </h1>
-            <div className="w-32 h-1 bg-blue-500 mx-auto mb-12"></div>
+            <div className="w-32 h-1 bg-blue-600 mx-auto mb-12"></div>
             <p 
               className="text-xl md:text-2xl text-gray-800 mb-8 font-light"
               style={{ fontFamily: 'var(--font-poppins)' }}
@@ -219,7 +219,7 @@ export default function Home() {
                   {/* Content */}
                   <div className="p-6">
                     <h3 
-                      className="text-2xl font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors"
+                      className="text-2xl font-semibold text-gray-900 mb-3 transition-colors"
                       style={{ fontFamily: 'var(--font-playfair)' }}
                     >
                       {item.title}
@@ -230,7 +230,7 @@ export default function Home() {
                     >
                       {item.description}
                     </p>
-                    <div className="mt-4 flex items-center text-blue-600 group-hover:text-blue-700 transition-colors">
+                    <div className="mt-4 flex items-center text-gray-500 group-hover:text-blue-600 transition-colors">
                       <span className="text-sm font-medium" style={{ fontFamily: 'var(--font-poppins)' }}>Explore</span>
                       <svg 
                         className="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform"
@@ -276,7 +276,7 @@ export default function Home() {
                       </li>
                       <li>
                         <Link href="/photography" className="hover:text-white transition-colors duration-200" style={{ fontFamily: 'var(--font-poppins)' }}>
-                          Photography
+                          Memories
                         </Link>
                       </li>
                       <li>

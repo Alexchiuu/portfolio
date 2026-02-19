@@ -38,12 +38,10 @@ export default function InteractiveBackground() {
       opacity: number;
     }> = [];
 
-    // Create particles with theme colors
+    // Create particles with monochrome theme colors
     const particleCount = Math.min(80, Math.floor((canvas.width * canvas.height) / 15000));
     for (let i = 0; i < particleCount; i++) {
-      // Use blue tones matching the theme
-      const blueValue = Math.random() * 50 + 100; // 100-150 range for light blue
-      const opacity = Math.random() * 0.3 + 0.2; // Subtle opacity
+      const opacity = Math.random() * 0.3 + 0.15; // Subtle opacity
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
@@ -51,7 +49,7 @@ export default function InteractiveBackground() {
         vy: (Math.random() - 0.5) * 0.8,
         radius: Math.random() * 2.5 + 1.5,
         baseRadius: Math.random() * 2.5 + 1.5,
-        color: `rgba(59, 130, 246, ${opacity})`, // Blue-500 with varying opacity
+        color: `rgba(0, 0, 0, ${opacity})`, // Black with varying opacity
         opacity: opacity
       });
     }
@@ -59,11 +57,8 @@ export default function InteractiveBackground() {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw gradient background matching theme
-      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      gradient.addColorStop(0, '#f0f9ff');
-      gradient.addColorStop(1, '#ffffff');
-      ctx.fillStyle = gradient;
+      // Draw solid white background
+      ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Update and draw particles
@@ -108,7 +103,7 @@ export default function InteractiveBackground() {
           particle.x, particle.y, particle.radius * 2.5
         );
         gradient.addColorStop(0, particle.color);
-        gradient.addColorStop(0.5, `rgba(59, 130, 246, ${particle.opacity * 0.5})`);
+        gradient.addColorStop(0.5, `rgba(0, 0, 0, ${particle.opacity * 0.5})`);
         gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
         
         ctx.beginPath();
@@ -128,7 +123,7 @@ export default function InteractiveBackground() {
             ctx.beginPath();
             ctx.moveTo(particle.x, particle.y);
             ctx.lineTo(otherParticle.x, otherParticle.y);
-            ctx.strokeStyle = `rgba(59, 130, 246, ${opacity})`; // Blue connections
+            ctx.strokeStyle = `rgba(0, 0, 0, ${opacity})`; // Dark monochrome connections
             ctx.lineWidth = 0.8;
             ctx.stroke();
           }

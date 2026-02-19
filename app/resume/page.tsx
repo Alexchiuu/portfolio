@@ -72,8 +72,8 @@ export default function ResumePage() {
               <Link href="/" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden min-[375px]:inline">Intro</Link>
               <Link href="/resume" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">About Me</Link>
               <Link href="/projects" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">Projects</Link>
-              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden sm:inline">Photo</Link>
-              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap sm:hidden">Photo</Link>
+              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden sm:inline">Memories</Link>
+              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap sm:hidden">Memories</Link>
               <Link href="/#contact" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden md:inline">Contact</Link>
             </div>
           </div>
@@ -81,14 +81,14 @@ export default function ResumePage() {
       </nav>
 
       <div 
-        className="min-h-screen relative overflow-hidden pt-20"
+        className="min-h-screen flex flex-col relative overflow-hidden pt-20"
         style={{ 
           fontFamily: 'var(--font-inter)'
         }}
       >
         {/* Interactive Background */}
         <InteractiveBackground />
-        <main className="flex w-full max-w-6xl flex-col items-center mx-auto px-8 py-20 md:py-32 relative z-10">
+        <main className="flex w-full max-w-6xl flex-col items-center mx-auto px-8 py-20 md:py-32 relative z-10 flex-1">
           {/* Title Section */}
           <div 
             className={`mb-16 w-full text-center transition-all duration-1000 delay-300 ${
@@ -117,7 +117,7 @@ export default function ResumePage() {
                 {/* Education */}
                 <div className="cursor-pointer">
                   <div
-                    className={`flex items-center gap-2 transition-all duration-700 ease-out ${
+                    className={`flex items-center gap-2 rounded-lg px-2 -mx-2 transition-all transition-all duration-700 ease-out ${
                       resumeInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
                     }`}
                     style={{ 
@@ -131,26 +131,26 @@ export default function ResumePage() {
                     aria-expanded={openSections.education}
                   >
                      <svg 
-                      className={`w-5 h-5 mb-4 transition-all duration-300 ${openSections.education ? 'text-blue-600 rotate-90' : 'text-blue-400'}`}
+                      className={`w-5 h-5 mb-4 transition-all duration-300 ${openSections.education ? 'text-blue-600 rotate-90' : 'text-gray-400'}`}
                        fill="none" 
                        stroke="currentColor" 
                        viewBox="0 0 24 24"
                      >
                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                      </svg>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-playfair)' }}>
+                    <h3 className={`text-2xl font-bold mb-4 transition-colors duration-200 ${openSections.education ? 'text-gray-900' : 'text-gray-700 hover:text-gray-900'}`} style={{ fontFamily: 'var(--font-playfair)' }}>
                        Education
                      </h3>
                    </div>
                   <div className={`relative pl-8 overflow-hidden transition-all duration-500 ease-in-out ${openSections.education ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
                     {/* Vertical Timeline Line (starts at first dot, ends at last dot) */}
-                    <div className="absolute left-[9px] top-[6px] bottom-[6px] w-0.5 bg-blue-600/50"></div>
+                    <div className="absolute left-[9px] top-[6px] bottom-[6px] w-0.5 bg-blue-400/60"></div>
                     
                     <div className="space-y-6 pb-4">
                       {/* Taipei Municipal Jianguo High School */}
                       <div className="relative">
                         {/* Timeline Dot */}
-                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-400 rounded-full border-2 border-white shadow-md"></div>
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-md"></div>
                         <div className="flex items-center gap-3 mb-2">
                           <div className="w-12 h-12 flex-shrink-0">
                             <Image 
@@ -181,7 +181,7 @@ export default function ResumePage() {
                       {/* National Taiwan University */}
                       <div className="relative">
                         {/* Timeline Dot */}
-                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-400 rounded-full border-2 border-white shadow-md"></div>
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-md"></div>
                         <div className="flex items-center gap-3 mb-2">
                           <div className="w-12 h-12 flex-shrink-0">
                             <Image 
@@ -212,7 +212,7 @@ export default function ResumePage() {
                 {/* Experience */}
                 <div className="cursor-pointer">
                   <div
-                    className={`flex items-center gap-2 transition-all duration-700 ease-out ${
+                    className={`flex items-center gap-2 rounded-lg px-2 -mx-2 transition-all transition-all duration-700 ease-out ${
                       resumeInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
                     }`}
                     style={{ 
@@ -226,26 +226,26 @@ export default function ResumePage() {
                     aria-expanded={openSections.experience}
                   >
                      <svg 
-                      className={`w-5 h-5 mb-4 transition-all duration-300 ${openSections.experience ? 'text-blue-600 rotate-90' : 'text-blue-400'}`}
+                      className={`w-5 h-5 mb-4 transition-all duration-300 ${openSections.experience ? 'text-blue-600 rotate-90' : 'text-gray-400'}`}
                        fill="none" 
                        stroke="currentColor" 
                        viewBox="0 0 24 24"
                      >
                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                      </svg>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-playfair)' }}>
+                    <h3 className={`text-2xl font-bold mb-4 transition-colors duration-200 ${openSections.experience ? 'text-gray-900' : 'text-gray-700 hover:text-gray-900'}`} style={{ fontFamily: 'var(--font-playfair)' }}>
                        Experience
                      </h3>
                    </div>
 
                   <div className={`relative pl-8 overflow-hidden transition-all duration-500 ease-in-out ${openSections.experience ? 'max-h-[700px] opacity-100' : 'max-h-0 opacity-0'}`}>
                     {/* Vertical Timeline Line (starts at first dot, ends at last dot) */}
-                    <div className="absolute left-[9px] top-[6px] bottom-[6px] w-0.5 bg-blue-600/50"></div>
+                    <div className="absolute left-[9px] top-[6px] bottom-[6px] w-0.5 bg-blue-400/60"></div>
 
                     <div className="space-y-6 pb-4">
                       {/* Research & Project (Senior Research) */}
                       <div className="relative">
-                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-400 rounded-full border-2 border-white shadow-md"></div>
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-md"></div>
                         <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
                           Senior Research — Vehicle Roll-Prevention Driver Assistance
                         </h4>
@@ -258,7 +258,7 @@ export default function ResumePage() {
 
                       {/* Independent Research (Wind Tunnel) */}
                       <div className="relative">
-                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-400 rounded-full border-2 border-white shadow-md"></div>
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-md"></div>
                         <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
                           Independent Research — Truck Roof Spoiler Aerodynamics
                         </h4>
@@ -276,7 +276,7 @@ export default function ResumePage() {
                 {/* Extracurriculars */}
                 <div className="cursor-pointer">
                   <div
-                    className={`flex items-center gap-2 transition-all duration-700 ease-out ${
+                    className={`flex items-center gap-2 rounded-lg px-2 -mx-2 transition-all transition-all duration-700 ease-out ${
                       resumeInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
                     }`}
                     style={{ 
@@ -290,25 +290,25 @@ export default function ResumePage() {
                     aria-expanded={openSections.extracurriculars}
                   >
                      <svg 
-                      className={`w-5 h-5 mb-4 transition-all duration-300 ${openSections.extracurriculars ? 'text-blue-600 rotate-90' : 'text-blue-400'}`}
+                      className={`w-5 h-5 mb-4 transition-all duration-300 ${openSections.extracurriculars ? 'text-blue-600 rotate-90' : 'text-gray-400'}`}
                        fill="none" 
                        stroke="currentColor" 
                        viewBox="0 0 24 24"
                      >
                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                      </svg>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-playfair)' }}>
+                    <h3 className={`text-2xl font-bold mb-4 transition-colors duration-200 ${openSections.extracurriculars ? 'text-gray-900' : 'text-gray-700 hover:text-gray-900'}`} style={{ fontFamily: 'var(--font-playfair)' }}>
                        Extracurriculars
                      </h3>
                    </div>
 
                   <div className={`relative pl-8 overflow-hidden transition-all duration-500 ease-in-out ${openSections.extracurriculars ? 'max-h-[900px] opacity-100' : 'max-h-0 opacity-0'}`}>
                     {/* Vertical Timeline Line (starts at first dot, ends at last dot) */}
-                    <div className="absolute left-[9px] top-[6px] bottom-[6px] w-0.5 bg-blue-600/50"></div>
+                    <div className="absolute left-[9px] top-[6px] bottom-[6px] w-0.5 bg-blue-400/60"></div>
 
                     <div className="space-y-6 pb-4">
                       <div className="relative">
-                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-400 rounded-full border-2 border-white shadow-md"></div>
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-md"></div>
                         <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
                           Science Fair Coordinator
                         </h4>
@@ -319,7 +319,7 @@ export default function ResumePage() {
                       </div>
 
                       <div className="relative">
-                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-400 rounded-full border-2 border-white shadow-md"></div>
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-md"></div>
                         <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
                           Algorithm Lecturer
                         </h4>
@@ -330,7 +330,7 @@ export default function ResumePage() {
                       </div>
 
                       <div className="relative">
-                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-400 rounded-full border-2 border-white shadow-md"></div>
+                        <div className="absolute left-[-30px] top-[6px] w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-md"></div>
                         <h4 className="text-xl font-semibold text-gray-900 mb-1" style={{ fontFamily: 'var(--font-poppins)' }}>
                           Competition Achievements
                         </h4>
@@ -348,7 +348,7 @@ export default function ResumePage() {
                 {/* Skills */}
                 <div className="cursor-pointer">
                   <div
-                    className={`flex items-center gap-2 transition-all duration-700 ease-out ${
+                    className={`flex items-center gap-2 rounded-lg px-2 -mx-2 transition-all transition-all duration-700 ease-out ${
                       resumeInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
                     }`}
                     style={{ 
@@ -362,21 +362,21 @@ export default function ResumePage() {
                     aria-expanded={openSections.skills}
                   >
                      <svg 
-                      className={`w-5 h-5 mb-4 transition-all duration-300 ${openSections.skills ? 'text-blue-600 rotate-90' : 'text-blue-400'}`}
+                      className={`w-5 h-5 mb-4 transition-all duration-300 ${openSections.skills ? 'text-blue-600 rotate-90' : 'text-gray-400'}`}
                        fill="none" 
                        stroke="currentColor" 
                        viewBox="0 0 24 24"
                      >
                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                      </svg>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-playfair)' }}>
+                    <h3 className={`text-2xl font-bold mb-4 transition-colors duration-200 ${openSections.skills ? 'text-gray-900' : 'text-gray-700 hover:text-gray-900'}`} style={{ fontFamily: 'var(--font-playfair)' }}>
                        Skills
                      </h3>
                    </div>
 
                   <div className={`relative pl-8 overflow-hidden transition-all duration-500 ease-in-out ${openSections.skills ? 'max-h-[420px] opacity-100' : 'max-h-0 opacity-0'}`}>
                     {/* Vertical Timeline Line (starts at first dot, ends at last dot) */}
-                    <div className="absolute left-[9px] top-[6px] bottom-[6px] w-0.5 bg-blue-600/50"></div>
+                    <div className="absolute left-[9px] top-[6px] bottom-[6px] w-0.5 bg-blue-400/60"></div>
 
                     <div className="pb-4">
                       <div className="mb-3">
@@ -448,7 +448,7 @@ export default function ResumePage() {
                     </li>
                     <li>
                       <Link href="/photography" className="hover:text-white transition-colors duration-200" style={{ fontFamily: 'var(--font-poppins)' }}>
-                        Photography
+                        Memories
                       </Link>
                     </li>
                     <li>

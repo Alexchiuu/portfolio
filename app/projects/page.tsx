@@ -82,8 +82,8 @@ export default function ProjectsPage() {
               <Link href="/" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden min-[375px]:inline">Intro</Link>
               <Link href="/resume" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">About Me</Link>
               <Link href="/projects" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">Projects</Link>
-              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden sm:inline">Photo</Link>
-              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap sm:hidden">Photo</Link>
+              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden sm:inline">Memories</Link>
+              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap sm:hidden">Memories</Link>
               <Link href="/#contact" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden md:inline">Contact</Link>
             </div>
           </div>
@@ -135,8 +135,8 @@ export default function ProjectsPage() {
                 <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
                     {/* Cover Image */}
-                    <div className="relative h-48 md:h-auto md:min-h-[200px] overflow-hidden bg-gradient-to-br from-blue-100 to-blue-200">
-                      <div className="absolute inset-0 flex items-center justify-center text-blue-600 text-6xl opacity-20 pointer-events-none z-0">
+                    <div className="relative h-48 md:h-auto md:min-h-[200px] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+                      <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-6xl opacity-20 pointer-events-none z-0">
                         📷
                       </div>
                       <div className="relative w-full h-full z-10">
@@ -229,7 +229,7 @@ export default function ProjectsPage() {
                     </li>
                     <li>
                       <Link href="/photography" className="hover:text-white transition-colors duration-200" style={{ fontFamily: 'var(--font-poppins)' }}>
-                        Photography
+                        Memories
                       </Link>
                     </li>
                     <li>

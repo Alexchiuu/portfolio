@@ -487,8 +487,8 @@ export default function PhotographyPage() {
               <Link href="/" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden min-[375px]:inline">Intro</Link>
               <Link href="/resume" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">About Me</Link>
               <Link href="/projects" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap">Projects</Link>
-              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden sm:inline">Photo</Link>
-              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap sm:hidden">Photo</Link>
+              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden sm:inline">Memories</Link>
+              <Link href="/photography" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap sm:hidden">Memories</Link>
               <Link href="/#contact" className="text-gray-700 hover:text-gray-900 transition-colors font-medium whitespace-nowrap hidden md:inline">Contact</Link>
             </div>
           </div>
@@ -515,7 +515,7 @@ export default function PhotographyPage() {
               className="mb-4 text-6xl md:text-7xl font-bold text-gray-900" 
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
-              Photography
+              Memories
             </h1>
             <div className="w-24 h-1 bg-blue-600 mx-auto"></div>
           </div>
@@ -849,7 +849,7 @@ export default function PhotographyPage() {
                           placeholder="Enter your name"
                           value={commentAuthor}
                           onChange={(e) => setCommentAuthor(e.target.value)}
-                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
+                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-gray-900 placeholder-gray-400"
                         />
                       </div>
                       <div>
@@ -862,7 +862,7 @@ export default function PhotographyPage() {
                           onChange={(e) => setCommentText(e.target.value)}
                           rows={3}
                           required
-                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-gray-900 placeholder-gray-400"
+                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent resize-none text-gray-900 placeholder-gray-400"
                         />
                       </div>
                       <button
