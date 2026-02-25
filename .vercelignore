@@ -1,0 +1,6 @@
+# These routes use Node.js fs to write files locally — they don't work on
+# Vercel's read-only filesystem and cause oversized function bundles.
+app/admin
+app/api/upload-photos
+app/api/delete-photo
+scripts

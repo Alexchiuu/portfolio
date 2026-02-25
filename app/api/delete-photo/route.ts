@@ -1,3 +1,5 @@
+export const runtime = "nodejs";
+
 import { NextRequest, NextResponse } from "next/server";
 import { unlink, readFile, writeFile } from "fs/promises";
 import { existsSync } from "fs";
