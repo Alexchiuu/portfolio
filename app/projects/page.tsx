@@ -64,6 +64,14 @@ export default function ProjectsPage() {
       url: "https://github.com/Alexchiuu/ROS_ackermann_car",
       tags: ["Python", "ROS2", "Robotics"],
       coverImage: "/projects/ros-car.jpg"
+    },
+    {
+      id: 5,
+      title: "Smart Closet (VibeFashion)",
+      description: "MakeNTU 2026 project (3rd place, NXP×AVNET Enterprise Award): an AI-powered wardrobe system with RFID-tracked motorized carousel, computer vision, Flask backend, and a Next.js dashboard for outfit recommendations and laundry workflows.",
+      url: "https://github.com/Alexchiuu/Smart_Closet",
+      tags: ["Python", "Flask", "Next.js", "RFID", "MakeNTU"],
+      coverImage: "/projects/smart-closet.png"
     }
   ];
 
